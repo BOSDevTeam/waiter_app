@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder<List<WaiterModel>>(
-      future: ApiService(dio: Dio(BaseOptions(baseUrl: baseUrl))).getWaiter(connectorModel),
+      future: ApiService(dio: Dio(BaseOptions(baseUrl: baseUrl,contentType: "application/json"))).getWaiter(connectorModel),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           lstWaiter=snapshot.data!;

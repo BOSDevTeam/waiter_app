@@ -10,6 +10,6 @@ abstract class ApiService{
   factory ApiService({required Dio dio}) => _ApiService(dio);
 
   @GET("waiter")
-  Future<List<WaiterModel>> getWaiter(ConnectorModel connectorModel);
+  Future<List<WaiterModel>> getWaiter(@Body() ConnectorModel connectorModel);
 
 }

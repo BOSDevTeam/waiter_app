@@ -23,7 +23,8 @@ class _ApiService implements ApiService {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(connectorModel.toJson());
     final _result = await _dio
         .fetch<List<dynamic>>(_setStreamType<List<WaiterModel>>(Options(
       method: 'GET',

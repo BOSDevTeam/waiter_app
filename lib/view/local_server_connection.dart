@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:waiter_app/view/login.dart';
+import 'package:waiter_app/view/register_key.dart';
 
 import '../controller/local_server_con_controller.dart';
 import '../value/app_color.dart';
@@ -87,10 +87,14 @@ class _LocalServerConnectionState extends State<LocalServerConnection> {
               child: ElevatedButton(
                   onPressed: () {
                     localServerConController.save().then((connector) {
-                      SnackBar(content: Text(AppString.saved));
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return Login(connectorModel: connector,);
-                      }));
+                      if (connector != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text(AppString.saved)));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const RegisterKey();
+                        }));
+                      }
                     });
                   },
                   style: ElevatedButton.styleFrom(
