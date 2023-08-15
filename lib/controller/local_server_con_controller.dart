@@ -12,7 +12,7 @@ class LocalServerConController {
   final databaseLoginUserController = TextEditingController();
   final databaseLoginPasswordController = TextEditingController();
 
-  Future<ConnectorModel?> save() async {
+  Future<bool> save() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (isValidateControl()) {
       sharedPreferences.setString("IPAddress", ipAddressController.text);
@@ -24,8 +24,10 @@ class LocalServerConController {
       sharedPreferences.setString(
           "BaseUrl", "http://$ipAddressController.text/WaiterWebService/api/");
 
-      AppConstant.baseUrl =
-          "http://$ipAddressController.text/WaiterWebService/api/";
+      String ipAddress = ipAddressController.text;
+
+      AppConstant.baseUrl = "http://$ipAddress/WaiterWebService/api/";
+
       AppConstant.connectorModel = ConnectorModel(
           ipAddress: sharedPreferences.getString("IPAddress").toString(),
           databaseName: sharedPreferences.getString("DatabaseName").toString(),
@@ -34,16 +36,22 @@ class LocalServerConController {
           databaseLoginPassword:
               sharedPreferences.getString("DatabaseLoginPassword").toString());
 
-      return ConnectorModel(
-          ipAddress: sharedPreferences.getString("IPAddress").toString(),
-          databaseName: sharedPreferences.getString("DatabaseName").toString(),
-          databaseLoginUser:
-              sharedPreferences.getString("DatabaseLoginUser").toString(),
-          databaseLoginPassword:
-              sharedPreferences.getString("DatabaseLoginPassword").toString());
+      return true;
     }
-    return null;
+    return false;
   }
+
+  /* Future<void> fillLocalServerData() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    ipAddressController.text =
+        sharedPreferences.getString("IPAddress").toString();
+    databaseNameController.text =
+        sharedPreferences.getString("DatabaseName").toString();
+    databaseLoginUserController.text =
+        sharedPreferences.getString("DatabaseLoginUser").toString();
+    databaseLoginPasswordController.text =
+        sharedPreferences.getString("DatabaseLoginPassword").toString();
+  } */
 
   bool isValidateControl() {
     if (ipAddressController.text.isEmpty) {

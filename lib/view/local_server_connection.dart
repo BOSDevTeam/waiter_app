@@ -86,8 +86,8 @@ class _LocalServerConnectionState extends State<LocalServerConnection> {
               alignment: Alignment.topRight,
               child: ElevatedButton(
                   onPressed: () {
-                    localServerConController.save().then((connector) {
-                      if (connector != null) {
+                    localServerConController.save().then((value) {
+                      if (value) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text(AppString.saved)));
                         Navigator.push(context,

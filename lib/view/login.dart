@@ -1,55 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:waiter_app/api/apiservice.dart';
 import 'package:dio/dio.dart';
 import 'package:waiter_app/model/connector_model.dart';
 import 'package:waiter_app/model/waiter_model.dart';
+import 'package:waiter_app/value/app_constant.dart';
 
 class Login extends StatefulWidget {
-  final ConnectorModel connectorModel;
-  const Login({super.key, required this.connectorModel});
+  const Login({super.key});
 
   @override
-  State<Login> createState() => _LoginState(connectorModel);
+  State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  ConnectorModel connectorModel;
-  late String baseUrl;
-  List<WaiterModel> lstWaiter = [];
-  late String ipAddress;
-  //dynamic apiService;
 
-  _LoginState(this.connectorModel);
-
+  final _waiterBox=Hive.box(AppConstant.waiterBox);
+  List<Map<String,dynamic>> lstWaiter=[];
+  
   @override
   void initState() {
-    ipAddress=connectorModel.ipAddress;
-    baseUrl = "http://$ipAddress/WaiterWebService/api/";
-    //apiService = ApiService(dio: Dio(BaseOptions(baseUrl: baseUrl)));
+    //_getWaiter();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder<List<WaiterModel>>(
-      future: ApiService(dio: Dio(BaseOptions(baseUrl: baseUrl,contentType: "application/json"))).getWaiter(connectorModel),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          lstWaiter=snapshot.data!;
-          return ListView.builder(
-              itemCount: lstWaiter.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(lstWaiter[index].waiterName),
-                );
-              });
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        return CircularProgressIndicator();
-      },
-    ));
+        body: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height/2,
+              color: Colors.green,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height/2,
+              color: Colors.red,
+            ),
+          ],
+        )
+    );
   }
 
   Widget _waiter() {
@@ -57,8 +47,17 @@ class _LoginState extends State<Login> {
         itemCount: lstWaiter.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(lstWaiter[index].waiterName),
+            title: Text(lstWaiter[index]["waiterName"]),
           );
         });
   }
+
+  void _getWaiter(){
+    final data=_waiterBox.keys.map((key) {
+        final item=_waiterBox.get(key);
+        return {"key":key,"waiterId":item["waiterId"],"waiterName":item["waiterName"],"password":item["password"]};
+    }).toList();
+    lstWaiter=data.toList();
+  }
+
 }

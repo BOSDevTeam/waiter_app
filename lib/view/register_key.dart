@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:waiter_app/controller/register_controller.dart';
 import 'package:waiter_app/view/data_downloading.dart';
 
 import '../value/app_color.dart';
+import '../value/app_constant.dart';
 import '../value/app_string.dart';
 
 class RegisterKey extends StatefulWidget {
@@ -57,6 +59,7 @@ class _RegisterKeyState extends State<RegisterKey> {
               alignment: Alignment.topRight,
               child: ElevatedButton(
                   onPressed: () {
+                    Hive.box(AppConstant.waiterBox).clear();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return const DataDownloading();

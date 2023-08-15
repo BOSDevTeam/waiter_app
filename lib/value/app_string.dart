@@ -14,4 +14,8 @@ class AppString{
   static const String enterKey="Enter Key";
   static const String confirm="Confirm";
   static const String macAddress="Mac Address";
+  static const String downloadCompleted="Download Completed";
+  static const String downloading="Downloading";
+  static const String waiter="Waiter";
+  static const String download="Download";
 }
