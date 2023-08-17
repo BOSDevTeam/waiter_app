@@ -3,6 +3,9 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:waiter_app/view/local_server_connection.dart';
 import 'package:waiter_app/view/login.dart';
+import 'package:waiter_app/view/navigation/nav_order.dart';
+import 'package:waiter_app/view/navigation/nav_setting.dart';
+import 'package:waiter_app/view/navigation/nav_table.dart';
 import 'package:waiter_app/view/register_key.dart';
 
 import 'value/app_color.dart';
@@ -44,6 +47,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const Login(),
+      routes: {
+        '/nav_order': (BuildContext ctx) => const NavOrder(),
+        '/nav_table': (BuildContext ctx) => const NavTable(),
+        '/nav_setting': (BuildContext ctx) => const NavSetting()
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 class AppString{
+  static const String appName="Quick Waiter";
   static const String localServerConnection="Local Server Connection";
   static const String ipAddress="IP Address";
   static const String databaseName="Database Name";
@@ -18,4 +19,13 @@ class AppString{
   static const String downloading="Downloading";
   static const String waiter="Waiter";
   static const String download="Download";
+  static const String welcomeToThe="Welcome to the";
+  static const String waiterLogin="Waiter Login";
+  static const String login="Login";
+  static const String password="Password";
+  static const String order="Order";
+  static const String table="Table";
+  static const String setting="Setting";
+  static const String exit="Exit";
+  static const String menu="Menu";
 }
