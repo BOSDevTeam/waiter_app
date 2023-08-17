@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:waiter_app/widget/title_text.dart';
+import 'package:waiter_app/widget/app_text.dart';
 
 import '../../nav_drawer.dart';
 import '../../value/app_color.dart';
@@ -22,9 +22,9 @@ class _NavOrderState extends State<NavOrder> {
         actions: [
           TextButton(
                     onPressed: () {},
-                    child: const Text(
-                      AppString.menu,
-                      style: TextStyle(color: AppColor.primaryDark),
+                    child: const AppText(
+                     text: AppString.menu,
+                     size: 20
                     ),
                   ),
         ],
