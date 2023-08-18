@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waiter_app/model/connector_model.dart';
 import 'package:waiter_app/value/app_constant.dart';
@@ -12,21 +13,39 @@ class LocalServerConController {
   final databaseLoginUserController = TextEditingController();
   final databaseLoginPasswordController = TextEditingController();
 
+  final _baseUrlBox = Hive.box(AppConstant.baseUrlBox);
+  final _connectorBox = Hive.box(AppConstant.connectorBox);
+
   Future<bool> save() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    //SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (isValidateControl()) {
-      sharedPreferences.setString("IPAddress", ipAddressController.text);
+      /* sharedPreferences.setString("IPAddress", ipAddressController.text);
       sharedPreferences.setString("DatabaseName", databaseNameController.text);
       sharedPreferences.setString(
           "DatabaseLoginUser", databaseLoginUserController.text);
       sharedPreferences.setString(
           "DatabaseLoginPassword", databaseLoginPasswordController.text);
       sharedPreferences.setString(
-          "BaseUrl", "http://$ipAddressController.text/WaiterWebService/api/");
+          "BaseUrl", "http://$ipAddressController.text/WaiterWebService/api/"); */
 
       String ipAddress = ipAddressController.text;
 
-      AppConstant.baseUrl = "http://$ipAddress/WaiterWebService/api/";
+      Hive.box(AppConstant.waiterBox).clear();
+      Hive.box(AppConstant.baseUrlBox).clear();
+      Hive.box(AppConstant.connectorBox).clear();
+
+      _insertBaseUrl({
+        "baseUrl": "http://$ipAddress/WaiterWebService/api/"
+      });
+
+      _insertConnectorBox({
+        "ipAddress": ipAddressController.text,
+        "databaseName": databaseNameController.text,
+        "databaseLoginUser": databaseLoginUserController.text,
+        "databaseLoginPassword": databaseLoginPasswordController.text
+      });
+
+      /* AppConstant.baseUrl = "http://$ipAddress/WaiterWebService/api/";
 
       AppConstant.connectorModel = ConnectorModel(
           ipAddress: sharedPreferences.getString("IPAddress").toString(),
@@ -34,7 +53,7 @@ class LocalServerConController {
           databaseLoginUser:
               sharedPreferences.getString("DatabaseLoginUser").toString(),
           databaseLoginPassword:
-              sharedPreferences.getString("DatabaseLoginPassword").toString());
+              sharedPreferences.getString("DatabaseLoginPassword").toString()); */
 
       return true;
     }
@@ -68,5 +87,13 @@ class LocalServerConController {
       return false;
     }
     return true;
+  }
+
+  Future<void> _insertBaseUrl(Map<String, dynamic> baseUrl) async {
+    await _baseUrlBox.add(baseUrl);
+  }
+
+  Future<void> _insertConnectorBox(Map<String, dynamic> connector) async {
+    await _connectorBox.add(connector);
   }
 }

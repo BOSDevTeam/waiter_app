@@ -18,7 +18,8 @@ class _NavOrderState extends State<NavOrder> {
     return Scaffold(
       drawer: const NavDrawer(),
       appBar: AppBar(
-        title: Text(AppString.order, style: TextStyle(color: AppColor.primary)),
+        title: const Text(AppString.order, style: TextStyle(color: AppColor.primary)),
+        iconTheme: const IconThemeData(color: AppColor.primary),
         actions: [
           TextButton(
                     onPressed: () {},

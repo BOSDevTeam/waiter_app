@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../nav_drawer.dart';
+import '../../value/app_color.dart';
 import '../../value/app_string.dart';
 
 class NavTable extends StatefulWidget {
@@ -15,7 +16,10 @@ class _NavTableState extends State<NavTable> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const NavDrawer(),
-      appBar: AppBar(title: const Text(AppString.table)),
+      appBar: AppBar(
+        title: const Text(AppString.table, style: TextStyle(color: AppColor.primary)),
+        iconTheme: const IconThemeData(color: AppColor.primary),
+      ),
     );
   }
 }

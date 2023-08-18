@@ -58,8 +58,7 @@ class _RegisterKeyState extends State<RegisterKey> {
             Align(
               alignment: Alignment.topRight,
               child: ElevatedButton(
-                  onPressed: () {
-                    Hive.box(AppConstant.waiterBox).clear();
+                  onPressed: () {                  
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return const DataDownloading();

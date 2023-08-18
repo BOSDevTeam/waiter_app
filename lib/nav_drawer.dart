@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:waiter_app/value/app_string.dart';
+import 'package:waiter_app/widget/app_text.dart';
 
 import 'value/app_color.dart';
 
@@ -34,31 +35,35 @@ class _NavDrawerState extends State<NavDrawer> {
             color: AppColor.primary300,
           ),
           ListTile(
-            leading: const Icon(Icons.list),
-            title: const Text(AppString.order),
+            leading: const Icon(
+              Icons.list,
+              color: AppColor.primaryDark,
+            ),
+            title: const AppText(text: AppString.order),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/nav_order');
             },
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.table_restaurant),
-            title: const Text(AppString.table),
+            leading:
+                const Icon(Icons.table_restaurant, color: AppColor.primaryDark),
+            title: const AppText(text: AppString.table),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/nav_table');
             },
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text(AppString.setting),
+            leading: const Icon(Icons.settings, color: AppColor.primaryDark),
+            title: const AppText(text: AppString.setting),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/nav_setting');
             },
           ),
           const Divider(),
           Expanded(
-            child: Container(             
+            child: Container(
               alignment: Alignment.bottomCenter,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -69,9 +74,8 @@ class _NavDrawerState extends State<NavDrawer> {
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: const Text(
-                      AppString.exit,
-                      style: TextStyle(color: AppColor.primaryDark),
+                    child: const AppText(
+                      text: AppString.exit,
                     ),
                   ),
                   const SizedBox(

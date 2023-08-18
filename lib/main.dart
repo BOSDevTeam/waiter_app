@@ -1,6 +1,8 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waiter_app/view/local_server_connection.dart';
 import 'package:waiter_app/view/login.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
@@ -11,15 +13,25 @@ import 'package:waiter_app/view/register_key.dart';
 import 'value/app_color.dart';
 import 'value/app_constant.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox(AppConstant.waiterBox);
-  runApp(const MyApp());
+  await Hive.openBox(AppConstant.baseUrlBox);
+  await Hive.openBox(AppConstant.connectorBox);
+
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  bool? isRegisterSuccess = sharedPreferences.getBool("IsRegisterSuccess");
+
+  runApp(MyApp(
+    isRegisterSuccess: isRegisterSuccess,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool? isRegisterSuccess;
+
+  const MyApp({super.key, required this.isRegisterSuccess});
 
   // This widget is the root of your application.
   @override
@@ -46,7 +58,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
         useMaterial3: true,
       ),
-      home: const Login(),
+      home: AnimatedSplashScreen(
+        backgroundColor: AppColor.primary,
+        splash: 'assets/images/foreground.png',
+        nextScreen: isRegisterSuccess == null || isRegisterSuccess == false
+            ? const LocalServerConnection()
+            : const Login(),
+      ),
       routes: {
         '/nav_order': (BuildContext ctx) => const NavOrder(),
         '/nav_table': (BuildContext ctx) => const NavTable(),
@@ -55,4 +73,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
