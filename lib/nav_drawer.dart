@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waiter_app/value/app_string.dart';
 import 'package:waiter_app/widget/app_text.dart';
 
@@ -12,6 +13,21 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
+
+  String _waiterName="";
+
+  @override
+  void initState() {
+    getWaiterName().then((value) {
+      if(value != null){
+        setState(() {
+          _waiterName=value;
+        });
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -19,7 +35,7 @@ class _NavDrawerState extends State<NavDrawer> {
         children: [
           UserAccountsDrawerHeader(
             accountName: const Text(""),
-            accountEmail: Text("Waiter Name"),
+            accountEmail: Text(_waiterName),
             currentAccountPicture: Image.asset(
               "assets/images/launcher.png",
               height: 100,
@@ -88,5 +104,10 @@ class _NavDrawerState extends State<NavDrawer> {
         ],
       ),
     );
+  }
+
+  Future<String?> getWaiterName() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString("WaiterName");
   }
 }

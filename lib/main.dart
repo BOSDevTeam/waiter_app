@@ -1,24 +1,20 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app/hive/hive_db.dart';
 import 'package:waiter_app/view/local_server_connection.dart';
 import 'package:waiter_app/view/login.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
 import 'package:waiter_app/view/navigation/nav_setting.dart';
 import 'package:waiter_app/view/navigation/nav_table.dart';
-import 'package:waiter_app/view/register_key.dart';
 
 import 'value/app_color.dart';
-import 'value/app_constant.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  await Hive.openBox(AppConstant.waiterBox);
-  await Hive.openBox(AppConstant.baseUrlBox);
-  await Hive.openBox(AppConstant.connectorBox);
+  await HiveDB.openAllBox();
 
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   bool? isRegisterSuccess = sharedPreferences.getBool("IsRegisterSuccess");
@@ -59,17 +55,23 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: AnimatedSplashScreen(
-        backgroundColor: AppColor.primary,
-        splash: 'assets/images/foreground.png',
-        nextScreen: isRegisterSuccess == null || isRegisterSuccess == false
-            ? const LocalServerConnection()
-            : const Login(),
-      ),
+          backgroundColor: AppColor.primary,
+          splash: 'assets/images/foreground.png',
+          nextScreen: _startWidget()),
       routes: {
         '/nav_order': (BuildContext ctx) => const NavOrder(),
         '/nav_table': (BuildContext ctx) => const NavTable(),
         '/nav_setting': (BuildContext ctx) => const NavSetting()
       },
     );
+  }
+
+  Widget _startWidget() {
+    if (isRegisterSuccess == null || isRegisterSuccess == false) {
+      HiveDB.clearAllBox();
+      return const LocalServerConnection();
+    } else {
+      return const Login();
+    }
   }
 }

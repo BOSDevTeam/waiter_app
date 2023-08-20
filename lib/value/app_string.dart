@@ -28,4 +28,8 @@ class AppString{
   static const String setting="Setting";
   static const String exit="Exit";
   static const String menu="Menu";
+  static const String enterPassword="Enter Password";
+  static const String notFoundWaiter="Not Found Waiter";
+  static const String invalidLogin="Invalid Login";
+  static const String mainMenu="Main Menu";
 }

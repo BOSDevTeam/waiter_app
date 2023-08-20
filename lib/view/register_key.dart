@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:waiter_app/controller/register_controller.dart';
 import 'package:waiter_app/view/data_downloading.dart';
 
 import '../value/app_color.dart';
-import '../value/app_constant.dart';
 import '../value/app_string.dart';
 
 class RegisterKey extends StatefulWidget {
@@ -58,11 +56,11 @@ class _RegisterKeyState extends State<RegisterKey> {
             Align(
               alignment: Alignment.topRight,
               child: ElevatedButton(
-                  onPressed: () {                  
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const DataDownloading();
-                    }));
+                  onPressed: () {  
+                    Navigator.pushAndRemoveUntil(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const DataDownloading();
+                          }), (route) => false);                                   
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.primary500,

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waiter_app/view/login.dart';
 
 import '../api/apiservice.dart';
+import '../controller/data_downloading_controller.dart';
+import '../hive/hive_db.dart';
 import '../model/connector_model.dart';
 import '../value/app_color.dart';
-import '../value/app_constant.dart';
 import '../value/app_string.dart';
 
 class DataDownloading extends StatefulWidget {
@@ -18,43 +18,48 @@ class DataDownloading extends StatefulWidget {
 }
 
 class _DataDownloadingState extends State<DataDownloading> {
-  /* var apiService =
-      ApiService(dio: Dio(BaseOptions(baseUrl: AppConstant.baseUrl))); */
-  final _waiterBox = Hive.box(AppConstant.waiterBox);
-  final _baseUrlBox = Hive.box(AppConstant.baseUrlBox);
-  final _connectorBox = Hive.box(AppConstant.connectorBox);
-  bool _isDownloadComplete = false;
-  String _currentDownloadData = "";
   dynamic apiService;
-  List<Map<String, dynamic>> lstBaseUrl = [];
-  List<Map<String, dynamic>> lstConnector = [];
-  dynamic connectorModel;
+  final dataDownloadingController = DataDownloadingController();
 
   @override
   void initState() {
-    lstBaseUrl = _getBaseUrl();
-    apiService =
-        ApiService(dio: Dio(BaseOptions(baseUrl: lstBaseUrl[0]["baseUrl"])));
-    lstConnector = _getConnector();
-    connectorModel = ConnectorModel(
-        ipAddress: lstConnector[0]["ipAddress"],
-        databaseName: lstConnector[0]["databaseName"],
-        databaseLoginUser: lstConnector[0]["databaseLoginUser"],
-        databaseLoginPassword: lstConnector[0]["databaseLoginPassword"]);
+    dataDownloadingController.lstBaseUrl = HiveDB.getBaseUrl();
+    apiService = ApiService(
+        dio: Dio(BaseOptions(
+            baseUrl: dataDownloadingController.lstBaseUrl[0]["baseUrl"])));
+    dataDownloadingController.lstConnector = HiveDB.getConnector();
+    dataDownloadingController.connectorModel = ConnectorModel(
+        ipAddress: dataDownloadingController.lstConnector[0]["ipAddress"],
+        databaseName: dataDownloadingController.lstConnector[0]["databaseName"],
+        databaseLoginUser: dataDownloadingController.lstConnector[0]
+            ["databaseLoginUser"],
+        databaseLoginPassword: dataDownloadingController.lstConnector[0]
+            ["databaseLoginPassword"]);
     setState(() {
-      _currentDownloadData = AppString.waiter;
+      dataDownloadingController.currentDownloadData = AppString.waiter;
     });
-    apiService.getWaiter(connectorModel).then((lstWaiter) {
+    apiService
+        .getWaiter(dataDownloadingController.connectorModel)
+        .then((lstWaiter) {
       for (int i = 0; i < lstWaiter.length; i++) {
-        _insertWaiter({
+        HiveDB.insertWaiter({
           "waiterId": lstWaiter[i].waiterId,
           "waiterName": lstWaiter[i].waiterName,
           "password": lstWaiter[i].password
         });
       }
-      setState(() {
-        _isDownloadComplete = true;
+
+      /* setState(() {
+        dataDownloadingController.currentDownloadData = AppString.mainMenu;
       });
+
+      setState(() {
+        dataDownloadingController.isDownloadComplete = true;
+      }); */
+    });
+
+    apiService.getMainMenu(dataDownloadingController.connectorModel).then((lstMainMenu){
+
     });
 
     super.initState();
@@ -68,12 +73,13 @@ class _DataDownloadingState extends State<DataDownloading> {
           AppString.download,
           style: TextStyle(color: AppColor.primary),
         )),
-        body: !_isDownloadComplete
+        body: !dataDownloadingController.isDownloadComplete
             ? Center(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("${AppString.downloading} $_currentDownloadData"),
+                  Text(
+                      "${AppString.downloading} $dataDownloadingController.currentDownloadData"),
                   const SizedBox(
                     height: 30,
                   ),
@@ -93,10 +99,11 @@ class _DataDownloadingState extends State<DataDownloading> {
                           SharedPreferences sharedPreferences =
                               await SharedPreferences.getInstance();
                           sharedPreferences.setBool("IsRegisterSuccess", true);
-                          Navigator.pushAndRemoveUntil(context,
+
+                          Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) {
                             return const Login();
-                          }), (route) => false);
+                          }));
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: AppColor.primary500,
@@ -108,34 +115,5 @@ class _DataDownloadingState extends State<DataDownloading> {
                   ],
                 ),
               ));
-  }
-
-  Future<void> _insertWaiter(Map<String, dynamic> waiter) async {
-    await _waiterBox.add(waiter);
-  }
-
-  List<Map<String, dynamic>> _getBaseUrl() {
-    final data = _baseUrlBox.keys.map((key) {
-      final item = _baseUrlBox.get(key);
-      return {
-        "key": key,
-        "baseUrl": item["baseUrl"],
-      };
-    }).toList();
-    return data;
-  }
-
-  List<Map<String, dynamic>> _getConnector() {
-    final data = _connectorBox.keys.map((key) {
-      final item = _connectorBox.get(key);
-      return {
-        "key": key,
-        "ipAddress": item["ipAddress"],
-        "databaseName": item["databaseName"],
-        "databaseLoginUser": item["databaseLoginUser"],
-        "databaseLoginPassword": item["databaseLoginPassword"],
-      };
-    }).toList();
-    return data;
   }
 }
