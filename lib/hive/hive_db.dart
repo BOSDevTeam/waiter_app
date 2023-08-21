@@ -13,6 +13,10 @@ class HiveDB {
     await Hive.openBox(connectorBox);
     await Hive.openBox(baseUrlBox);
     await Hive.openBox(waiterBox);
+    await Hive.openBox(mainMenuBox);
+    await Hive.openBox(subMenuBox);
+    await Hive.openBox(itemBox);
+    await Hive.openBox(systemItemBox);
   }
 
   static Future<void> insertConnectorBox(Map<String, dynamic> connector) async {

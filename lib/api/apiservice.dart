@@ -6,6 +6,7 @@ import 'package:waiter_app/model/waiter_model.dart';
 import '../model/item_model.dart';
 import '../model/main_menu_model.dart';
 import '../model/sub_menu_model.dart';
+import '../model/system_item_model.dart';
 
 part 'apiservice.g.dart';
 
@@ -26,6 +27,6 @@ abstract class ApiService{
   Future<List<ItemModel>> getItem(@Body() ConnectorModel connectorModel);
 
   @GET("systemitem")
-  Future<List<ItemModel>> getSystemItem(@Body() ConnectorModel connectorModel);
+  Future<List<SystemItemModel>> getSystemItem(@Body() ConnectorModel connectorModel);
 
 }

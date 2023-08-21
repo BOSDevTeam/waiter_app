@@ -12,9 +12,9 @@ class SubMenuModel{
   @JsonKey(name: "SubMenuName")
   String subMenuName;
   @JsonKey(name: "IncomeID")
-  int incomId;
+  int incomeId;
 
-  SubMenuModel({required this.subMenuId,required this.mainMenuId,required this.subMenuName,required this.incomId});
+  SubMenuModel({required this.subMenuId,required this.mainMenuId,required this.subMenuName,required this.incomeId});
 
   factory SubMenuModel.fromJson(Map<String, dynamic> json) => _$SubMenuModelFromJson(json);
   Map<String, dynamic> toJson() => _$SubMenuModelToJson(this);

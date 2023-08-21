@@ -35,9 +35,11 @@ class _DataDownloadingState extends State<DataDownloading> {
             ["databaseLoginUser"],
         databaseLoginPassword: dataDownloadingController.lstConnector[0]
             ["databaseLoginPassword"]);
-    setState(() {
+
+    /* setState(() {
       dataDownloadingController.currentDownloadData = AppString.waiter;
-    });
+    }); */
+
     apiService
         .getWaiter(dataDownloadingController.connectorModel)
         .then((lstWaiter) {
@@ -49,17 +51,85 @@ class _DataDownloadingState extends State<DataDownloading> {
         });
       }
 
-      /* setState(() {
-        dataDownloadingController.currentDownloadData = AppString.mainMenu;
-      });
-
       setState(() {
-        dataDownloadingController.isDownloadComplete = true;
-      }); */
+        dataDownloadingController.isWaiterComplete = true;
+        dataDownloadingController.downloadStatus = "Waiter Completed";
+      });
     });
 
-    apiService.getMainMenu(dataDownloadingController.connectorModel).then((lstMainMenu){
+    apiService
+        .getMainMenu(dataDownloadingController.connectorModel)
+        .then((lstMainMenu) {
+      for (int i = 0; i < lstMainMenu.length; i++) {
+        HiveDB.insertMainMenu({
+          "mainMenuId": lstMainMenu[i].mainMenuId,
+          "mainMenuName": lstMainMenu[i].mainMenuName,
+          "counterId": lstMainMenu[i].counterId
+        });
+      }
 
+      setState(() {
+        dataDownloadingController.isMainMenuComplete = true;
+        dataDownloadingController.downloadStatus = "Main Menu Completed";
+      });
+    });
+
+    apiService
+        .getSubMenu(dataDownloadingController.connectorModel)
+        .then((lstSubMenu) {
+      for (int i = 0; i < lstSubMenu.length; i++) {
+        HiveDB.insertSubMenu({
+          "subMenuId": lstSubMenu[i].subMenuId,
+          "mainMenuId": lstSubMenu[i].mainMenuId,
+          "subMenuName": lstSubMenu[i].subMenuName,
+          "incomeId": lstSubMenu[i].incomeId
+        });
+      }
+
+      setState(() {
+        dataDownloadingController.isSubMenuComplete = true;
+        dataDownloadingController.downloadStatus = "Sub Menu Completed";
+      });
+    });
+
+    apiService
+        .getItem(dataDownloadingController.connectorModel)
+        .then((lstItem) {
+      for (int i = 0; i < lstItem.length; i++) {
+        HiveDB.insertItem({
+          "itemId": lstItem[i].itemId,
+          "subMenuId": lstItem[i].subMenuId,
+          "itemName": lstItem[i].itemName,
+          "salePrice": lstItem[i].salePrice,
+          "sType": lstItem[i].sType,
+          "outOfOrder": lstItem[i].outOfOrder,
+          "ingredients": lstItem[i].ingredients,
+          "barcode": lstItem[i].barcode,
+          "noDiscount": lstItem[i].noDiscount,
+          "itemDiscount": lstItem[i].itemDiscount
+        });
+      }
+
+      setState(() {
+        dataDownloadingController.isItemComplete = true;
+        dataDownloadingController.downloadStatus = "Item Completed";
+      });
+    });
+
+    apiService
+        .getSystemItem(dataDownloadingController.connectorModel)
+        .then((lstSystemItem) {
+      for (int i = 0; i < lstSystemItem.length; i++) {
+        HiveDB.insertSystemItem({
+          "systemId": lstSystemItem[i].systemId,
+          "itemId": lstSystemItem[i].itemId
+        });
+      }
+
+      setState(() {
+        dataDownloadingController.isSystemItemComplete = true;
+        dataDownloadingController.downloadStatus = "System Item Completed";
+      });
     });
 
     super.initState();
@@ -73,20 +143,12 @@ class _DataDownloadingState extends State<DataDownloading> {
           AppString.download,
           style: TextStyle(color: AppColor.primary),
         )),
-        body: !dataDownloadingController.isDownloadComplete
+        body: dataDownloadingController.isWaiterComplete &&
+                dataDownloadingController.isMainMenuComplete &&
+                dataDownloadingController.isSubMenuComplete &&
+                dataDownloadingController.isItemComplete &&
+                dataDownloadingController.isSystemItemComplete
             ? Center(
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                      "${AppString.downloading} $dataDownloadingController.currentDownloadData"),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  const CircularProgressIndicator()
-                ],
-              ))
-            : Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -114,6 +176,18 @@ class _DataDownloadingState extends State<DataDownloading> {
                         child: const Text(AppString.sContinue)),
                   ],
                 ),
-              ));
+              )
+            : Center(
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                      "${AppString.downloading} $dataDownloadingController.downloadStatus"),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  const CircularProgressIndicator()
+                ],
+              )));
   }
 }

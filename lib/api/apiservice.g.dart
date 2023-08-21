@@ -139,14 +139,15 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<ItemModel>> getSystemItem(ConnectorModel connectorModel) async {
+  Future<List<SystemItemModel>> getSystemItem(
+      ConnectorModel connectorModel) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(connectorModel.toJson());
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<ItemModel>>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<SystemItemModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -163,7 +164,7 @@ class _ApiService implements ApiService {
               baseUrl,
             ))));
     var value = _result.data!
-        .map((dynamic i) => ItemModel.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => SystemItemModel.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }
