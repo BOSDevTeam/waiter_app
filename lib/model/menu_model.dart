@@ -1,7 +1,8 @@
 class MenuModel{
   String? id;
   String? name;
-  List<MenuModel>? list = [];
+  List<MenuModel> list = [];
+  int? type;
 
-  MenuModel({this.id,this.name, this.list});
+  MenuModel({this.id,this.name,required this.list});
 }

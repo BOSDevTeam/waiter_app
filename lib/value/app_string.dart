@@ -32,4 +32,6 @@ class AppString{
   static const String notFoundWaiter="Not Found Waiter";
   static const String invalidLogin="Invalid Login";
   static const String mainMenu="Main Menu";
+  static const String customers="Customers";
+  static const String orders="Orders";
 }
