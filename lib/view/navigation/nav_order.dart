@@ -1,10 +1,14 @@
+import 'package:contextmenu/contextmenu.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:waiter_app/hive/hive_db.dart';
 import 'package:waiter_app/widget/app_text.dart';
 
+import '../../controller/order_provider.dart';
 import '../../model/item_model.dart';
 import '../../model/main_menu_model.dart';
 import '../../model/menu_model.dart';
+import '../../model/order_model.dart';
 import '../../model/sub_menu_model.dart';
 import '../../nav_drawer.dart';
 import '../../value/app_color.dart';
@@ -214,55 +218,213 @@ class _NavOrderState extends State<NavOrder> {
                   text: AppString.orders,
                   color: AppColor.primary500,
                 )),
-            const Divider()
+            const Divider(),
+            Consumer<OrderProvider>(builder: (context, provider, child) {
+              return Expanded(child: _order(provider));
+            }),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.primary500,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.only(
+                          left: 40, right: 40, top: 20, bottom: 20),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.zero))),
+                  child: const Text(AppString.sendOrder)),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget _drawer(List<MenuModel> data) {
-    return Drawer(
-      shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero
+  Widget _order(OrderProvider provider) {
+    return ListView.builder(
+        itemCount: provider.lstOrder.length,
+        itemBuilder: (context, index) {
+          OrderModel data = provider.lstOrder[index];
+          return Container(
+            margin: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
             ),
-        child: SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            const AppText(text:AppString.menu),
-            const SizedBox(height: 20),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return _buildMenuList(data[index]);
-              },
-            )
-          ],
-        ),
-      ),
-    ));
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    AppText(
+                      text: data.itemName,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    AppText(
+                      text: data.taste.toString(),
+                      size: 14,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              context
+                                  .read<OrderProvider>()
+                                  .decreaseQuantity(index);
+                            },
+                            icon: const Icon(
+                              Icons.remove,
+                              color: AppColor.primary400,
+                            ),
+                            style: IconButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    side:
+                                        const BorderSide(color: AppColor.grey),
+                                    borderRadius: BorderRadius.circular(5)))),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          style: const ButtonStyle(
+                              side: MaterialStatePropertyAll(
+                                  BorderSide(color: AppColor.grey)),
+                              padding:
+                                  MaterialStatePropertyAll(EdgeInsets.all(10))),
+                          child: Text(data.quantity.toString()),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              context
+                                  .read<OrderProvider>()
+                                  .increaseQuantity(index);
+                            },
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                            style: IconButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    side:
+                                        const BorderSide(color: AppColor.grey),
+                                    borderRadius: BorderRadius.circular(5)),
+                                backgroundColor: AppColor.primary400))
+                      ],
+                    ),
+                    ContextMenuArea(
+                      builder: (context) => [
+                         const ListTile(
+                          leading: Icon(Icons.food_bank_outlined),
+                          title: Text(AppString.commonTaste),
+                        ),
+                         const ListTile(
+                          leading: Icon(Icons.food_bank_outlined),
+                          title: Text(AppString.tasteByItem),
+                        ),
+                         const ListTile(
+                          leading: Icon(Icons.food_bank_outlined),
+                          title: Text(AppString.numberOrderItem),
+                        ),
+                         const ListTile(
+                          leading: Icon(Icons.food_bank_outlined),
+                          title: Text(AppString.delete),
+                        ),
+                      ],
+                      child: Card(
+                        color: Theme.of(context).primaryColor,
+                        child: Center(
+                          child: Text(
+                            'Press',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      /* IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.more_horiz,
+                            color: AppColor.primary400,
+                          ),
+                          style: IconButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  side: const BorderSide(color: AppColor.grey),
+                                  borderRadius: BorderRadius.circular(5)))), */
+                    )
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
-  Widget _buildMenuList(MenuModel list) {
-    if (list.list.isEmpty) {
+  Widget _drawer(List<MenuModel> data) {
+    return Drawer(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                const AppText(text: AppString.menu),
+                const SizedBox(height: 20),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    return _buildMenuList(data[index]);
+                  },
+                )
+              ],
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildMenuList(MenuModel menuModel) {
+    if (menuModel.list.isEmpty) {
       return Builder(builder: (context) {
         return ListTile(
-            leading: const SizedBox(width: 10),
-            //textColor: _menuColor(list.type),
-            title: Text(list.name.toString()));
+          leading: const SizedBox(width: 10),
+          //textColor: _menuColor(list.type),
+          title: Text(menuModel.name.toString()),
+          onTap: () {
+            if (menuModel.type == 3) {
+              addToOrder(menuModel);
+            }
+          },
+        );
       });
     } else {
       return ExpansionTile(
         leading: const Icon(Icons.food_bank),
         //textColor: _menuColor(list.type),
-        title: Text(list.name.toString()),
-        children: list.list.map(_buildMenuList).toList(),
+        title: Text(menuModel.name.toString()),
+        children: menuModel.list.map(_buildMenuList).toList(),
       );
     }
+  }
+
+  void addToOrder(MenuModel data) {
+    context.read<OrderProvider>().addOrder(
+        OrderModel(itemId: data.id!, itemName: data.name!, quantity: 1));
   }
 
   Color _menuColor(int? type) {
