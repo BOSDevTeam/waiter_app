@@ -120,7 +120,12 @@ class _NavOrderState extends State<NavOrder> {
                                     width: 2, color: AppColor.primary)),
                             child: InkWell(
                               splashColor: AppColor.primary300,
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return Table();
+                                }));
+                              },
                               child: const SizedBox(
                                 width: 60,
                                 height: 60,

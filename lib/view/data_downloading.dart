@@ -64,7 +64,7 @@ class _DataDownloadingState extends State<DataDownloading> {
       }
 
       setState(() {
-        dataDownloadingController.isMainMenuComplete = true;   
+        dataDownloadingController.isMainMenuComplete = true;
       });
     });
 
@@ -81,7 +81,7 @@ class _DataDownloadingState extends State<DataDownloading> {
       }
 
       setState(() {
-        dataDownloadingController.isSubMenuComplete = true;      
+        dataDownloadingController.isSubMenuComplete = true;
       });
     });
 
@@ -138,7 +138,7 @@ class _DataDownloadingState extends State<DataDownloading> {
       });
     });
 
-     apiService
+    apiService
         .getTable(dataDownloadingController.connectorModel)
         .then((lstTable) {
       for (int i = 0; i < lstTable.length; i++) {
@@ -151,6 +151,59 @@ class _DataDownloadingState extends State<DataDownloading> {
 
       setState(() {
         dataDownloadingController.isTableComplete = true;
+      });
+    });
+
+    apiService
+        .getTaste(dataDownloadingController.connectorModel)
+        .then((lstTaste) {
+      for (int i = 0; i < lstTaste.length; i++) {
+        HiveDB.insertTaste({
+          "tasteId": lstTaste[i].tasteId,
+          "tasteName": lstTaste[i].tasteName
+        });
+      }
+
+      setState(() {
+        dataDownloadingController.isTasteComplete = true;
+      });
+    });
+
+    apiService
+        .getTasteMulti(dataDownloadingController.connectorModel)
+        .then((lstTasteMulti) {
+      for (int i = 0; i < lstTasteMulti.length; i++) {
+        HiveDB.insertTasteMulti({
+          "tId": lstTasteMulti[i].tId,
+          "groupId": lstTasteMulti[i].groupId,
+          "tasteId": lstTasteMulti[i].tasteId,
+          "tasteName": lstTasteMulti[i].tasteName,
+          "tasteShort": lstTasteMulti[i].tasteShort,
+          "tasteSort": lstTasteMulti[i].tasteSort,
+          "price": lstTasteMulti[i].price
+        });
+      }
+
+      setState(() {
+        dataDownloadingController.isTasteMultiComplete = true;
+      });
+    });
+
+    apiService
+        .getSystemSetting(dataDownloadingController.connectorModel)
+        .then((lstSystemSetting) {
+      for (int i = 0; i < lstSystemSetting.length; i++) {
+        HiveDB.insertSystemItem({
+          "tax": lstSystemSetting[i].tax,
+          "service": lstSystemSetting[i].service,
+          "adminPassword": lstSystemSetting[i].adminPassword,
+          "title": lstSystemSetting[i].title,
+          "userPassword": lstSystemSetting[i].userPassword
+        });
+      }
+
+      setState(() {
+        dataDownloadingController.isSystemSettingComplete = true;
       });
     });
 
@@ -169,7 +222,12 @@ class _DataDownloadingState extends State<DataDownloading> {
                 dataDownloadingController.isMainMenuComplete &&
                 dataDownloadingController.isSubMenuComplete &&
                 dataDownloadingController.isItemComplete &&
-                dataDownloadingController.isSystemItemComplete
+                dataDownloadingController.isSystemItemComplete &&
+                dataDownloadingController.isTableTypeComplete &&
+                dataDownloadingController.isTableComplete &&
+                dataDownloadingController.isTasteComplete &&
+                dataDownloadingController.isTasteMultiComplete &&
+                dataDownloadingController.isSystemSettingComplete
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -203,8 +261,7 @@ class _DataDownloadingState extends State<DataDownloading> {
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                      AppString.downloading),
+                  Text(AppString.downloading),
                   SizedBox(
                     height: 30,
                   ),

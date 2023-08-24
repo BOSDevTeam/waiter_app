@@ -40,4 +40,5 @@ class AppString {
   static const String tasteByItem = "Taste by Item";
   static const String numberOrderItem = "Number Order Item";
   static const String delete = "Delete";
+  static const String tableSituation = "Table Situation";
 }
