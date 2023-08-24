@@ -1,6 +1,4 @@
 class DataDownloadingController {
-  //bool isDownloadComplete = false;
-  String downloadStatus = "";
   List<Map<String, dynamic>> lstBaseUrl = [];
   List<Map<String, dynamic>> lstConnector = [];
   dynamic connectorModel;
@@ -9,4 +7,9 @@ class DataDownloadingController {
   bool isSubMenuComplete = false;
   bool isItemComplete = false;
   bool isSystemItemComplete = false;
+  bool isTableTypeComplete = false;
+  bool isTableComplete = false;
+  bool isTasteComplete = false;
+  bool isTasteMultiComplete = false;
+  bool isSystemSettingComplete = false;
 }

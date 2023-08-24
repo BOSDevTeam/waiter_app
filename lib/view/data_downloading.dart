@@ -36,10 +36,6 @@ class _DataDownloadingState extends State<DataDownloading> {
         databaseLoginPassword: dataDownloadingController.lstConnector[0]
             ["databaseLoginPassword"]);
 
-    /* setState(() {
-      dataDownloadingController.currentDownloadData = AppString.waiter;
-    }); */
-
     apiService
         .getWaiter(dataDownloadingController.connectorModel)
         .then((lstWaiter) {
@@ -53,7 +49,6 @@ class _DataDownloadingState extends State<DataDownloading> {
 
       setState(() {
         dataDownloadingController.isWaiterComplete = true;
-        dataDownloadingController.downloadStatus = "Waiter Completed";
       });
     });
 
@@ -69,8 +64,7 @@ class _DataDownloadingState extends State<DataDownloading> {
       }
 
       setState(() {
-        dataDownloadingController.isMainMenuComplete = true;
-        dataDownloadingController.downloadStatus = "Main Menu Completed";
+        dataDownloadingController.isMainMenuComplete = true;   
       });
     });
 
@@ -87,8 +81,7 @@ class _DataDownloadingState extends State<DataDownloading> {
       }
 
       setState(() {
-        dataDownloadingController.isSubMenuComplete = true;
-        dataDownloadingController.downloadStatus = "Sub Menu Completed";
+        dataDownloadingController.isSubMenuComplete = true;      
       });
     });
 
@@ -112,7 +105,6 @@ class _DataDownloadingState extends State<DataDownloading> {
 
       setState(() {
         dataDownloadingController.isItemComplete = true;
-        dataDownloadingController.downloadStatus = "Item Completed";
       });
     });
 
@@ -128,7 +120,37 @@ class _DataDownloadingState extends State<DataDownloading> {
 
       setState(() {
         dataDownloadingController.isSystemItemComplete = true;
-        dataDownloadingController.downloadStatus = "System Item Completed";
+      });
+    });
+
+    apiService
+        .getTableType(dataDownloadingController.connectorModel)
+        .then((lstTableType) {
+      for (int i = 0; i < lstTableType.length; i++) {
+        HiveDB.insertTableType({
+          "tableTypeId": lstTableType[i].tableTypeId,
+          "tableTypeName": lstTableType[i].tableTypeName
+        });
+      }
+
+      setState(() {
+        dataDownloadingController.isTableTypeComplete = true;
+      });
+    });
+
+     apiService
+        .getTable(dataDownloadingController.connectorModel)
+        .then((lstTable) {
+      for (int i = 0; i < lstTable.length; i++) {
+        HiveDB.insertTable({
+          "tableId": lstTable[i].tableId,
+          "tableName": lstTable[i].tableName,
+          "tableTypeId": lstTable[i].tableTypeId
+        });
+      }
+
+      setState(() {
+        dataDownloadingController.isTableComplete = true;
       });
     });
 
@@ -177,16 +199,16 @@ class _DataDownloadingState extends State<DataDownloading> {
                   ],
                 ),
               )
-            : Center(
+            : const Center(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                      "${AppString.downloading} $dataDownloadingController.downloadStatus"),
-                  const SizedBox(
+                      AppString.downloading),
+                  SizedBox(
                     height: 30,
                   ),
-                  const CircularProgressIndicator()
+                  CircularProgressIndicator()
                 ],
               )));
   }

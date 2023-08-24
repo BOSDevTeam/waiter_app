@@ -42,7 +42,6 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   animated_splash_screen: ^1.3.0
-  contextmenu: ^3.0.0
 
 dev_dependencies:
   flutter_test:
