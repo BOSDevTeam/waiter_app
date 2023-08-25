@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/hive/hive_db.dart';
 import 'package:waiter_app/widget/app_text.dart';
+import 'package:waiter_app/view/table_situation.dart';
 
 import '../../controller/order_provider.dart';
 import '../../model/item_model.dart';
@@ -123,7 +124,7 @@ class _NavOrderState extends State<NavOrder> {
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return Table();
+                                  return const TableSituation();
                                 }));
                               },
                               child: const SizedBox(

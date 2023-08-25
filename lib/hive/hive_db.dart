@@ -202,7 +202,7 @@ class HiveDB {
 
   static List<Map<String, dynamic>> getTaste() {
     final data = Hive.box(tasteBox).keys.map((key) {
-      final item = Hive.box(tableBox).get(key);
+      final item = Hive.box(tasteBox).get(key);
       return {
         "key": key,
         "tasteId": item["tasteId"],
