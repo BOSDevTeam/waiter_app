@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:waiter_app/model/table_situation_model.dart';
 import 'package:waiter_app/widget/app_text.dart';
 import 'package:dio/dio.dart';
 
 import '../api/apiservice.dart';
 import '../controller/data_downloading_controller.dart';
+import '../controller/order_provider.dart';
 import '../controller/table_situation_controller.dart';
 import '../hive/hive_db.dart';
 import '../model/connector_model.dart';
@@ -42,21 +44,6 @@ class _TableSituationState extends State<TableSituation> {
     if (tableSituationController.lstTableType.isNotEmpty) {
       tableSituationController.selectedTableType =
           tableSituationController.lstTableType[0];
-
-      apiService
-          .getTableSituation(dataDownloadingController.connectorModel,
-              tableSituationController.selectedTableType["tableTypeId"])
-          .then((lstTableSituation) {
-            tableSituationController.lstTableSituation=lstTableSituation;
-          });
-
-      /* tableSituationController.lstTable = HiveDB.getTable();
-      tableSituationController.lstTableByTableType = tableSituationController
-          .lstTable
-          .where((element) =>
-              element["tableTypeId"] ==
-              tableSituationController.selectedTableType["tableTypeId"])
-          .toList(); */
     }
     super.initState();
   }
@@ -72,7 +59,22 @@ class _TableSituationState extends State<TableSituation> {
       body: Container(
         color: AppColor.grey,
         child: Column(
-          children: [_tableType(), Expanded(child: _table())],
+          children: [
+            _tableType(),
+            FutureBuilder<List<TableSituationModel>>(
+                future: apiService.getTableSituation(
+                    dataDownloadingController.connectorModel,
+                    tableSituationController.selectedTableType["tableTypeId"]),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    tableSituationController.lstTableSituation = snapshot.data!;
+                    return Expanded(child: _table());
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                })
+          ],
         ),
       ),
     );
@@ -91,34 +93,62 @@ class _TableSituationState extends State<TableSituation> {
             padding: const EdgeInsets.all(5),
             height: 120,
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: table.isOccupied ? Colors.transparent : Colors.white,
                 border: Border.all(color: AppColor.primary300),
                 borderRadius: BorderRadius.circular(5)),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 40,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.person,
-                        color: AppColor.primary500,
+            child: Material(
+              color: table.isOccupied ? AppColor.grey : Colors.white,
+              child: InkWell(
+                splashColor: AppColor.primary300,
+                onTap: () {
+                  if (!table.isOccupied) {
+                    context.read<OrderProvider>().setSelectedTable({
+                      "tableId": table.tableId,
+                      "tableName": table.tableName
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                onLongPress: () {
+                  if (table.isOccupied) {
+                    print('table long press');
+                  }
+                },
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 40,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          table.isOccupied
+                              ? const Icon(
+                                  Icons.person,
+                                  color: AppColor.primary500,
+                                )
+                              : Container(),
+                          AppText(
+                            text: table.tableName,
+                            fontWeight: FontWeight.bold,
+                          )
+                        ],
                       ),
-                      AppText(
-                        text: table.tableName,
-                        fontWeight: FontWeight.bold,
-                      )
-                    ],
-                  ),
+                    ),
+                    table.isOccupied
+                        ? AppText(
+                            text: "People".toUpperCase(),
+                            color: AppColor.primary500,
+                            size: 14,
+                          )
+                        : AppText(
+                            text: "Empty".toUpperCase(),
+                            color: AppColor.primary500,
+                            size: 14,
+                          )
+                  ],
                 ),
-                AppText(
-                  text: "Empty".toUpperCase(),
-                  color: AppColor.primary500,
-                  size: 14,
-                )
-              ],
+              ),
             ),
           );
         }));
@@ -128,19 +158,14 @@ class _TableSituationState extends State<TableSituation> {
     return SizedBox(
         height: 60,
         child: ListView.builder(
-            //shrinkWrap: true,
             scrollDirection: Axis.horizontal,
-            //physics: const AlwaysScrollableScrollPhysics(),
             itemCount: tableSituationController.lstTableType.length,
             itemBuilder: (context, index) {
               Map<String, dynamic> tableType =
                   tableSituationController.lstTableType[index];
-              return InkWell(
-                splashColor: AppColor.primary300,
-                onTap: () {},
-                child: Container(
-                    decoration: tableSituationController
-                                .selectedTableType["tableTypeId"] !=
+              return Container(
+                decoration:
+                    tableSituationController.selectedTableType["tableTypeId"] !=
                             tableType["tableTypeId"]
                         ? BoxDecoration(
                             border: Border.all(color: AppColor.grey),
@@ -148,16 +173,40 @@ class _TableSituationState extends State<TableSituation> {
                         : BoxDecoration(
                             border: Border.all(color: AppColor.grey),
                             color: AppColor.primaryDark),
-                    width: 130,
-                    alignment: Alignment.center,
-                    child: tableSituationController
-                                .selectedTableType["tableTypeId"] !=
-                            tableType["tableTypeId"]
-                        ? AppText(text: tableType["tableTypeName"])
-                        : AppText(
-                            text: tableType["tableTypeName"],
-                            color: Colors.white,
-                          )),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    splashColor: AppColor.primary300,
+                    onTap: () {
+                      tableSituationController.selectedTableType =
+                          tableSituationController.lstTableType[index];
+                      apiService
+                          .getTableSituation(
+                              dataDownloadingController.connectorModel,
+                              tableSituationController
+                                  .selectedTableType["tableTypeId"])
+                          .then((lstTableSituation) {
+                        tableSituationController.lstTableSituation =
+                            lstTableSituation;
+                        setState(() {
+                          _table();
+                        });
+                      });
+                    },
+                    child: Container(
+                        width: 130,
+                        height: 60,
+                        alignment: Alignment.center,
+                        child: tableSituationController
+                                    .selectedTableType["tableTypeId"] !=
+                                tableType["tableTypeId"]
+                            ? AppText(text: tableType["tableTypeName"])
+                            : AppText(
+                                text: tableType["tableTypeName"],
+                                color: Colors.white,
+                              )),
+                  ),
+                ),
               );
             }));
   }

@@ -4,8 +4,10 @@ import '../model/order_model.dart';
 
 class OrderProvider extends ChangeNotifier {
   final List<OrderModel> _lstOrder = [];
+  late Map<String, dynamic> _selectedTable = {"tableId": 0, "tableName": "-"};
 
   List<OrderModel> get lstOrder => _lstOrder;
+  Map<String, dynamic> get selectedTable=>_selectedTable;
 
   void addOrder(OrderModel orderModel) {
     _lstOrder.add(orderModel);
@@ -22,5 +24,10 @@ class OrderProvider extends ChangeNotifier {
       _lstOrder[index].quantity -= 1;
       notifyListeners();
     }
+  }
+
+  void setSelectedTable(Map<String, dynamic> selectedTable){
+    _selectedTable=selectedTable;
+    notifyListeners();
   }
 }

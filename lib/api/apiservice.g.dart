@@ -329,7 +329,7 @@ class _ApiService implements ApiService {
     int tableTypeId,
   ) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'tableTypeId': tableTypeId};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(connectorModel.toJson());

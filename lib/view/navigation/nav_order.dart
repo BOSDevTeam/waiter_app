@@ -141,21 +141,24 @@ class _NavOrderState extends State<NavOrder> {
                         const SizedBox(
                           width: 20,
                         ),
-                        const Column(
+                        Column(
                           children: [
-                            AppText(
+                            const AppText(
                               text: AppString.table,
                               size: 16,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            AppText(
-                              text: "12",
-                              color: AppColor.primary,
-                              size: 20,
-                              fontWeight: FontWeight.bold,
-                            )
+                            Consumer<OrderProvider>(
+                                builder: (context, provider, child) {
+                              return AppText(
+                                text: provider.selectedTable["tableName"],
+                                color: AppColor.primary,
+                                size: 20,
+                                fontWeight: FontWeight.bold,
+                              );
+                            }),                          
                           ],
                         )
                       ],
