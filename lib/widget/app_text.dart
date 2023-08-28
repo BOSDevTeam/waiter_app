@@ -32,6 +32,7 @@ class AppText extends StatelessWidget {
           fontWeight: fontWeight,
           fontFamily: fontFamily),
       textAlign: textAlign,
+      
     );
   }
 }

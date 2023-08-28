@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
             nextScreen: _startWidget()), */
-            home: _startWidget(),
+        home: _startWidget(),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const NavTable(),
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
     } else {
       return const Login();
     }
-  } */
+  }  */
 
   Widget _startWidget() {
       HiveDB.clearAllBox();

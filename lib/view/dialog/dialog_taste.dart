@@ -15,39 +15,44 @@ class DialogTaste extends StatefulWidget {
 }
 
 class _DialogTasteState extends State<DialogTaste> {
-  final tasteProvider=TasteProvider();
+  final tasteProvider = TasteProvider();
 
   @override
   void initState() {
-    tasteProvider.lstTaste=HiveDB.getTaste();
+    tasteProvider.lstTaste = HiveDB.getTaste();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(builder: (context,setstate){
+    return StatefulBuilder(builder: (context, setstate) {
       return AlertDialog(
         title: const AppText(text: AppString.commonTaste),
         content: Column(
           children: [
             Container(
-              color: Colors.lightBlue,
+              //color: Colors.lightBlue,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Consumer<TasteProvider>(
-                                  builder: (context, provider, child) {
-                                return Flexible(
-                                  child: AppText(
-                                    text: provider.selectedTaste,
-                                    color: AppColor.primary,
-                                    fontFamily: "BOS",
-                                  ),
-                                );
-                              }),
-                  IconButton(onPressed: (){
-
-                  }, icon: Icon(Icons.cancel))
+                  Consumer<TasteProvider>(builder: (context, provider, child) {
+                    return 
+                    Expanded(
+                      child: TextFormField(
+                        controller: provider.tasteController,
+                        style: TextStyle(fontFamily: "BOS"),
+                        decoration: InputDecoration(border: OutlineInputBorder()),
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                      ),
+                    );
+                    /* AppText(
+                      text: provider.selectedTaste,
+                      color: AppColor.primary,
+                      fontFamily: "BOS",
+                    ); */
+                  }),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.cancel)),
                 ],
               ),
             ),
@@ -58,12 +63,12 @@ class _DialogTasteState extends State<DialogTaste> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextButton(onPressed: (){
-                Navigator.pop(context);
-              }, child: const Text(AppString.cancel)),
-              ElevatedButton(
-                  onPressed: () {},
-                  child: const Text(AppString.add))
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(AppString.cancel)),
+              ElevatedButton(onPressed: () {}, child: const Text(AppString.add))
             ],
           )
         ],
@@ -71,21 +76,25 @@ class _DialogTasteState extends State<DialogTaste> {
     });
   }
 
-  Widget _taste(){
+  Widget _taste() {
     return SizedBox(
       width: double.maxFinite,
       child: ListView.builder(
-        itemCount: tasteProvider.lstTaste.length,
-        itemBuilder:(context,index){
-          Map<String,dynamic> data=tasteProvider.lstTaste[index];
-          return ListTile(
-            leading: AppText(text:data["tasteName"],fontFamily: "BOS",),
-            onTap: () {
-              context.read<TasteProvider>().setSelectedTaste(data["tasteName"]);
-            },
-          );
-      }),
+          itemCount: tasteProvider.lstTaste.length,
+          itemBuilder: (context, index) {
+            Map<String, dynamic> data = tasteProvider.lstTaste[index];
+            return ListTile(
+              leading: AppText(
+                text: data["tasteName"],
+                fontFamily: "BOS",
+              ),
+              onTap: () {
+                context
+                    .read<TasteProvider>()
+                    .setSelectedTaste(data["tasteName"]);
+              },
+            );
+          }),
     );
   }
-
 }
