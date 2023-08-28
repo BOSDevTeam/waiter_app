@@ -24,6 +24,7 @@ class _TableSituationState extends State<TableSituation> {
   dynamic apiService;
   final tableSituationController = TableSituationController();
   final dataDownloadingController = DataDownloadingController();
+  Offset _tapPosition = Offset.zero;
 
   @override
   void initState() {
@@ -100,6 +101,7 @@ class _TableSituationState extends State<TableSituation> {
               color: table.isOccupied ? AppColor.grey : Colors.white,
               child: InkWell(
                 splashColor: AppColor.primary300,
+                onTapDown: (details) => _getTapPosition(details),
                 onTap: () {
                   if (!table.isOccupied) {
                     context.read<OrderProvider>().setSelectedTable({
@@ -111,7 +113,7 @@ class _TableSituationState extends State<TableSituation> {
                 },
                 onLongPress: () {
                   if (table.isOccupied) {
-                    print('table long press');
+                    _showContextMenu(context);
                   }
                 },
                 child: Column(
@@ -128,9 +130,12 @@ class _TableSituationState extends State<TableSituation> {
                                   color: AppColor.primary500,
                                 )
                               : Container(),
-                          AppText(
-                            text: table.tableName,
-                            fontWeight: FontWeight.bold,
+                          Flexible(
+                            child: AppText(
+                              text: table.tableName,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "BOS",
+                            ),
                           )
                         ],
                       ),
@@ -200,14 +205,58 @@ class _TableSituationState extends State<TableSituation> {
                         child: tableSituationController
                                     .selectedTableType["tableTypeId"] !=
                                 tableType["tableTypeId"]
-                            ? AppText(text: tableType["tableTypeName"])
+                            ? AppText(text: tableType["tableTypeName"],fontFamily: "BOS",)
                             : AppText(
                                 text: tableType["tableTypeName"],
                                 color: Colors.white,
+                                fontFamily: "BOS"
                               )),
                   ),
                 ),
               );
             }));
+  }
+
+  void _getTapPosition(TapDownDetails details) {
+    final RenderBox referenceBox = context.findRenderObject() as RenderBox;
+    setState(() {
+      _tapPosition = referenceBox.globalToLocal(details.globalPosition);
+    });
+  }
+
+  void _showContextMenu(BuildContext context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+
+    final result = await showMenu(
+        context: context,
+
+        // Show the context menu at the tap location
+        position: RelativeRect.fromRect(
+            Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 30, 30),
+            Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+                overlay.paintBounds.size.height)),
+
+        // set a list of choices for the context menu
+        items: [
+          const PopupMenuItem(
+            value: AppString.viewOrder,
+            child: Text(AppString.viewOrder),
+          ),
+          const PopupMenuItem(
+            value: AppString.getBill,
+            child: Text(AppString.getBill),
+          ),
+        ]);
+
+    // Implement the logic for each choice here
+    switch (result) {
+      case AppString.viewOrder:
+        debugPrint('view order');
+        break;
+      case AppString.getBill:
+        debugPrint('get bill');
+        break;
+    }
   }
 }

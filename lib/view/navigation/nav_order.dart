@@ -13,6 +13,7 @@ import '../../model/sub_menu_model.dart';
 import '../../nav_drawer.dart';
 import '../../value/app_color.dart';
 import '../../value/app_string.dart';
+import '../dialog/dialog_taste.dart';
 
 class NavOrder extends StatefulWidget {
   const NavOrder({super.key});
@@ -141,25 +142,28 @@ class _NavOrderState extends State<NavOrder> {
                         const SizedBox(
                           width: 20,
                         ),
-                        Column(
-                          children: [
-                            const AppText(
-                              text: AppString.table,
-                              size: 16,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Consumer<OrderProvider>(
-                                builder: (context, provider, child) {
-                              return AppText(
-                                text: provider.selectedTable["tableName"],
-                                color: AppColor.primary,
-                                size: 20,
-                                fontWeight: FontWeight.bold,
-                              );
-                            }),                          
-                          ],
+                        Flexible(
+                          child: Column(
+                            children: [
+                              const AppText(
+                                text: AppString.table,
+                                size: 16,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Consumer<OrderProvider>(
+                                  builder: (context, provider, child) {
+                                return AppText(
+                                  text: provider.selectedTable["tableName"],
+                                  color: AppColor.primary,
+                                  size: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "BOS",
+                                );
+                              }),
+                            ],
+                          ),
                         )
                       ],
                     ),
@@ -268,12 +272,14 @@ class _NavOrderState extends State<NavOrder> {
                   children: [
                     AppText(
                       text: data.itemName,
+                      fontFamily: "BOS",
                     ),
                     const SizedBox(
                       width: 5,
                     ),
                     AppText(
                       text: data.taste.toString(),
+                      fontFamily: "BOS",
                       size: 14,
                     )
                   ],
@@ -398,7 +404,11 @@ class _NavOrderState extends State<NavOrder> {
     // Implement the logic for each choice here
     switch (result) {
       case AppString.commonTaste:
-        debugPrint('common taste');
+        showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return const DialogTaste();
+            });
         break;
       case AppString.tasteByItem:
         debugPrint('taste by item');
@@ -442,7 +452,10 @@ class _NavOrderState extends State<NavOrder> {
         return ListTile(
           leading: const SizedBox(width: 10),
           //textColor: _menuColor(list.type),
-          title: Text(menuModel.name.toString()),
+          title: AppText(
+            text: menuModel.name.toString(),
+            fontFamily: "BOS",
+          ),
           onTap: () {
             if (menuModel.type == 3) {
               addToOrder(menuModel);
@@ -454,7 +467,10 @@ class _NavOrderState extends State<NavOrder> {
       return ExpansionTile(
         leading: const Icon(Icons.food_bank),
         //textColor: _menuColor(list.type),
-        title: Text(menuModel.name.toString()),
+        title: AppText(
+          text: menuModel.name.toString(),
+          fontFamily: "BOS",
+        ),
         children: menuModel.list.map(_buildMenuList).toList(),
       );
     }

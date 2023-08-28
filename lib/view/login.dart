@@ -5,6 +5,7 @@ import '../controller/login_controller.dart';
 import '../hive/hive_db.dart';
 import '../value/app_color.dart';
 import '../value/app_string.dart';
+import '../widget/app_text.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -18,6 +19,7 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
+    loginController.passwordController.text="1";
     loginController.lstWaiter = HiveDB.getWaiter();
     if (loginController.lstWaiter.isNotEmpty) {
       loginController.selectedWaiter = loginController.lstWaiter[0];
@@ -101,7 +103,7 @@ class _LoginState extends State<Login> {
                             items: loginController.lstWaiter.map((e) {
                               return DropdownMenuItem<Map<String, dynamic>>(
                                 value: e,
-                                child: Text(e["waiterName"]),
+                                child: AppText(text:e["waiterName"],fontFamily: "BOS",),
                               );
                             }).toList(),
                             onChanged: (value) {
@@ -138,6 +140,10 @@ class _LoginState extends State<Login> {
                               return const NavOrder();
                             }));
                           }
+                          Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (context) {
+                              return const NavOrder();
+                            }));
                         });
                       },
                       style: ElevatedButton.styleFrom(

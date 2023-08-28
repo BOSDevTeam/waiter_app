@@ -1,4 +1,7 @@
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+
+import '../model/waiter_model.dart';
 
 class HiveDB {
   static const String connectorBox = "connector_box";

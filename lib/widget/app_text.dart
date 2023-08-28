@@ -9,6 +9,7 @@ class AppText extends StatelessWidget {
   final TextOverflow textOverflow;
   final TextAlign textAlign;
   final FontWeight fontWeight;
+  final String? fontFamily;
 
   const AppText(
       {super.key,
@@ -17,7 +18,8 @@ class AppText extends StatelessWidget {
       this.size = 16,
       this.textOverflow = TextOverflow.ellipsis,
       this.textAlign = TextAlign.left,
-      this.fontWeight = FontWeight.normal});
+      this.fontWeight = FontWeight.normal,
+      this.fontFamily});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,8 @@ class AppText extends StatelessWidget {
           color: color,
           fontSize: size,
           overflow: textOverflow,
-          fontWeight: fontWeight),
+          fontWeight: fontWeight,
+          fontFamily: fontFamily),
       textAlign: textAlign,
     );
   }

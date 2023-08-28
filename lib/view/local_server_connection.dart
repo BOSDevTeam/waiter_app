@@ -16,6 +16,15 @@ class _LocalServerConnectionState extends State<LocalServerConnection> {
   final localServerConController = LocalServerConController();
 
   @override
+  void initState() {
+    localServerConController.ipAddressController.text="192.168.100.11";
+    localServerConController.databaseNameController.text="RestDB";
+    localServerConController.databaseLoginUserController.text="sa";
+    localServerConController.databaseLoginPasswordController.text="nya";
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,

@@ -41,4 +41,8 @@ class AppString {
   static const String numberOrderItem = "Number Order Item";
   static const String delete = "Delete";
   static const String tableSituation = "Table Situation";
+  static const String viewOrder = "View Order";
+  static const String getBill = "Get Bill";
+  static const String cancel = "Cancel";
+  static const String add = "Add";
 }
