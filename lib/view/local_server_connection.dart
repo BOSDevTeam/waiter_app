@@ -17,10 +17,10 @@ class _LocalServerConnectionState extends State<LocalServerConnection> {
 
   @override
   void initState() {
-    localServerConController.ipAddressController.text="192.168.99.185";
+    localServerConController.ipAddressController.text="192.168.100.11";
     localServerConController.databaseNameController.text="RestDB";
     localServerConController.databaseLoginUserController.text="sa";
-    localServerConController.databaseLoginPasswordController.text="2012";
+    localServerConController.databaseLoginPasswordController.text="nya";
     super.initState();
   }
 

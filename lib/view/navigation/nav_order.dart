@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:waiter_app/hive/hive_db.dart';
+import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/widget/app_text.dart';
 import 'package:waiter_app/view/table_situation.dart';
 
-import '../../controller/order_provider.dart';
+import '../../provider/order_provider.dart';
 import '../../model/item_model.dart';
 import '../../model/main_menu_model.dart';
 import '../../model/menu_model.dart';
@@ -35,42 +35,48 @@ class _NavOrderState extends State<NavOrder> {
   @override
   void initState() {
     super.initState();
-    lstMainMenu = HiveDB.getMainMenu();
-    lstSubMenu = HiveDB.getSubMenu();
-    lstItem = HiveDB.getItem();
 
-    for (int i = 0; i < lstMainMenu.length; i++) {
-      mainMenu = MenuModel(list: []);
-      mainMenu.id = lstMainMenu[i]["mainMenuId"].toString();
-      mainMenu.name = lstMainMenu[i]["mainMenuName"];
-      mainMenu.type = 1;
+    DatabaseHelper().getMainMenu().then((value) {
+      lstMainMenu = value;
+      DatabaseHelper().getSubMenu().then((value) {
+        lstSubMenu = value;
+        DatabaseHelper().getItem().then((value) {
+          lstItem = value;
+          for (int i = 0; i < lstMainMenu.length; i++) {
+            mainMenu = MenuModel(list: []);
+            mainMenu.id = lstMainMenu[i]["mainMenuId"].toString();
+            mainMenu.name = lstMainMenu[i]["mainMenuName"];
+            mainMenu.type = 1;
 
-      List<Map<String, dynamic>> subMenuList = lstSubMenu
-          .where((element) =>
-              element["mainMenuId"] == lstMainMenu[i]["mainMenuId"])
-          .toList();
-      for (int j = 0; j < subMenuList.length; j++) {
-        subMenu = MenuModel(list: []);
-        subMenu.id = subMenuList[j]["subMenuId"].toString();
-        subMenu.name = subMenuList[j]["subMenuName"];
-        subMenu.type = 2;
+            List<Map<String, dynamic>> subMenuList = lstSubMenu
+                .where((element) =>
+                    element["mainMenuId"] == lstMainMenu[i]["mainMenuId"])
+                .toList();
+            for (int j = 0; j < subMenuList.length; j++) {
+              subMenu = MenuModel(list: []);
+              subMenu.id = subMenuList[j]["subMenuId"].toString();
+              subMenu.name = subMenuList[j]["subMenuName"];
+              subMenu.type = 2;
 
-        List<Map<String, dynamic>> itemList = lstItem
-            .where((element) =>
-                element["subMenuId"] == subMenuList[j]["subMenuId"])
-            .toList();
-        for (int k = 0; k < itemList.length; k++) {
-          MenuModel item = MenuModel(list: []);
-          item.id = itemList[k]["itemId"];
-          item.name = itemList[k]["itemName"];
-          item.type = 3;
-          subMenu.list.add(item);
-        }
+              List<Map<String, dynamic>> itemList = lstItem
+                  .where((element) =>
+                      element["subMenuId"] == subMenuList[j]["subMenuId"])
+                  .toList();
+              for (int k = 0; k < itemList.length; k++) {
+                MenuModel item = MenuModel(list: []);
+                item.id = itemList[k]["itemId"];
+                item.name = itemList[k]["itemName"];
+                item.type = 3;
+                subMenu.list.add(item);
+              }
 
-        mainMenu.list.add(subMenu);
-      }
-      lstMenu.add(mainMenu);
-    }
+              mainMenu.list.add(subMenu);
+            }
+            lstMenu.add(mainMenu);
+          }
+        });
+      });
+    });
   }
 
   @override
@@ -278,10 +284,18 @@ class _NavOrderState extends State<NavOrder> {
                       width: 5,
                     ),
                     AppText(
-                      text: data.taste.toString(),
-                      fontFamily: "BOS",
-                      size: 14,
-                    )
+                        text: data.commonTaste.toString(),
+                        fontFamily: "BOS",
+                        size: 14,
+                        color: Colors.blue),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    AppText(
+                        text: data.tasteByItem.toString(),
+                        fontFamily: "BOS",
+                        size: 14,
+                        color: Colors.green)
                   ],
                 ),
                 const SizedBox(
@@ -342,7 +356,7 @@ class _NavOrderState extends State<NavOrder> {
                     ),
                     InkWell(
                         onTapDown: (details) => _getTapPosition(details),
-                        onLongPress: () => _showContextMenu(context),
+                        onLongPress: () => _showContextMenu(context, index),
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
@@ -368,7 +382,7 @@ class _NavOrderState extends State<NavOrder> {
     });
   }
 
-  void _showContextMenu(BuildContext context) async {
+  void _showContextMenu(BuildContext context, int index) async {
     final RenderObject? overlay =
         Overlay.of(context).context.findRenderObject();
 
@@ -405,13 +419,25 @@ class _NavOrderState extends State<NavOrder> {
     switch (result) {
       case AppString.commonTaste:
         showDialog<void>(
+            barrierDismissible: false,
             context: context,
             builder: (BuildContext context) {
-              return const DialogTaste();
+              return DialogTaste(
+                orderIndex: index,
+                isTasteMulti: false,
+              );
             });
         break;
       case AppString.tasteByItem:
-        debugPrint('taste by item');
+        showDialog<void>(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return DialogTaste(
+                orderIndex: index,
+                isTasteMulti: true,
+              );
+            });
         break;
       case AppString.numberOrderItem:
         debugPrint('number order item');

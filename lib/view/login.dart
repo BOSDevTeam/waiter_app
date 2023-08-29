@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
 
 import '../controller/login_controller.dart';
-import '../hive/hive_db.dart';
 import '../value/app_color.dart';
 import '../value/app_string.dart';
 import '../widget/app_text.dart';
@@ -19,11 +19,14 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    loginController.passwordController.text="1";
-    loginController.lstWaiter = HiveDB.getWaiter();
-    if (loginController.lstWaiter.isNotEmpty) {
-      loginController.selectedWaiter = loginController.lstWaiter[0];
-    }
+    loginController.passwordController.text = "1";
+    DatabaseHelper().getWaiter().then((value) {
+      loginController.lstWaiter = value;
+      if (value.isNotEmpty) {
+        loginController.selectedWaiter = value[0];
+      }
+    });
+
     super.initState();
   }
 
@@ -103,7 +106,10 @@ class _LoginState extends State<Login> {
                             items: loginController.lstWaiter.map((e) {
                               return DropdownMenuItem<Map<String, dynamic>>(
                                 value: e,
-                                child: AppText(text:e["waiterName"],fontFamily: "BOS",),
+                                child: AppText(
+                                  text: e["waiterName"],
+                                  fontFamily: "BOS",
+                                ),
                               );
                             }).toList(),
                             onChanged: (value) {
@@ -141,9 +147,9 @@ class _LoginState extends State<Login> {
                             }));
                           }
                           Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) {
-                              return const NavOrder();
-                            }));
+                              MaterialPageRoute(builder: (context) {
+                            return const NavOrder();
+                          }));
                         });
                       },
                       style: ElevatedButton.styleFrom(

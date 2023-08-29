@@ -6,9 +6,9 @@ import 'package:dio/dio.dart';
 
 import '../api/apiservice.dart';
 import '../controller/data_downloading_controller.dart';
-import '../controller/order_provider.dart';
+import '../database/database_helper.dart';
+import '../provider/order_provider.dart';
 import '../controller/table_situation_controller.dart';
-import '../hive/hive_db.dart';
 import '../model/connector_model.dart';
 import '../value/app_color.dart';
 import '../value/app_string.dart';
@@ -28,24 +28,33 @@ class _TableSituationState extends State<TableSituation> {
 
   @override
   void initState() {
-    dataDownloadingController.lstBaseUrl = HiveDB.getBaseUrl();
-    apiService = ApiService(
-        dio: Dio(BaseOptions(
-            baseUrl: dataDownloadingController.lstBaseUrl[0]["baseUrl"])));
-    dataDownloadingController.lstConnector = HiveDB.getConnector();
-    dataDownloadingController.connectorModel = ConnectorModel(
-        ipAddress: dataDownloadingController.lstConnector[0]["ipAddress"],
-        databaseName: dataDownloadingController.lstConnector[0]["databaseName"],
-        databaseLoginUser: dataDownloadingController.lstConnector[0]
-            ["databaseLoginUser"],
-        databaseLoginPassword: dataDownloadingController.lstConnector[0]
-            ["databaseLoginPassword"]);
+    DatabaseHelper().getBaseUrl().then((value) {
+      dataDownloadingController.lstBaseUrl = value;
 
-    tableSituationController.lstTableType = HiveDB.getTableType();
-    if (tableSituationController.lstTableType.isNotEmpty) {
-      tableSituationController.selectedTableType =
-          tableSituationController.lstTableType[0];
-    }
+      apiService = ApiService(
+          dio: Dio(BaseOptions(
+              baseUrl: dataDownloadingController.lstBaseUrl[0]["BaseUrl"])));
+
+      DatabaseHelper().getConnector().then((value) {
+        dataDownloadingController.lstConnector = value;
+        dataDownloadingController.connectorModel = ConnectorModel(
+            ipAddress: dataDownloadingController.lstConnector[0]["IPAddress"],
+            databaseName: dataDownloadingController.lstConnector[0]
+                ["DatabaseName"],
+            databaseLoginUser: dataDownloadingController.lstConnector[0]
+                ["DatabaseLoginUser"],
+            databaseLoginPassword: dataDownloadingController.lstConnector[0]
+                ["DatabaseLoginPassword"]);
+
+        DatabaseHelper().getTableType().then((value) {
+          tableSituationController.lstTableType = value;
+          if (tableSituationController.lstTableType.isNotEmpty) {
+            tableSituationController.selectedTableType =
+                tableSituationController.lstTableType[0];
+          }
+        });
+      });
+    });
     super.initState();
   }
 
@@ -205,12 +214,14 @@ class _TableSituationState extends State<TableSituation> {
                         child: tableSituationController
                                     .selectedTableType["tableTypeId"] !=
                                 tableType["tableTypeId"]
-                            ? AppText(text: tableType["tableTypeName"],fontFamily: "BOS",)
+                            ? AppText(
+                                text: tableType["tableTypeName"],
+                                fontFamily: "BOS",
+                              )
                             : AppText(
                                 text: tableType["tableTypeName"],
                                 color: Colors.white,
-                                fontFamily: "BOS"
-                              )),
+                                fontFamily: "BOS")),
                   ),
                 ),
               );

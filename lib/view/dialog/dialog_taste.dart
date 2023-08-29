@@ -1,25 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:waiter_app/controller/taste_provider.dart';
+import 'package:waiter_app/database/database_helper.dart';
+import 'package:waiter_app/provider/taste_provider.dart';
 import 'package:waiter_app/widget/app_text.dart';
 
-import '../../hive/hive_db.dart';
+import '../../provider/order_provider.dart';
 import '../../value/app_color.dart';
 import '../../value/app_string.dart';
+import '../navigation/nav_order.dart';
 
 class DialogTaste extends StatefulWidget {
-  const DialogTaste({super.key});
+  final int orderIndex;
+  final bool isTasteMulti;
+  const DialogTaste(
+      {super.key, required this.orderIndex, required this.isTasteMulti});
 
   @override
-  State<DialogTaste> createState() => _DialogTasteState();
+  State<DialogTaste> createState() =>
+      _DialogTasteState(orderIndex, isTasteMulti);
 }
 
 class _DialogTasteState extends State<DialogTaste> {
   final tasteProvider = TasteProvider();
+  int orderIndex;
+  bool isTasteMulti;
+
+  _DialogTasteState(this.orderIndex, this.isTasteMulti);
 
   @override
   void initState() {
-    tasteProvider.lstTaste = HiveDB.getTaste();
+    if (!isTasteMulti) {
+      DatabaseHelper().getTaste().then((value) {
+        tasteProvider.lstTaste = value;
+      });
+    } else {
+      DatabaseHelper().getTasteMulti().then((value) {
+        tasteProvider.lstTaste = value;
+      });
+    }
     super.initState();
   }
 
@@ -27,36 +45,27 @@ class _DialogTasteState extends State<DialogTaste> {
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, setstate) {
       return AlertDialog(
-        title: const AppText(text: AppString.commonTaste),
+        title: !isTasteMulti
+            ? const AppText(text: AppString.commonTaste)
+            : const AppText(text: AppString.tasteByItem),
         content: Column(
           children: [
-            Container(
-              //color: Colors.lightBlue,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Consumer<TasteProvider>(builder: (context, provider, child) {
-                    return 
-                    Expanded(
-                      child: TextFormField(
-                        controller: provider.tasteController,
-                        style: TextStyle(fontFamily: "BOS"),
-                        decoration: InputDecoration(border: OutlineInputBorder()),
-                        maxLines: null,
-                        keyboardType: TextInputType.multiline,
-                      ),
-                    );
-                    /* AppText(
-                      text: provider.selectedTaste,
-                      color: AppColor.primary,
-                      fontFamily: "BOS",
-                    ); */
-                  }),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.cancel)),
-                ],
-              ),
-            ),
-            Expanded(child: _taste()),
+            Consumer<TasteProvider>(builder: (context, provider, child) {
+              return TextFormField(
+                controller: provider.tasteController,
+                style: const TextStyle(fontFamily: "BOS"),
+                decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                        onPressed: () {
+                          context.read<TasteProvider>().clearSelectedTaste();
+                        },
+                        icon: const Icon(Icons.cancel))),
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+              );
+            }),
+            Expanded(child: _taste(isTasteMulti)),
           ],
         ),
         actions: [
@@ -65,10 +74,26 @@ class _DialogTasteState extends State<DialogTaste> {
             children: [
               TextButton(
                   onPressed: () {
+                    context.read<TasteProvider>().clearSelectedTaste();
                     Navigator.pop(context);
                   },
                   child: const Text(AppString.cancel)),
-              ElevatedButton(onPressed: () {}, child: const Text(AppString.add))
+              ElevatedButton(
+                  onPressed: () {
+                    String tastes = context.read<TasteProvider>().selectedTaste;
+                    if (!isTasteMulti) {
+                      context
+                          .read<OrderProvider>()
+                          .updateCommonTaste(orderIndex, tastes);
+                    } else {
+                      context
+                          .read<OrderProvider>()
+                          .updateTasteByItem(orderIndex, tastes);
+                    }
+                    context.read<TasteProvider>().clearSelectedTaste();
+                    Navigator.pop(context);
+                  },
+                  child: const Text(AppString.add))
             ],
           )
         ],
@@ -76,7 +101,7 @@ class _DialogTasteState extends State<DialogTaste> {
     });
   }
 
-  Widget _taste() {
+  Widget _taste(bool isTasteMulti) {
     return SizedBox(
       width: double.maxFinite,
       child: ListView.builder(
@@ -88,6 +113,12 @@ class _DialogTasteState extends State<DialogTaste> {
                 text: data["tasteName"],
                 fontFamily: "BOS",
               ),
+              trailing: isTasteMulti
+                  ? AppText(
+                      text: data["price"],
+                      size: 14,
+                    )
+                  : Container(),
               onTap: () {
                 context
                     .read<TasteProvider>()

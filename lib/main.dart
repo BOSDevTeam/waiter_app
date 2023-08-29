@@ -1,25 +1,21 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:waiter_app/controller/order_provider.dart';
-import 'package:waiter_app/controller/taste_provider.dart';
-import 'package:waiter_app/hive/hive_db.dart';
+import 'package:waiter_app/database/database_helper.dart';
+import 'package:waiter_app/provider/order_provider.dart';
+import 'package:waiter_app/provider/taste_provider.dart';
 import 'package:waiter_app/view/dialog/dialog_taste.dart';
 import 'package:waiter_app/view/local_server_connection.dart';
 import 'package:waiter_app/view/login.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
 import 'package:waiter_app/view/navigation/nav_setting.dart';
 import 'package:waiter_app/view/navigation/nav_table.dart';
-import 'package:waiter_app/view/table_situation.dart';
 
 import 'value/app_color.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  await HiveDB.openAllBox();
 
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   bool? isRegisterSuccess = sharedPreferences.getBool("IsRegisterSuccess");
@@ -39,8 +35,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<OrderProvider>(create: (context)=>OrderProvider(),child: const NavOrder(),),
-        ChangeNotifierProvider<TasteProvider>(create: (context)=>TasteProvider(),child: const DialogTaste(),)
+        ChangeNotifierProvider<OrderProvider>(
+          create: (context) => OrderProvider(),
+          child: const NavOrder(),
+        ),
+        ChangeNotifierProvider<TasteProvider>(
+          create: (context) => TasteProvider(),
+          child: const DialogTaste(
+            orderIndex: -1,
+            isTasteMulti: false,
+          ),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -64,11 +69,10 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
           useMaterial3: true,
         ),
-        /* home: AnimatedSplashScreen(
+        home: AnimatedSplashScreen(
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
-            nextScreen: _startWidget()), */
-        home: _startWidget(),
+            nextScreen: _startWidget()),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const NavTable(),
@@ -78,17 +82,12 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  /* Widget _startWidget() {
+  Widget _startWidget() {
     if (isRegisterSuccess == null || isRegisterSuccess == false) {
-      HiveDB.clearAllBox();
+      DatabaseHelper().deleteAllData();
       return const LocalServerConnection();
     } else {
       return const Login();
     }
-  }  */
-
-  Widget _startWidget() {
-      HiveDB.clearAllBox();
-      return const LocalServerConnection();
   }
 }

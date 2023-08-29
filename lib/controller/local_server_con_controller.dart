@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:waiter_app/database/database_helper.dart';
 
-import '../hive/hive_db.dart';
 import '../value/app_string.dart';
 
 class LocalServerConController {
@@ -14,15 +14,15 @@ class LocalServerConController {
     if (isValidateControl()) {
       String ipAddress = ipAddressController.text;
 
-      HiveDB.insertBaseUrl(
-          {"baseUrl": "http://$ipAddress/WaiterWebService/api/"});
+      DatabaseHelper().insertBaseUrl({"baseUrl": "http://$ipAddress/WaiterWebService/api/"});
 
-      HiveDB.insertConnectorBox({
+      DatabaseHelper().insertConnector({
         "ipAddress": ipAddressController.text,
         "databaseName": databaseNameController.text,
         "databaseLoginUser": databaseLoginUserController.text,
         "databaseLoginPassword": databaseLoginPasswordController.text
       });
+     
       return true;
     }
     return false;

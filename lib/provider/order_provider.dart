@@ -7,7 +7,7 @@ class OrderProvider extends ChangeNotifier {
   late Map<String, dynamic> _selectedTable = {"tableId": 0, "tableName": "-"};
 
   List<OrderModel> get lstOrder => _lstOrder;
-  Map<String, dynamic> get selectedTable=>_selectedTable;
+  Map<String, dynamic> get selectedTable => _selectedTable;
 
   void addOrder(OrderModel orderModel) {
     _lstOrder.add(orderModel);
@@ -26,8 +26,18 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  void setSelectedTable(Map<String, dynamic> selectedTable){
-    _selectedTable=selectedTable;
+  void setSelectedTable(Map<String, dynamic> selectedTable) {
+    _selectedTable = selectedTable;
+    notifyListeners();
+  }
+
+  void updateCommonTaste(int index, String tastes) {
+    _lstOrder[index].commonTaste = tastes;
+    notifyListeners();
+  }
+
+  void updateTasteByItem(int index, String tastes) {
+    _lstOrder[index].tasteByItem = tastes;
     notifyListeners();
   }
 }
