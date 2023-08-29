@@ -7,7 +7,8 @@ import '../value/app_string.dart';
 class LoginController {
   final passwordController = TextEditingController();
   List<Map<String, dynamic>> lstWaiter = [];
-  Map<String, dynamic> selectedWaiter= {"waiterId": 0, "waiterName": "-"};
+  //Map<String, dynamic> selectedWaiter= {"waiterId": 0, "waiterName": "-"};
+  late Map<String, dynamic> selectedWaiter;
 
   Future<bool> authenticate() async {
     if (isValidateControl()) {

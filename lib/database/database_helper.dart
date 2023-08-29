@@ -7,7 +7,7 @@ class DatabaseHelper {
   static const String tbConnector = "Connector";
   static const String tbWaiter = "Waiter";
   static const String tbTableType = "TableType";
-  static const String tbTable = "Table";
+  static const String tbTable = "RestTable";
   static const String tbMainMenu = "MainMenu";
   static const String tbSubMenu = "SubMenu";
   static const String tbItem = "Item";

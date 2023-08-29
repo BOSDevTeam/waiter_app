@@ -45,7 +45,11 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getWaiter(dataDownloadingController.connectorModel)
             .then((lstWaiter) {
           for (int i = 0; i < lstWaiter.length; i++) {
-            DatabaseHelper().insertWaiter(lstWaiter[i]);
+            DatabaseHelper().insertWaiter({
+              "waiterId": lstWaiter[i].waiterId,
+              "waiterName": lstWaiter[i].waiterName,
+              "password": lstWaiter[i].password
+            });
             /* HiveDB.insertWaiter({
           "waiterId": lstWaiter[i].waiterId,
           "waiterName": lstWaiter[i].waiterName,
@@ -62,7 +66,11 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getMainMenu(dataDownloadingController.connectorModel)
             .then((lstMainMenu) {
           for (int i = 0; i < lstMainMenu.length; i++) {
-            DatabaseHelper().insertMainMenu(lstMainMenu[i]);
+            DatabaseHelper().insertMainMenu({
+              "mainMenuId": lstMainMenu[i].mainMenuId,
+              "mainMenuName": lstMainMenu[i].mainMenuName,
+              "counterId": lstMainMenu[i].counterId
+            });
             /* HiveDB.insertMainMenu({
           "mainMenuId": lstMainMenu[i].mainMenuId,
           "mainMenuName": lstMainMenu[i].mainMenuName,
@@ -79,7 +87,12 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getSubMenu(dataDownloadingController.connectorModel)
             .then((lstSubMenu) {
           for (int i = 0; i < lstSubMenu.length; i++) {
-            DatabaseHelper().insertSubMenu(lstSubMenu[i]);
+            DatabaseHelper().insertSubMenu({
+              "subMenuId": lstSubMenu[i].subMenuId,
+              "mainMenuId": lstSubMenu[i].mainMenuId,
+              "subMenuName": lstSubMenu[i].subMenuName,
+              "incomeId": lstSubMenu[i].incomeId
+            });
             /* HiveDB.insertSubMenu({
           "subMenuId": lstSubMenu[i].subMenuId,
           "mainMenuId": lstSubMenu[i].mainMenuId,
@@ -97,7 +110,18 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getItem(dataDownloadingController.connectorModel)
             .then((lstItem) {
           for (int i = 0; i < lstItem.length; i++) {
-            DatabaseHelper().insertItem(lstItem[i]);
+            DatabaseHelper().insertItem({
+              "itemId": lstItem[i].itemId,
+              "subMenuId": lstItem[i].subMenuId,
+              "itemName": lstItem[i].itemName,
+              "salePrice": lstItem[i].salePrice,
+              "sType": lstItem[i].sType,
+              "outOfOrder": lstItem[i].outOfOrder,
+              "ingredients": lstItem[i].ingredients,
+              "barcode": lstItem[i].barcode,
+              "noDiscount": lstItem[i].noDiscount,
+              "itemDiscount": lstItem[i].itemDiscount
+            });
             /* HiveDB.insertItem({
           "itemId": lstItem[i].itemId,
           "subMenuId": lstItem[i].subMenuId,
@@ -121,7 +145,10 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getSystemItem(dataDownloadingController.connectorModel)
             .then((lstSystemItem) {
           for (int i = 0; i < lstSystemItem.length; i++) {
-            DatabaseHelper().insertSystemItem(lstSystemItem[i]);
+            DatabaseHelper().insertSystemItem({
+              "systemId": lstSystemItem[i].systemId,
+              "itemId": lstSystemItem[i].itemId
+            });
             /* HiveDB.insertSystemItem({
           "systemId": lstSystemItem[i].systemId,
           "itemId": lstSystemItem[i].itemId
@@ -137,7 +164,10 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getTableType(dataDownloadingController.connectorModel)
             .then((lstTableType) {
           for (int i = 0; i < lstTableType.length; i++) {
-            DatabaseHelper().insertTableType(lstTableType[i]);
+            DatabaseHelper().insertTableType({
+              "tableTypeId": lstTableType[i].tableTypeId,
+              "tableTypeName": lstTableType[i].tableTypeName
+            });
             /*   HiveDB.insertTableType({
           "tableTypeId": lstTableType[i].tableTypeId,
           "tableTypeName": lstTableType[i].tableTypeName
@@ -153,7 +183,11 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getTable(dataDownloadingController.connectorModel)
             .then((lstTable) {
           for (int i = 0; i < lstTable.length; i++) {
-            DatabaseHelper().insertTable(lstTable[i]);
+            DatabaseHelper().insertTable({
+              "tableId": lstTable[i].tableId,
+              "tableName": lstTable[i].tableName,
+              "tableTypeId": lstTable[i].tableTypeId
+            });
             /*  HiveDB.insertTable({
           "tableId": lstTable[i].tableId,
           "tableName": lstTable[i].tableName,
@@ -170,7 +204,10 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getTaste(dataDownloadingController.connectorModel)
             .then((lstTaste) {
           for (int i = 0; i < lstTaste.length; i++) {
-            DatabaseHelper().insertTaste(lstTaste[i]);
+            DatabaseHelper().insertTaste({
+              "tasteId": lstTaste[i].tasteId,
+              "tasteName": lstTaste[i].tasteName
+            });
             // HiveDB.insertTaste({
             //   "tasteId": lstTaste[i].tasteId,
             //   "tasteName": lstTaste[i].tasteName
@@ -186,7 +223,15 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getTasteMulti(dataDownloadingController.connectorModel)
             .then((lstTasteMulti) {
           for (int i = 0; i < lstTasteMulti.length; i++) {
-            DatabaseHelper().insertTasteMulti(lstTasteMulti[i]);
+            DatabaseHelper().insertTasteMulti({
+              "tId": lstTasteMulti[i].tId,
+              "groupId": lstTasteMulti[i].groupId,
+              "tasteId": lstTasteMulti[i].tasteId,
+              "tasteName": lstTasteMulti[i].tasteName,
+              "tasteShort": lstTasteMulti[i].tasteShort,
+              "tasteSort": lstTasteMulti[i].tasteSort,
+              "price": lstTasteMulti[i].price
+            });
             /* HiveDB.insertTasteMulti({
           "tId": lstTasteMulti[i].tId,
           "groupId": lstTasteMulti[i].groupId,
@@ -207,7 +252,13 @@ class _DataDownloadingState extends State<DataDownloading> {
             .getSystemSetting(dataDownloadingController.connectorModel)
             .then((lstSystemSetting) {
           for (int i = 0; i < lstSystemSetting.length; i++) {
-            DatabaseHelper().insertSystemSetting(lstSystemSetting[i]);
+            DatabaseHelper().insertSystemSetting({
+              "tax": lstSystemSetting[i].tax,
+              "service": lstSystemSetting[i].service,
+              "adminPassword": lstSystemSetting[i].adminPassword,
+              "title": lstSystemSetting[i].title,
+              "userPassword": lstSystemSetting[i].userPassword
+            });
             /* HiveDB.insertSystemItem({
           "tax": lstSystemSetting[i].tax,
           "service": lstSystemSetting[i].service,
