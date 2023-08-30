@@ -154,7 +154,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getItem() async {
     _db = await _createDatabase();
     List<Map<String, dynamic>> list = await _db.rawQuery(
-        "SELECT ItemID,SubMenuID,ItemName,SalePrice,SType,OutOfOrder,Ingredients,Barcode,NoDiscount,ItemDiscount FROM $tbItem");
+        "SELECT ItemID,item.SubMenuID,ItemName,SalePrice,SType,OutOfOrder,Ingredients,Barcode,NoDiscount,ItemDiscount,sub.IncomeID FROM $tbItem item INNER JOIN $tbSubMenu sub ON item.SubMenuID=sub.SubMenuID");
     return list;
   }
 
@@ -199,10 +199,10 @@ class DatabaseHelper {
     return await _db.insert(tbTasteMulti, data);
   }
 
-  Future<List<Map<String, dynamic>>> getTasteMulti() async {
+  Future<List<Map<String, dynamic>>> getTasteMulti(int incomeId) async {
     _db = await _createDatabase();
     List<Map<String, dynamic>> list = await _db.rawQuery(
-        "SELECT TID,GroupID,TasteID,TasteName,TasteShort,TasteSort,Price FROM $tbTasteMulti");
+        "SELECT TID,GroupID,TasteID,TasteName,TasteShort,TasteSort,Price FROM $tbTasteMulti WHERE GroupID=$incomeId");
     return list;
   }
 }

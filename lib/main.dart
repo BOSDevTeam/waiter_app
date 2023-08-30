@@ -2,15 +2,19 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app/provider/login_provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/provider/order_provider.dart';
+import 'package:waiter_app/provider/table_situation_provider.dart';
 import 'package:waiter_app/provider/taste_provider.dart';
+import 'package:waiter_app/test.dart';
 import 'package:waiter_app/view/dialog/dialog_taste.dart';
 import 'package:waiter_app/view/local_server_connection.dart';
 import 'package:waiter_app/view/login.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
 import 'package:waiter_app/view/navigation/nav_setting.dart';
 import 'package:waiter_app/view/navigation/nav_table.dart';
+import 'package:waiter_app/view/table_situation.dart';
 
 import 'value/app_color.dart';
 
@@ -35,15 +39,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<LoginProvider>(
+          create: (context) => LoginProvider(),
+          child: const Login(),
+        ),
         ChangeNotifierProvider<OrderProvider>(
           create: (context) => OrderProvider(),
           child: const NavOrder(),
+        ),
+        ChangeNotifierProvider<TableSituationProvider>(
+          create: (context) => TableSituationProvider(),
+          child: const TableSituation(),
         ),
         ChangeNotifierProvider<TasteProvider>(
           create: (context) => TasteProvider(),
           child: const DialogTaste(
             orderIndex: -1,
             isTasteMulti: false,
+            incomeId: 0,
           ),
         )
       ],
@@ -69,10 +82,11 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
           useMaterial3: true,
         ),
-        home: AnimatedSplashScreen(
+        /* home: AnimatedSplashScreen(
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
-            nextScreen: _startWidget()),
+            nextScreen: _startWidget()), */
+            home:Login(),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const NavTable(),

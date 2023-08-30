@@ -12,30 +12,32 @@ import '../navigation/nav_order.dart';
 class DialogTaste extends StatefulWidget {
   final int orderIndex;
   final bool isTasteMulti;
+  final int incomeId;
   const DialogTaste(
-      {super.key, required this.orderIndex, required this.isTasteMulti});
+      {super.key, required this.orderIndex, required this.isTasteMulti,required this.incomeId});
 
   @override
   State<DialogTaste> createState() =>
-      _DialogTasteState(orderIndex, isTasteMulti);
+      _DialogTasteState(orderIndex, isTasteMulti,incomeId);
 }
 
 class _DialogTasteState extends State<DialogTaste> {
   final tasteProvider = TasteProvider();
   int orderIndex;
   bool isTasteMulti;
+  int incomeId;
 
-  _DialogTasteState(this.orderIndex, this.isTasteMulti);
+  _DialogTasteState(this.orderIndex, this.isTasteMulti, this.incomeId);
 
   @override
   void initState() {
     if (!isTasteMulti) {
       DatabaseHelper().getTaste().then((value) {
-        tasteProvider.lstTaste = value;
+        context.read<TasteProvider>().setTaste(value);        
       });
     } else {
-      DatabaseHelper().getTasteMulti().then((value) {
-        tasteProvider.lstTaste = value;
+      DatabaseHelper().getTasteMulti(incomeId).then((value) {
+        context.read<TasteProvider>().setTaste(value);       
       });
     }
     super.initState();
@@ -65,7 +67,9 @@ class _DialogTasteState extends State<DialogTaste> {
                 keyboardType: TextInputType.multiline,
               );
             }),
-            Expanded(child: _taste(isTasteMulti)),
+            Consumer<TasteProvider>(builder: (context, provider, child) {
+              return Expanded(child: _taste(isTasteMulti, provider.lstTaste));
+            })
           ],
         ),
         actions: [
@@ -101,28 +105,31 @@ class _DialogTasteState extends State<DialogTaste> {
     });
   }
 
-  Widget _taste(bool isTasteMulti) {
+  Widget _taste(bool isTasteMulti, List<Map<String, dynamic>> lstTaste) {
     return SizedBox(
       width: double.maxFinite,
       child: ListView.builder(
-          itemCount: tasteProvider.lstTaste.length,
+          itemCount: lstTaste.length,
           itemBuilder: (context, index) {
-            Map<String, dynamic> data = tasteProvider.lstTaste[index];
+            Map<String, dynamic> data = lstTaste[index];
             return ListTile(
               leading: AppText(
-                text: data["tasteName"],
+                text: data["TasteName"],
                 fontFamily: "BOS",
               ),
-              trailing: isTasteMulti
-                  ? AppText(
-                      text: data["price"],
-                      size: 14,
+              title: isTasteMulti
+                  ? Align(
+                      alignment: Alignment.centerRight,
+                      child: AppText(
+                        text: data["Price"].toString(),
+                        size: 14,
+                      ),
                     )
                   : Container(),
               onTap: () {
                 context
                     .read<TasteProvider>()
-                    .setSelectedTaste(data["tasteName"]);
+                    .setSelectedTaste(data["TasteName"]);
               },
             );
           }),

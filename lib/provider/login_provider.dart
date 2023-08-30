@@ -4,16 +4,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../value/app_string.dart';
 
-class LoginController {
+class LoginProvider extends ChangeNotifier {
   final passwordController = TextEditingController();
-  List<Map<String, dynamic>> lstWaiter = [];
-  //Map<String, dynamic> selectedWaiter= {"waiterId": 0, "waiterName": "-"};
-  late Map<String, dynamic> selectedWaiter;
+  List<Map<String, dynamic>> _lstWaiter = [];
+  Map<String, dynamic> _selectedWaiter = {
+    "WaiterID": 0,
+    "WaiterName": "",
+  };
+
+  List<Map<String, dynamic>> get lstWaiter => _lstWaiter;
+
+  Map<String, dynamic> get selectedWaiter => _selectedWaiter;
+
+  void setWaiterList(List<Map<String, dynamic>> lstWaiter) {
+    _lstWaiter = lstWaiter;
+    notifyListeners();
+  }
+
+  void setSelectedWaiter(Map<String, dynamic> selectedWaiter) {
+    _selectedWaiter = selectedWaiter;
+    notifyListeners();
+  }
 
   Future<bool> authenticate() async {
     if (isValidateControl()) {
-      int waiterId = selectedWaiter["waiterId"];
-      String waiterName = selectedWaiter["waiterName"];
+      int waiterId = _selectedWaiter["waiterId"];
+      String waiterName = _selectedWaiter["waiterName"];
 
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
@@ -28,11 +44,11 @@ class LoginController {
   bool isValidateControl() {
     String password = "";
     String inputPassword = passwordController.text;
-    if (lstWaiter.isNotEmpty) {
-      password = selectedWaiter["password"];
+    if (_lstWaiter.isNotEmpty) {
+      password = _selectedWaiter["password"];
     }
 
-    if (lstWaiter.isEmpty) {
+    if (_lstWaiter.isEmpty) {
       Fluttertoast.showToast(msg: AppString.notFoundWaiter);
       return false;
     } else if (passwordController.text.isEmpty) {

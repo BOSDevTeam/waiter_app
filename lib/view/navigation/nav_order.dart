@@ -44,28 +44,29 @@ class _NavOrderState extends State<NavOrder> {
           lstItem = value;
           for (int i = 0; i < lstMainMenu.length; i++) {
             mainMenu = MenuModel(list: []);
-            mainMenu.id = lstMainMenu[i]["mainMenuId"].toString();
-            mainMenu.name = lstMainMenu[i]["mainMenuName"];
+            mainMenu.id = lstMainMenu[i]["MainMenuID"].toString();
+            mainMenu.name = lstMainMenu[i]["MainMenuName"];
             mainMenu.type = 1;
 
             List<Map<String, dynamic>> subMenuList = lstSubMenu
                 .where((element) =>
-                    element["mainMenuId"] == lstMainMenu[i]["mainMenuId"])
+                    element["MainMenuID"] == lstMainMenu[i]["MainMenuID"])
                 .toList();
             for (int j = 0; j < subMenuList.length; j++) {
               subMenu = MenuModel(list: []);
-              subMenu.id = subMenuList[j]["subMenuId"].toString();
-              subMenu.name = subMenuList[j]["subMenuName"];
+              subMenu.id = subMenuList[j]["SubMenuID"].toString();
+              subMenu.name = subMenuList[j]["SubMenuName"];
               subMenu.type = 2;
 
               List<Map<String, dynamic>> itemList = lstItem
                   .where((element) =>
-                      element["subMenuId"] == subMenuList[j]["subMenuId"])
+                      element["SubMenuID"] == subMenuList[j]["SubMenuID"])
                   .toList();
               for (int k = 0; k < itemList.length; k++) {
                 MenuModel item = MenuModel(list: []);
-                item.id = itemList[k]["itemId"];
-                item.name = itemList[k]["itemName"];
+                item.id = itemList[k]["ItemID"];
+                item.name = itemList[k]["ItemName"];
+                item.incomdId = itemList[k]["IncomeID"];
                 item.type = 3;
                 subMenu.list.add(item);
               }
@@ -74,6 +75,7 @@ class _NavOrderState extends State<NavOrder> {
             }
             lstMenu.add(mainMenu);
           }
+          context.read<OrderProvider>().setMenu(lstMenu);
         });
       });
     });
@@ -97,7 +99,9 @@ class _NavOrderState extends State<NavOrder> {
           ),
         ],
       ),
-      endDrawer: _drawer(lstMenu),
+      endDrawer: Consumer<OrderProvider>(builder: (context, provider, child) {
+        return _drawer(provider.lstMenu);
+      }),
       body: Container(
         color: AppColor.grey,
         child: Column(
@@ -274,30 +278,40 @@ class _NavOrderState extends State<NavOrder> {
             ),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    AppText(
-                      text: data.itemName,
-                      fontFamily: "BOS",
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    AppText(
-                        text: data.commonTaste.toString(),
-                        fontFamily: "BOS",
-                        size: 14,
-                        color: Colors.blue),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    AppText(
-                        text: data.tasteByItem.toString(),
-                        fontFamily: "BOS",
-                        size: 14,
-                        color: Colors.green)
-                  ],
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: AppText(
+                    text: data.itemName,
+                    fontFamily: "BOS",
+                  ),
                 ),
+                data.commonTaste!.isNotEmpty || data.tasteByItem!.isNotEmpty
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          data.commonTaste!.isNotEmpty
+                              ? Expanded(
+                                  child: Text(
+                                  data.commonTaste.toString(),
+                                  style: const TextStyle(
+                                      color: AppColor.primary500,
+                                      fontFamily: "BOS"),
+                                  maxLines: null,
+                                ))
+                              : Container(),
+                          data.tasteByItem!.isNotEmpty
+                              ? Expanded(
+                                  child: Text(
+                                  data.tasteByItem.toString(),
+                                  style: const TextStyle(
+                                      color: AppColor.primary500,
+                                      fontFamily: "BOS"),
+                                  maxLines: null,
+                                ))
+                              : Container(),
+                        ],
+                      )
+                    : Container(),
                 const SizedBox(
                   height: 10,
                 ),
@@ -356,7 +370,8 @@ class _NavOrderState extends State<NavOrder> {
                     ),
                     InkWell(
                         onTapDown: (details) => _getTapPosition(details),
-                        onLongPress: () => _showContextMenu(context, index),
+                        onLongPress: () =>
+                            _showContextMenu(context, index, data.incomdId),
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
@@ -382,7 +397,7 @@ class _NavOrderState extends State<NavOrder> {
     });
   }
 
-  void _showContextMenu(BuildContext context, int index) async {
+  void _showContextMenu(BuildContext context, int index, int incomeId) async {
     final RenderObject? overlay =
         Overlay.of(context).context.findRenderObject();
 
@@ -425,6 +440,7 @@ class _NavOrderState extends State<NavOrder> {
               return DialogTaste(
                 orderIndex: index,
                 isTasteMulti: false,
+                incomeId: 0,
               );
             });
         break;
@@ -436,6 +452,7 @@ class _NavOrderState extends State<NavOrder> {
               return DialogTaste(
                 orderIndex: index,
                 isTasteMulti: true,
+                incomeId: incomeId,
               );
             });
         break;
@@ -443,7 +460,7 @@ class _NavOrderState extends State<NavOrder> {
         debugPrint('number order item');
         break;
       case AppString.delete:
-        debugPrint('delete');
+        deleteOrder(index);
         break;
     }
   }
@@ -503,8 +520,15 @@ class _NavOrderState extends State<NavOrder> {
   }
 
   void addToOrder(MenuModel data) {
-    context.read<OrderProvider>().addOrder(
-        OrderModel(itemId: data.id!, itemName: data.name!, quantity: 1));
+    context.read<OrderProvider>().addOrder(OrderModel(
+        itemId: data.id!,
+        itemName: data.name!,
+        quantity: 1,
+        incomdId: data.incomdId ?? 0));
+  }
+
+  void deleteOrder(int index) {
+    context.read<OrderProvider>().deleteOrder(index);
   }
 
   Color _menuColor(int? type) {

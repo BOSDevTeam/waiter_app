@@ -8,7 +8,7 @@ import '../api/apiservice.dart';
 import '../controller/data_downloading_controller.dart';
 import '../database/database_helper.dart';
 import '../provider/order_provider.dart';
-import '../controller/table_situation_controller.dart';
+import '../provider/table_situation_provider.dart';
 import '../model/connector_model.dart';
 import '../value/app_color.dart';
 import '../value/app_string.dart';
@@ -22,7 +22,6 @@ class TableSituation extends StatefulWidget {
 
 class _TableSituationState extends State<TableSituation> {
   dynamic apiService;
-  final tableSituationController = TableSituationController();
   final dataDownloadingController = DataDownloadingController();
   Offset _tapPosition = Offset.zero;
 
@@ -47,10 +46,20 @@ class _TableSituationState extends State<TableSituation> {
                 ["DatabaseLoginPassword"]);
 
         DatabaseHelper().getTableType().then((value) {
-          tableSituationController.lstTableType = value;
-          if (tableSituationController.lstTableType.isNotEmpty) {
-            tableSituationController.selectedTableType =
-                tableSituationController.lstTableType[0];
+          if (value.isNotEmpty) {
+            context.read<TableSituationProvider>().setTableType(value);
+            context
+                .read<TableSituationProvider>()
+                .setSelectedTableType(value[0]);
+
+            apiService
+                .getTableSituation(dataDownloadingController.connectorModel,
+                    value[0]["TableTypeID"])
+                .then((lstTableSituation) {
+              context
+                  .read<TableSituationProvider>()
+                  .setTableSituation(lstTableSituation);
+            });
           }
         });
       });
@@ -70,34 +79,26 @@ class _TableSituationState extends State<TableSituation> {
         color: AppColor.grey,
         child: Column(
           children: [
-            _tableType(),
-            FutureBuilder<List<TableSituationModel>>(
-                future: apiService.getTableSituation(
-                    dataDownloadingController.connectorModel,
-                    tableSituationController.selectedTableType["tableTypeId"]),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    tableSituationController.lstTableSituation = snapshot.data!;
-                    return Expanded(child: _table());
-                  } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                })
+            Consumer<TableSituationProvider>(
+                builder: (context, provider, child) {
+              return _tableType(provider.lstTableType);
+            }),
+            Consumer<TableSituationProvider>(
+                builder: (context, provider, child) {
+              return Expanded(child: _table(provider.lstTableSituation));
+            }),
           ],
         ),
       ),
     );
   }
 
-  Widget _table() {
+  Widget _table(List<TableSituationModel> lstTableSituation) {
     return GridView.count(
         shrinkWrap: true,
         crossAxisCount: 3,
-        children: List.generate(
-            tableSituationController.lstTableSituation.length, (index) {
-          TableSituationModel table =
-              tableSituationController.lstTableSituation[index];
+        children: List.generate(lstTableSituation.length, (index) {
+          TableSituationModel table = lstTableSituation[index];
           return Container(
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.all(5),
@@ -168,58 +169,58 @@ class _TableSituationState extends State<TableSituation> {
         }));
   }
 
-  Widget _tableType() {
+  Widget _tableType(List<Map<String, dynamic>> lstTableType) {
     return SizedBox(
         height: 60,
         child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: tableSituationController.lstTableType.length,
+            itemCount: lstTableType.length,
             itemBuilder: (context, index) {
-              Map<String, dynamic> tableType =
-                  tableSituationController.lstTableType[index];
+              Map<String, dynamic> tableType = lstTableType[index];
               return Container(
-                decoration:
-                    tableSituationController.selectedTableType["tableTypeId"] !=
-                            tableType["tableTypeId"]
-                        ? BoxDecoration(
-                            border: Border.all(color: AppColor.grey),
-                            color: Colors.white)
-                        : BoxDecoration(
-                            border: Border.all(color: AppColor.grey),
-                            color: AppColor.primaryDark),
+                decoration: context
+                            .read<TableSituationProvider>()
+                            .selectedTableType["TableTypeID"] !=
+                        tableType["TableTypeID"]
+                    ? BoxDecoration(
+                        border: Border.all(color: AppColor.grey),
+                        color: Colors.white)
+                    : BoxDecoration(
+                        border: Border.all(color: AppColor.grey),
+                        color: AppColor.primaryDark),
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
                     splashColor: AppColor.primary300,
                     onTap: () {
-                      tableSituationController.selectedTableType =
-                          tableSituationController.lstTableType[index];
+                      context
+                          .read<TableSituationProvider>()
+                          .setSelectedTableType(tableType);
+
                       apiService
                           .getTableSituation(
                               dataDownloadingController.connectorModel,
-                              tableSituationController
-                                  .selectedTableType["tableTypeId"])
+                              tableType["TableTypeID"])
                           .then((lstTableSituation) {
-                        tableSituationController.lstTableSituation =
-                            lstTableSituation;
-                        setState(() {
-                          _table();
-                        });
+                        context
+                            .read<TableSituationProvider>()
+                            .setTableSituation(lstTableSituation);
                       });
                     },
                     child: Container(
                         width: 130,
                         height: 60,
                         alignment: Alignment.center,
-                        child: tableSituationController
-                                    .selectedTableType["tableTypeId"] !=
-                                tableType["tableTypeId"]
+                        child: context
+                                    .read<TableSituationProvider>()
+                                    .selectedTableType["TableTypeID"] !=
+                                tableType["TableTypeID"]
                             ? AppText(
-                                text: tableType["tableTypeName"],
+                                text: tableType["TableTypeName"],
                                 fontFamily: "BOS",
                               )
                             : AppText(
-                                text: tableType["tableTypeName"],
+                                text: tableType["TableTypeName"],
                                 color: Colors.white,
                                 fontFamily: "BOS")),
                   ),
