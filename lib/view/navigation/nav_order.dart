@@ -11,6 +11,7 @@ import '../../model/menu_model.dart';
 import '../../model/order_model.dart';
 import '../../model/sub_menu_model.dart';
 import '../../nav_drawer.dart';
+import '../../provider/setting_provider.dart';
 import '../../value/app_color.dart';
 import '../../value/app_string.dart';
 import '../dialog/dialog_taste.dart';
@@ -31,10 +32,15 @@ class _NavOrderState extends State<NavOrder> {
   MenuModel mainMenu = MenuModel(list: []);
   MenuModel subMenu = MenuModel(list: []);
   Offset _tapPosition = Offset.zero;
+  bool isHideSalePriceInItem = false;
 
   @override
   void initState() {
     super.initState();
+
+    context.read<SettingProvider>().getHideSalePriceInItem().then((value) {
+      isHideSalePriceInItem = value ?? false;
+    });
 
     DatabaseHelper().getMainMenu().then((value) {
       lstMainMenu = value;
@@ -67,6 +73,7 @@ class _NavOrderState extends State<NavOrder> {
                 item.id = itemList[k]["ItemID"];
                 item.name = itemList[k]["ItemName"];
                 item.incomdId = itemList[k]["IncomeID"];
+                item.salePrice = itemList[k]["SalePrice"];
                 item.type = 3;
                 subMenu.list.add(item);
               }
@@ -135,7 +142,7 @@ class _NavOrderState extends State<NavOrder> {
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return const TableSituation();
+                                  return const TableSituation(isFromNav: false);
                                 }));
                               },
                               child: const SizedBox(
@@ -370,8 +377,15 @@ class _NavOrderState extends State<NavOrder> {
                     ),
                     InkWell(
                         onTapDown: (details) => _getTapPosition(details),
-                        onLongPress: () =>
-                            _showContextMenu(context, index, data.incomdId),
+                        onLongPress: () {
+                          context
+                              .read<SettingProvider>()
+                              .getUseTasteByMenu()
+                              .then((value) {
+                            _showContextMenu(
+                                context, index, data.incomdId, value ?? false);
+                          });
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
@@ -397,7 +411,8 @@ class _NavOrderState extends State<NavOrder> {
     });
   }
 
-  void _showContextMenu(BuildContext context, int index, int incomeId) async {
+  void _showContextMenu(BuildContext context, int index, int incomeId,
+      bool isUseTasteByMenu) async {
     final RenderObject? overlay =
         Overlay.of(context).context.findRenderObject();
 
@@ -416,10 +431,10 @@ class _NavOrderState extends State<NavOrder> {
             value: AppString.commonTaste,
             child: Text(AppString.commonTaste),
           ),
-          const PopupMenuItem(
-            value: AppString.tasteByItem,
-            child: Text(AppString.tasteByItem),
-          ),
+          PopupMenuItem(
+              enabled: isUseTasteByMenu,
+              value: AppString.tasteByMenu,
+              child: const Text(AppString.tasteByMenu)),
           const PopupMenuItem(
             value: AppString.numberOrderItem,
             child: Text(AppString.numberOrderItem),
@@ -444,7 +459,7 @@ class _NavOrderState extends State<NavOrder> {
               );
             });
         break;
-      case AppString.tasteByItem:
+      case AppString.tasteByMenu:
         showDialog<void>(
             barrierDismissible: false,
             context: context,
@@ -499,6 +514,13 @@ class _NavOrderState extends State<NavOrder> {
             text: menuModel.name.toString(),
             fontFamily: "BOS",
           ),
+
+          subtitle: !isHideSalePriceInItem && menuModel.type == 3
+              ? AppText(
+                  text: menuModel.salePrice.toString(),
+                  size: 14,
+                  color: AppColor.primary)
+              : SizedBox.shrink(),
           onTap: () {
             if (menuModel.type == 3) {
               addToOrder(menuModel);
@@ -520,11 +542,43 @@ class _NavOrderState extends State<NavOrder> {
   }
 
   void addToOrder(MenuModel data) {
-    context.read<OrderProvider>().addOrder(OrderModel(
+    int index = context.read<OrderProvider>().addOrder(OrderModel(
         itemId: data.id!,
         itemName: data.name!,
         quantity: 1,
         incomdId: data.incomdId ?? 0));
+
+    context.read<SettingProvider>().getShowTasteInSelectItem().then(
+      (value) {
+        if (value != null && value == true) {
+          context.read<SettingProvider>().getUseTasteByMenu().then((value) {
+            if (value == null || value == false) {
+              showDialog<void>(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogTaste(
+                      orderIndex: index,
+                      isTasteMulti: false,
+                      incomeId: 0,
+                    );
+                  });
+            } else {
+              showDialog<void>(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogTaste(
+                      orderIndex: index,
+                      isTasteMulti: true,
+                      incomeId: data.incomdId ?? 0,
+                    );
+                  });
+            }
+          });
+        }
+      },
+    );
   }
 
   void deleteOrder(int index) {

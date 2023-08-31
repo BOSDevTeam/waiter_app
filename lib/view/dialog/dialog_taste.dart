@@ -49,7 +49,7 @@ class _DialogTasteState extends State<DialogTaste> {
       return AlertDialog(
         title: !isTasteMulti
             ? const AppText(text: AppString.commonTaste)
-            : const AppText(text: AppString.tasteByItem),
+            : const AppText(text: AppString.tasteByMenu),
         content: Column(
           children: [
             Consumer<TasteProvider>(builder: (context, provider, child) {

@@ -86,49 +86,19 @@ class _LoginState extends State<Login> {
                   ),
                   Consumer<LoginProvider>(builder: (context, provider, child) {
                     return InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        _waiterDialog(provider.lstWaiter);
+                      },
                       child: Container(
+                          padding: const EdgeInsets.only(left: 10),
+                          alignment: Alignment.centerLeft,
+                          height: 60,
                           decoration: BoxDecoration(
                               border: Border.all(color: AppColor.primaryDark),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(4))),
                           child: AppText(
-                              text: provider.selectedWaiter["WaiterName"])
-
-                          /* DropdownButtonHideUnderline(
-                        child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton(
-                              itemHeight: 60,
-                              value: isGotWaiter ? _selectedWaiter : null,
-                              style: const TextStyle(
-                                  color: AppColor.primaryDark, fontSize: 16),
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down,
-                                color: AppColor.primary,
-                              ),
-                              items: _lstWaiter.map((e) {
-                                return DropdownMenuItem<Map<String, dynamic>>(
-                                  value: e,
-                                  child: AppText(
-                                    text: e["WaiterName"].toString(),
-                                    fontFamily: "BOS",
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                _selectedWaiter = value!;
-                                /* context
-                                      .read<LoginProvider>()
-                                      .setSelectedWaiter(value!); */
-                                /* setState(() {
-                                  provider.selectedWaiter = value!;
-                                }); */
-                              },
-                              isExpanded: true,
-                            )),
-                      ), */
-                          ),
+                              text: provider.selectedWaiter["WaiterName"])),
                     );
                   }),
                   const SizedBox(
@@ -160,10 +130,6 @@ class _LoginState extends State<Login> {
                               return const NavOrder();
                             }));
                           }
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const NavOrder();
-                          }));
                         });
                       },
                       style: ElevatedButton.styleFrom(
@@ -180,5 +146,33 @@ class _LoginState extends State<Login> {
         ],
       )),
     );
+  }
+
+  Future<void> _waiterDialog(List<Map<String, dynamic>> lstWaiter) async {
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: const AppText(text: AppString.waiter),
+              content: Expanded(
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: ListView.builder(
+                      itemCount: lstWaiter.length,
+                      itemBuilder: ((context, index) {
+                        Map<String, dynamic> waiter = lstWaiter[index];
+                        return ListTile(
+                          onTap: () {
+                            Navigator.pop(context);
+                            context
+                                .read<LoginProvider>()
+                                .setSelectedWaiter(waiter);
+                          },
+                          title: AppText(text: waiter["WaiterName"]),
+                        );
+                      })),
+                ),
+              ));
+        });
   }
 }

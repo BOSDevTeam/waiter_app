@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import '../api/apiservice.dart';
 import '../controller/data_downloading_controller.dart';
 import '../database/database_helper.dart';
+import '../nav_drawer.dart';
 import '../provider/order_provider.dart';
 import '../provider/table_situation_provider.dart';
 import '../model/connector_model.dart';
@@ -14,16 +15,20 @@ import '../value/app_color.dart';
 import '../value/app_string.dart';
 
 class TableSituation extends StatefulWidget {
-  const TableSituation({super.key});
+  final bool isFromNav;
+  const TableSituation({super.key, required this.isFromNav});
 
   @override
-  State<TableSituation> createState() => _TableSituationState();
+  State<TableSituation> createState() => _TableSituationState(isFromNav);
 }
 
 class _TableSituationState extends State<TableSituation> {
   dynamic apiService;
   final dataDownloadingController = DataDownloadingController();
   Offset _tapPosition = Offset.zero;
+  bool isFromNav;
+
+  _TableSituationState(this.isFromNav);
 
   @override
   void initState() {
@@ -70,11 +75,18 @@ class _TableSituationState extends State<TableSituation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: const Text(
-        AppString.tableSituation,
-        style: TextStyle(color: AppColor.primary),
-      )),
+      drawer: isFromNav ? const NavDrawer() : null,
+      appBar: isFromNav
+          ? AppBar(
+              title: const Text(AppString.table,
+                  style: TextStyle(color: AppColor.primary)),
+              iconTheme: const IconThemeData(color: AppColor.primary),
+            )
+          : AppBar(
+              title: const Text(
+              AppString.tableSituation,
+              style: TextStyle(color: AppColor.primary),
+            )),
       body: Container(
         color: AppColor.grey,
         child: Column(
@@ -113,12 +125,14 @@ class _TableSituationState extends State<TableSituation> {
                 splashColor: AppColor.primary300,
                 onTapDown: (details) => _getTapPosition(details),
                 onTap: () {
-                  if (!table.isOccupied) {
-                    context.read<OrderProvider>().setSelectedTable({
-                      "tableId": table.tableId,
-                      "tableName": table.tableName
-                    });
-                    Navigator.pop(context);
+                  if (!isFromNav) {
+                    if (!table.isOccupied) {
+                      context.read<OrderProvider>().setSelectedTable({
+                        "tableId": table.tableId,
+                        "tableName": table.tableName
+                      });
+                      Navigator.pop(context);
+                    }
                   }
                 },
                 onLongPress: () {

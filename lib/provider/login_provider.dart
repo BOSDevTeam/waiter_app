@@ -28,8 +28,8 @@ class LoginProvider extends ChangeNotifier {
 
   Future<bool> authenticate() async {
     if (isValidateControl()) {
-      int waiterId = _selectedWaiter["waiterId"];
-      String waiterName = _selectedWaiter["waiterName"];
+      int waiterId = _selectedWaiter["WaiterID"];
+      String waiterName = _selectedWaiter["WaiterName"];
 
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
@@ -45,7 +45,7 @@ class LoginProvider extends ChangeNotifier {
     String password = "";
     String inputPassword = passwordController.text;
     if (_lstWaiter.isNotEmpty) {
-      password = _selectedWaiter["password"];
+      password = _selectedWaiter["Password"];
     }
 
     if (_lstWaiter.isEmpty) {

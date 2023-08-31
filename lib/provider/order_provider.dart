@@ -12,9 +12,10 @@ class OrderProvider extends ChangeNotifier {
   Map<String, dynamic> get selectedTable => _selectedTable;
   List<MenuModel> get lstMenu => _lstMenu;
 
-  void addOrder(OrderModel orderModel) {
+  int addOrder(OrderModel orderModel) {
     _lstOrder.add(orderModel);
     notifyListeners();
+    return _lstOrder.length - 1;
   }
 
   void increaseQuantity(int index) {
