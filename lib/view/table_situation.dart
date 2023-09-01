@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/model/table_situation_model.dart';
 import 'package:waiter_app/widget/app_text.dart';
@@ -57,10 +58,12 @@ class _TableSituationState extends State<TableSituation> {
                 .read<TableSituationProvider>()
                 .setSelectedTableType(value[0]);
 
+            EasyLoading.show();
             apiService
                 .getTableSituation(dataDownloadingController.connectorModel,
                     value[0]["TableTypeID"])
                 .then((lstTableSituation) {
+              EasyLoading.dismiss();
               context
                   .read<TableSituationProvider>()
                   .setTableSituation(lstTableSituation);
@@ -211,11 +214,13 @@ class _TableSituationState extends State<TableSituation> {
                           .read<TableSituationProvider>()
                           .setSelectedTableType(tableType);
 
+                      EasyLoading.show();
                       apiService
                           .getTableSituation(
                               dataDownloadingController.connectorModel,
                               tableType["TableTypeID"])
                           .then((lstTableSituation) {
+                        EasyLoading.dismiss();
                         context
                             .read<TableSituationProvider>()
                             .setTableSituation(lstTableSituation);

@@ -1,0 +1,4 @@
+enum NumberType {
+  quantityNumber,
+  orderItemNumber,
+}

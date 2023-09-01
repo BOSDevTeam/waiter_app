@@ -1,14 +1,18 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waiter_app/provider/login_provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
+import 'package:waiter_app/provider/number_provider.dart';
 import 'package:waiter_app/provider/order_provider.dart';
 import 'package:waiter_app/provider/setting_provider.dart';
 import 'package:waiter_app/provider/table_situation_provider.dart';
 import 'package:waiter_app/provider/taste_provider.dart';
+import 'package:waiter_app/view/dialog/dialog_number.dart';
 import 'package:waiter_app/view/dialog/dialog_taste.dart';
+import 'package:waiter_app/view/dialog/number_type.dart';
 import 'package:waiter_app/view/local_server_connection.dart';
 import 'package:waiter_app/view/login.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
@@ -64,6 +68,10 @@ class MyApp extends StatelessWidget {
           create: (context) => SettingProvider(),
           child: const NavSetting(),
         ),
+        ChangeNotifierProvider<NumberProvider>(
+          create: (context) => NumberProvider(),
+          child: const DialogNumber(orderIndex: -1,numberType: NumberType.quantityNumber,),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -99,6 +107,7 @@ class MyApp extends StatelessWidget {
               ),
           '/nav_setting': (BuildContext ctx) => const NavSetting()
         },
+        builder: EasyLoading.init(),
       ),
     );
   }

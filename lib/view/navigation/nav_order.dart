@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
+import 'package:waiter_app/view/dialog/dialog_number.dart';
+import 'package:waiter_app/view/dialog/number_type.dart';
 import 'package:waiter_app/widget/app_text.dart';
 import 'package:waiter_app/view/table_situation.dart';
 
@@ -285,12 +289,17 @@ class _NavOrderState extends State<NavOrder> {
             ),
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: AppText(
-                    text: data.itemName,
-                    fontFamily: "BOS",
-                  ),
+                Row(
+                  children: [
+                    AppText(text: data.number.toString()),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: AppText(
+                        text: data.itemName,
+                        fontFamily: "BOS",
+                      ),
+                    ),
+                  ],
                 ),
                 data.commonTaste!.isNotEmpty || data.tasteByItem!.isNotEmpty
                     ? Row(
@@ -346,7 +355,17 @@ class _NavOrderState extends State<NavOrder> {
                           width: 10,
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog<void>(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DialogNumber(
+                                    orderIndex: index,
+                                    numberType: NumberType.quantityNumber,
+                                  );
+                                });
+                          },
                           style: const ButtonStyle(
                               side: MaterialStatePropertyAll(
                                   BorderSide(color: AppColor.grey)),
@@ -472,7 +491,15 @@ class _NavOrderState extends State<NavOrder> {
             });
         break;
       case AppString.numberOrderItem:
-        debugPrint('number order item');
+        showDialog<void>(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return DialogNumber(
+                orderIndex: index,
+                numberType: NumberType.orderItemNumber,
+              );
+            });
         break;
       case AppString.delete:
         deleteOrder(index);
@@ -510,20 +537,24 @@ class _NavOrderState extends State<NavOrder> {
         return ListTile(
           leading: const SizedBox(width: 10),
           //textColor: _menuColor(list.type),
-          title: AppText(
-            text: menuModel.name.toString(),
-            fontFamily: "BOS",
-          ),
+          title: Expanded(
+              child: Text(
+            menuModel.name.toString(),
+            style:
+                const TextStyle(color: AppColor.primaryDark, fontFamily: "BOS"),
+            maxLines: null,
+          )),
 
           subtitle: !isHideSalePriceInItem && menuModel.type == 3
               ? AppText(
                   text: menuModel.salePrice.toString(),
                   size: 14,
                   color: AppColor.primary)
-              : SizedBox.shrink(),
+              : const Text(""),
           onTap: () {
             if (menuModel.type == 3) {
-              addToOrder(menuModel);
+              int index = addToOrder(menuModel);
+              showTasteInSelectItem(index, menuModel.incomdId ?? 0);
             }
           },
         );
@@ -532,22 +563,30 @@ class _NavOrderState extends State<NavOrder> {
       return ExpansionTile(
         leading: const Icon(Icons.food_bank),
         //textColor: _menuColor(list.type),
-        title: AppText(
-          text: menuModel.name.toString(),
-          fontFamily: "BOS",
-        ),
+        title: Expanded(
+            child: Text(
+          menuModel.name.toString(),
+          style:
+              const TextStyle(color: AppColor.primaryDark, fontFamily: "BOS"),
+          maxLines: null,
+        )),
         children: menuModel.list.map(_buildMenuList).toList(),
       );
     }
   }
 
-  void addToOrder(MenuModel data) {
+  int addToOrder(MenuModel data) {
     int index = context.read<OrderProvider>().addOrder(OrderModel(
         itemId: data.id!,
         itemName: data.name!,
         quantity: 1,
         incomdId: data.incomdId ?? 0));
 
+    Fluttertoast.showToast(msg: AppString.orderAdded);
+    return index;
+  }
+
+  void showTasteInSelectItem(int index, int incomeId) {
     context.read<SettingProvider>().getShowTasteInSelectItem().then(
       (value) {
         if (value != null && value == true) {
@@ -569,10 +608,9 @@ class _NavOrderState extends State<NavOrder> {
                   context: context,
                   builder: (BuildContext context) {
                     return DialogTaste(
-                      orderIndex: index,
-                      isTasteMulti: true,
-                      incomeId: data.incomdId ?? 0,
-                    );
+                        orderIndex: index,
+                        isTasteMulti: true,
+                        incomeId: incomeId);
                   });
             }
           });

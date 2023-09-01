@@ -48,4 +48,6 @@ class AppString {
   static const String general = "General";
   static const String updateData = "Update Data";
   static const String data = "Data";
+  static const String orderAdded = "Order Added";
+  static const String loading = "Loading";
 }

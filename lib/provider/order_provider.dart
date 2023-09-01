@@ -30,6 +30,11 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
+  void changeQuantity(int index, int quantity) {
+    _lstOrder[index].quantity = quantity;
+    notifyListeners();
+  }
+
   void setSelectedTable(Map<String, dynamic> selectedTable) {
     _selectedTable = selectedTable;
     notifyListeners();

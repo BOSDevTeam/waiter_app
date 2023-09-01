@@ -5,6 +5,7 @@ class OrderModel {
   String? tasteByItem;
   int quantity;
   int incomdId;
+  int? number;
 
   OrderModel(
       {required this.itemId,
@@ -12,5 +13,6 @@ class OrderModel {
       this.commonTaste = "",
       this.tasteByItem = "",
       required this.quantity,
-      required this.incomdId});
+      required this.incomdId,
+      this.number = 0});
 }

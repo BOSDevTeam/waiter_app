@@ -54,8 +54,9 @@ class _DialogTasteState extends State<DialogTaste> {
           children: [
             Consumer<TasteProvider>(builder: (context, provider, child) {
               return TextFormField(
+                readOnly: true,
                 controller: provider.tasteController,
-                style: const TextStyle(fontFamily: "BOS"),
+                style: const TextStyle(fontFamily: "BOS",color: AppColor.primary500),
                 decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
@@ -84,6 +85,7 @@ class _DialogTasteState extends State<DialogTaste> {
                   child: const Text(AppString.cancel)),
               ElevatedButton(
                   onPressed: () {
+                    Navigator.pop(context);
                     String tastes = context.read<TasteProvider>().selectedTaste;
                     if (!isTasteMulti) {
                       context
@@ -94,8 +96,7 @@ class _DialogTasteState extends State<DialogTaste> {
                           .read<OrderProvider>()
                           .updateTasteByItem(orderIndex, tastes);
                     }
-                    context.read<TasteProvider>().clearSelectedTaste();
-                    Navigator.pop(context);
+                    context.read<TasteProvider>().clearSelectedTaste();                    
                   },
                   child: const Text(AppString.add))
             ],
