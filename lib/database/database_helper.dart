@@ -1,6 +1,16 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import '../model/item_model.dart';
+import '../model/main_menu_model.dart';
+import '../model/sub_menu_model.dart';
+import '../model/system_item_model.dart';
+import '../model/table_model.dart';
+import '../model/table_type_model.dart';
+import '../model/taste_model.dart';
+import '../model/taste_multi_model.dart';
+import '../model/waiter_model.dart';
+
 class DatabaseHelper {
   late Database _db;
   static const String tbBaseUrl = "BaseUrl";
@@ -46,7 +56,7 @@ class DatabaseHelper {
     return _db;
   }
 
-  Future<void> deleteAllData() async{
+  Future<void> deleteAllData() async {
     _db = await _createDatabase();
     await _db.delete(tbBaseUrl);
     await _db.delete(tbConnector);
@@ -86,9 +96,13 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> insertWaiter(Map<String, dynamic> data) async {
+  Future<int> insertWaiter(List<WaiterModel> lstData) async {
+    int result = 0;
     _db = await _createDatabase();
-    return await _db.insert(tbWaiter, data);
+    for (var data in lstData) {
+      result = await _db.insert(tbWaiter, data.toJson());
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getWaiter() async {
@@ -98,9 +112,13 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> insertTableType(Map<String, dynamic> data) async {
+  Future<int> insertTableType(List<TableTypeModel> lstData) async {
+    int result = 0;
     _db = await _createDatabase();
-    return await _db.insert(tbTableType, data);
+    for (var data in lstData) {
+      result = await _db.insert(tbTableType, data.toJson());
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getTableType() async {
@@ -110,9 +128,13 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> insertTable(Map<String, dynamic> data) async {
+  Future<int> insertTable(List<TableModel> lstData) async {
+    int result = 0;
     _db = await _createDatabase();
-    return await _db.insert(tbTable, data);
+    for (var data in lstData) {
+      result = await _db.insert(tbTable, data.toJson());
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getTable() async {
@@ -122,9 +144,13 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> insertMainMenu(Map<String, dynamic> data) async {
+  Future<int> insertMainMenu(List<MainMenuModel> lstData) async {
+    int result = 0;
     _db = await _createDatabase();
-    return await _db.insert(tbMainMenu, data);
+    for (var data in lstData) {
+      result = await _db.insert(tbMainMenu, data.toJson());
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getMainMenu() async {
@@ -134,9 +160,13 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> insertSubMenu(Map<String, dynamic> data) async {
+  Future<int> insertSubMenu(List<SubMenuModel> lstData) async {
+    int result = 0;
     _db = await _createDatabase();
-    return await _db.insert(tbSubMenu, data);
+    for (var data in lstData) {
+      result = await _db.insert(tbSubMenu, data.toJson());
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getSubMenu() async {
@@ -146,9 +176,13 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> insertItem(Map<String, dynamic> data) async {
+  Future<int> insertItem(List<ItemModel> lstData) async {
+    int result = 0;
     _db = await _createDatabase();
-    return await _db.insert(tbItem, data);
+    for (var data in lstData) {
+      result = await _db.insert(tbItem, data.toJson());
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getItem() async {
@@ -158,9 +192,13 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> insertSystemItem(Map<String, dynamic> data) async {
+  Future<int> insertSystemItem(List<SystemItemModel> lstData) async {
+    int result = 0;
     _db = await _createDatabase();
-    return await _db.insert(tbSystemItem, data);
+    for (var data in lstData) {
+      result = await _db.insert(tbSystemItem, data.toJson());
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getSystemItem() async {
@@ -182,9 +220,13 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> insertTaste(Map<String, dynamic> data) async {
+  Future<int> insertTaste(List<TasteModel> lstData) async {
+    int result = 0;
     _db = await _createDatabase();
-    return await _db.insert(tbTaste, data);
+    for (var data in lstData) {
+      result = await _db.insert(tbTaste, data.toJson());
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getTaste() async {
@@ -194,9 +236,13 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> insertTasteMulti(Map<String, dynamic> data) async {
+  Future<int> insertTasteMulti(List<TasteMultiModel> lstData) async {
+    int result = 0;
     _db = await _createDatabase();
-    return await _db.insert(tbTasteMulti, data);
+    for (var data in lstData) {
+      result = await _db.insert(tbTasteMulti, data.toJson());
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getTasteMulti(int incomeId) async {

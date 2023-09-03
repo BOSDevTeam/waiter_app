@@ -14,15 +14,17 @@ class DialogTaste extends StatefulWidget {
   final bool isTasteMulti;
   final int incomeId;
   const DialogTaste(
-      {super.key, required this.orderIndex, required this.isTasteMulti,required this.incomeId});
+      {super.key,
+      required this.orderIndex,
+      required this.isTasteMulti,
+      required this.incomeId});
 
   @override
   State<DialogTaste> createState() =>
-      _DialogTasteState(orderIndex, isTasteMulti,incomeId);
+      _DialogTasteState(orderIndex, isTasteMulti, incomeId);
 }
 
 class _DialogTasteState extends State<DialogTaste> {
-  final tasteProvider = TasteProvider();
   int orderIndex;
   bool isTasteMulti;
   int incomeId;
@@ -32,12 +34,16 @@ class _DialogTasteState extends State<DialogTaste> {
   @override
   void initState() {
     if (!isTasteMulti) {
+      context.read<TasteProvider>().loadSelectedTaste(
+          context.read<OrderProvider>().getCommonTaste(orderIndex));
       DatabaseHelper().getTaste().then((value) {
-        context.read<TasteProvider>().setTaste(value);        
+        context.read<TasteProvider>().setTaste(value);
       });
     } else {
+      context.read<TasteProvider>().loadSelectedTaste(
+          context.read<OrderProvider>().getTasteByItem(orderIndex));
       DatabaseHelper().getTasteMulti(incomeId).then((value) {
-        context.read<TasteProvider>().setTaste(value);       
+        context.read<TasteProvider>().setTaste(value);
       });
     }
     super.initState();
@@ -47,6 +53,7 @@ class _DialogTasteState extends State<DialogTaste> {
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, setstate) {
       return AlertDialog(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         title: !isTasteMulti
             ? const AppText(text: AppString.commonTaste)
             : const AppText(text: AppString.tasteByMenu),
@@ -56,7 +63,8 @@ class _DialogTasteState extends State<DialogTaste> {
               return TextFormField(
                 readOnly: true,
                 controller: provider.tasteController,
-                style: const TextStyle(fontFamily: "BOS",color: AppColor.primary500),
+                style: const TextStyle(
+                    fontFamily: "BOS", color: AppColor.primary500),
                 decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
@@ -80,6 +88,7 @@ class _DialogTasteState extends State<DialogTaste> {
               TextButton(
                   onPressed: () {
                     context.read<TasteProvider>().clearSelectedTaste();
+
                     Navigator.pop(context);
                   },
                   child: const Text(AppString.cancel)),
@@ -96,7 +105,7 @@ class _DialogTasteState extends State<DialogTaste> {
                           .read<OrderProvider>()
                           .updateTasteByItem(orderIndex, tastes);
                     }
-                    context.read<TasteProvider>().clearSelectedTaste();                    
+                    context.read<TasteProvider>().clearSelectedTaste();
                   },
                   child: const Text(AppString.add))
             ],

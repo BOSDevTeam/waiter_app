@@ -21,8 +21,10 @@ class _LoginState extends State<Login> {
     context.read<LoginProvider>().passwordController.text = "1";
 
     DatabaseHelper().getWaiter().then((value) {
-      context.read<LoginProvider>().setWaiterList(value);
-      context.read<LoginProvider>().setSelectedWaiter(value[0]);
+      if (value.isNotEmpty) {
+        context.read<LoginProvider>().setWaiterList(value);
+        context.read<LoginProvider>().setSelectedWaiter(value[0]);
+      }
     });
 
     super.initState();
@@ -85,20 +87,19 @@ class _LoginState extends State<Login> {
                     height: 20,
                   ),
                   Consumer<LoginProvider>(builder: (context, provider, child) {
-                    return InkWell(
-                      onTap: () {
-                        _waiterDialog(provider.lstWaiter);
-                      },
-                      child: Container(
-                          padding: const EdgeInsets.only(left: 10),
-                          alignment: Alignment.centerLeft,
-                          height: 60,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: AppColor.primaryDark),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(4))),
-                          child: AppText(
-                              text: provider.selectedWaiter["WaiterName"])),
+                    return TextFormField(
+                      onTap: () => _waiterDialog(provider.lstWaiter),
+                      readOnly: true,
+                      controller: provider.nameController,
+                      style: const TextStyle(
+                          fontFamily: "BOS", color: AppColor.primaryDark),
+                      decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                _waiterDialog(provider.lstWaiter);
+                              },
+                              icon: const Icon(Icons.arrow_drop_down))),
                     );
                   }),
                   const SizedBox(
@@ -153,6 +154,8 @@ class _LoginState extends State<Login> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+              shape:
+                  const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               title: const AppText(text: AppString.waiter),
               content: Expanded(
                 child: SizedBox(
@@ -168,7 +171,8 @@ class _LoginState extends State<Login> {
                                 .read<LoginProvider>()
                                 .setSelectedWaiter(waiter);
                           },
-                          title: AppText(text: waiter["WaiterName"]),
+                          leading: const Icon(Icons.person),
+                          title: AppText(text: waiter["WaiterName"],fontFamily:"BOS"),
                         );
                       })),
                 ),

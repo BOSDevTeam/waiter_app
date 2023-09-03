@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:waiter_app/view/dialog/number_type.dart';
+import 'package:waiter_app/value/number_type.dart';
 import 'package:waiter_app/widget/app_text.dart';
 
 import '../../provider/number_provider.dart';
@@ -36,10 +36,15 @@ class _DialogNumberState extends State<DialogNumber> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const AppText(
-              text: "Title",
-              size: 18,
-            ),
+            numberType == NumberType.quantityNumber
+                ? const AppText(
+                    text: AppString.quantity,
+                    size: 18,
+                  )
+                : const AppText(
+                    text: AppString.numberOrder,
+                    size: 18,
+                  ),
             IconButton(
                 onPressed: () {
                   context.read<NumberProvider>().clearNumber();
@@ -299,8 +304,11 @@ class _DialogNumberState extends State<DialogNumber> {
                                 context
                                     .read<OrderProvider>()
                                     .changeQuantity(orderIndex, num);
-                              }else if(numberType == NumberType.orderItemNumber){
-                                
+                              } else if (numberType ==
+                                  NumberType.orderItemNumber) {
+                                context
+                                    .read<OrderProvider>()
+                                    .numberOrderItem(orderIndex, num);
                               }
 
                               context.read<NumberProvider>().clearNumber();

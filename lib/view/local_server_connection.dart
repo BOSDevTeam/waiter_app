@@ -41,7 +41,7 @@ class _LocalServerConnectionState extends State<LocalServerConnection> {
             TextFormField(
               controller: localServerConController.ipAddressController,
               style: const TextStyle(color: AppColor.primaryDark),
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                   labelText: AppString.ipAddress,

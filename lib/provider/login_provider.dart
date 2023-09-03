@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../value/app_string.dart';
 
 class LoginProvider extends ChangeNotifier {
+  final nameController = TextEditingController();
   final passwordController = TextEditingController();
   List<Map<String, dynamic>> _lstWaiter = [];
   Map<String, dynamic> _selectedWaiter = {
@@ -14,15 +15,16 @@ class LoginProvider extends ChangeNotifier {
 
   List<Map<String, dynamic>> get lstWaiter => _lstWaiter;
 
-  Map<String, dynamic> get selectedWaiter => _selectedWaiter;
+  //Map<String, dynamic> get selectedWaiter => _selectedWaiter;
 
   void setWaiterList(List<Map<String, dynamic>> lstWaiter) {
     _lstWaiter = lstWaiter;
-    notifyListeners();
+    //notifyListeners();
   }
 
   void setSelectedWaiter(Map<String, dynamic> selectedWaiter) {
     _selectedWaiter = selectedWaiter;
+    nameController.text=selectedWaiter["WaiterName"];
     notifyListeners();
   }
 

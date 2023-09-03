@@ -50,4 +50,7 @@ class AppString {
   static const String data = "Data";
   static const String orderAdded = "Order Added";
   static const String loading = "Loading";
+  static const String takeLongPress = "Take a long press";
+  static const String quantity = "Quantity";
+  static const String numberOrder = "Number Order";
 }

@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/view/dialog/dialog_number.dart';
-import 'package:waiter_app/view/dialog/number_type.dart';
+import 'package:waiter_app/value/number_type.dart';
 import 'package:waiter_app/widget/app_text.dart';
 import 'package:waiter_app/view/table_situation.dart';
 
@@ -289,17 +289,30 @@ class _NavOrderState extends State<NavOrder> {
             ),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    AppText(text: data.number.toString()),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: AppText(
-                        text: data.itemName,
-                        fontFamily: "BOS",
-                      ),
-                    ),
-                  ],
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      data.number != 0
+                          ? AppText(
+                              text: "#${data.number}",
+                              fontFamily: "BOS",
+                              color: AppColor.primary400,
+                            )
+                          : const SizedBox(),
+                      data.number != 0
+                          ? const SizedBox(
+                              width: 5,
+                            )
+                          : const SizedBox(),
+                      Expanded(
+                          child: Text(
+                        data.itemName,
+                        style: const TextStyle(fontFamily: "BOS"),
+                        maxLines: null,
+                      ))
+                    ],
+                  ),
                 ),
                 data.commonTaste!.isNotEmpty || data.tasteByItem!.isNotEmpty
                     ? Row(
@@ -395,6 +408,9 @@ class _NavOrderState extends State<NavOrder> {
                       ],
                     ),
                     InkWell(
+                        onTap: () {
+                          Fluttertoast.showToast(msg: AppString.takeLongPress);
+                        },
                         onTapDown: (details) => _getTapPosition(details),
                         onLongPress: () {
                           context
@@ -411,7 +427,7 @@ class _NavOrderState extends State<NavOrder> {
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(color: AppColor.grey)),
                           child: const Icon(
-                            Icons.more_horiz,
+                            Icons.touch_app,
                             color: AppColor.primary400,
                           ),
                         )),
@@ -550,9 +566,10 @@ class _NavOrderState extends State<NavOrder> {
                   text: menuModel.salePrice.toString(),
                   size: 14,
                   color: AppColor.primary)
-              : const Text(""),
+              : const SizedBox(),
           onTap: () {
             if (menuModel.type == 3) {
+              //_key.currentState!.closeEndDrawer();
               int index = addToOrder(menuModel);
               showTasteInSelectItem(index, menuModel.incomdId ?? 0);
             }
@@ -561,7 +578,13 @@ class _NavOrderState extends State<NavOrder> {
       });
     } else {
       return ExpansionTile(
-        leading: const Icon(Icons.food_bank),
+        leading: menuModel.type == 1
+            ? const Icon(Icons.food_bank)
+            : const Icon(
+                Icons.menu_book,
+                size: 20,
+                color: AppColor.primary400,
+              ),
         //textColor: _menuColor(list.type),
         title: Expanded(
             child: Text(
@@ -583,6 +606,7 @@ class _NavOrderState extends State<NavOrder> {
         incomdId: data.incomdId ?? 0));
 
     Fluttertoast.showToast(msg: AppString.orderAdded);
+
     return index;
   }
 

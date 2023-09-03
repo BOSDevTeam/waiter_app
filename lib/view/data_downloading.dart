@@ -44,249 +44,132 @@ class _DataDownloadingState extends State<DataDownloading> {
         apiService
             .getWaiter(dataDownloadingController.connectorModel)
             .then((lstWaiter) {
-          for (int i = 0; i < lstWaiter.length; i++) {
-            DatabaseHelper().insertWaiter({
-              "waiterId": lstWaiter[i].waiterId,
-              "waiterName": lstWaiter[i].waiterName,
-              "password": lstWaiter[i].password
-            });
-            /* HiveDB.insertWaiter({
-          "waiterId": lstWaiter[i].waiterId,
-          "waiterName": lstWaiter[i].waiterName,
-          "password": lstWaiter[i].password
-        }); */
-          }
-
-          setState(() {
-            dataDownloadingController.isWaiterComplete = true;
+          DatabaseHelper().insertWaiter(lstWaiter).then((value) {
+            if (lstWaiter.length == value) {
+              setState(() {
+                dataDownloadingController.isWaiterComplete = true;
+              });
+            }
           });
         });
 
         apiService
             .getMainMenu(dataDownloadingController.connectorModel)
             .then((lstMainMenu) {
-          for (int i = 0; i < lstMainMenu.length; i++) {
-            DatabaseHelper().insertMainMenu({
-              "mainMenuId": lstMainMenu[i].mainMenuId,
-              "mainMenuName": lstMainMenu[i].mainMenuName,
-              "counterId": lstMainMenu[i].counterId
-            });
-            /* HiveDB.insertMainMenu({
-          "mainMenuId": lstMainMenu[i].mainMenuId,
-          "mainMenuName": lstMainMenu[i].mainMenuName,
-          "counterId": lstMainMenu[i].counterId
-        }); */
-          }
-
-          setState(() {
-            dataDownloadingController.isMainMenuComplete = true;
+          DatabaseHelper().insertMainMenu(lstMainMenu).then((value) {
+            if (lstMainMenu.length == value) {
+              setState(() {
+                dataDownloadingController.isMainMenuComplete = true;
+              });
+            }
           });
         });
 
         apiService
             .getSubMenu(dataDownloadingController.connectorModel)
             .then((lstSubMenu) {
-          for (int i = 0; i < lstSubMenu.length; i++) {
-            DatabaseHelper().insertSubMenu({
-              "subMenuId": lstSubMenu[i].subMenuId,
-              "mainMenuId": lstSubMenu[i].mainMenuId,
-              "subMenuName": lstSubMenu[i].subMenuName,
-              "incomeId": lstSubMenu[i].incomeId
-            });
-            /* HiveDB.insertSubMenu({
-          "subMenuId": lstSubMenu[i].subMenuId,
-          "mainMenuId": lstSubMenu[i].mainMenuId,
-          "subMenuName": lstSubMenu[i].subMenuName,
-          "incomeId": lstSubMenu[i].incomeId
-        }); */
-          }
-
-          setState(() {
-            dataDownloadingController.isSubMenuComplete = true;
+          DatabaseHelper().insertSubMenu(lstSubMenu).then((value) {
+            if (lstSubMenu.length == value) {
+              setState(() {
+                dataDownloadingController.isSubMenuComplete = true;
+              });
+            }
           });
         });
 
         apiService
             .getItem(dataDownloadingController.connectorModel)
             .then((lstItem) {
-          for (int i = 0; i < lstItem.length; i++) {
-            DatabaseHelper().insertItem({
-              "itemId": lstItem[i].itemId,
-              "subMenuId": lstItem[i].subMenuId,
-              "itemName": lstItem[i].itemName,
-              "salePrice": lstItem[i].salePrice,
-              "sType": lstItem[i].sType,
-              "outOfOrder": lstItem[i].outOfOrder,
-              "ingredients": lstItem[i].ingredients,
-              "barcode": lstItem[i].barcode,
-              "noDiscount": lstItem[i].noDiscount,
-              "itemDiscount": lstItem[i].itemDiscount
-            });
-            /* HiveDB.insertItem({
-          "itemId": lstItem[i].itemId,
-          "subMenuId": lstItem[i].subMenuId,
-          "itemName": lstItem[i].itemName,
-          "salePrice": lstItem[i].salePrice,
-          "sType": lstItem[i].sType,
-          "outOfOrder": lstItem[i].outOfOrder,
-          "ingredients": lstItem[i].ingredients,
-          "barcode": lstItem[i].barcode,
-          "noDiscount": lstItem[i].noDiscount,
-          "itemDiscount": lstItem[i].itemDiscount
-        }); */
-          }
-
-          setState(() {
-            dataDownloadingController.isItemComplete = true;
+          DatabaseHelper().insertItem(lstItem).then((value) {
+            if (lstItem.length == value) {
+              setState(() {
+                dataDownloadingController.isItemComplete = true;
+              });
+            }
           });
         });
 
         apiService
             .getSystemItem(dataDownloadingController.connectorModel)
             .then((lstSystemItem) {
-          for (int i = 0; i < lstSystemItem.length; i++) {
-            DatabaseHelper().insertSystemItem({
-              "systemId": lstSystemItem[i].systemId,
-              "itemId": lstSystemItem[i].itemId
-            });
-            /* HiveDB.insertSystemItem({
-          "systemId": lstSystemItem[i].systemId,
-          "itemId": lstSystemItem[i].itemId
-        }); */
-          }
-
-          setState(() {
-            dataDownloadingController.isSystemItemComplete = true;
+          DatabaseHelper().insertSystemItem(lstSystemItem).then((value) {
+            if (lstSystemItem.length == value) {
+              setState(() {
+                dataDownloadingController.isSystemItemComplete = true;
+              });
+            }
           });
         });
 
         apiService
             .getTableType(dataDownloadingController.connectorModel)
             .then((lstTableType) {
-          for (int i = 0; i < lstTableType.length; i++) {
-            DatabaseHelper().insertTableType({
-              "tableTypeId": lstTableType[i].tableTypeId,
-              "tableTypeName": lstTableType[i].tableTypeName
-            });
-            /*   HiveDB.insertTableType({
-          "tableTypeId": lstTableType[i].tableTypeId,
-          "tableTypeName": lstTableType[i].tableTypeName
-        }); */
-          }
-
-          setState(() {
-            dataDownloadingController.isTableTypeComplete = true;
+          DatabaseHelper().insertTableType(lstTableType).then((value) {
+            if (lstTableType.length == value) {
+              setState(() {
+                dataDownloadingController.isTableTypeComplete = true;
+              });
+            }
           });
         });
 
         apiService
             .getTable(dataDownloadingController.connectorModel)
             .then((lstTable) {
-          for (int i = 0; i < lstTable.length; i++) {
-            DatabaseHelper().insertTable({
-              "tableId": lstTable[i].tableId,
-              "tableName": lstTable[i].tableName,
-              "tableTypeId": lstTable[i].tableTypeId
-            });
-            /*  HiveDB.insertTable({
-          "tableId": lstTable[i].tableId,
-          "tableName": lstTable[i].tableName,
-          "tableTypeId": lstTable[i].tableTypeId
-        }); */
-          }
-
-          setState(() {
-            dataDownloadingController.isTableComplete = true;
+          DatabaseHelper().insertTable(lstTable).then((value) {
+            if (lstTable.length == value) {
+              setState(() {
+                dataDownloadingController.isTableComplete = true;
+              });
+            }
           });
         });
 
         apiService
             .getTaste(dataDownloadingController.connectorModel)
             .then((lstTaste) {
-          for (int i = 0; i < lstTaste.length; i++) {
-            DatabaseHelper().insertTaste({
-              "tasteId": lstTaste[i].tasteId,
-              "tasteName": lstTaste[i].tasteName
-            });
-            // HiveDB.insertTaste({
-            //   "tasteId": lstTaste[i].tasteId,
-            //   "tasteName": lstTaste[i].tasteName
-            // });
-          }
-
-          setState(() {
-            dataDownloadingController.isTasteComplete = true;
+          DatabaseHelper().insertTaste(lstTaste).then((value) {
+            if (lstTaste.length == value) {
+              setState(() {
+                dataDownloadingController.isTasteComplete = true;
+              });
+            }
           });
         });
 
         apiService
             .getTasteMulti(dataDownloadingController.connectorModel)
             .then((lstTasteMulti) {
-          for (int i = 0; i < lstTasteMulti.length; i++) {
-            DatabaseHelper().insertTasteMulti({
-              "tId": lstTasteMulti[i].tId,
-              "groupId": lstTasteMulti[i].groupId,
-              "tasteId": lstTasteMulti[i].tasteId,
-              "tasteName": lstTasteMulti[i].tasteName,
-              "tasteShort": lstTasteMulti[i].tasteShort,
-              "tasteSort": lstTasteMulti[i].tasteSort,
-              "price": lstTasteMulti[i].price
-            });
-            /* HiveDB.insertTasteMulti({
-          "tId": lstTasteMulti[i].tId,
-          "groupId": lstTasteMulti[i].groupId,
-          "tasteId": lstTasteMulti[i].tasteId,
-          "tasteName": lstTasteMulti[i].tasteName,
-          "tasteShort": lstTasteMulti[i].tasteShort,
-          "tasteSort": lstTasteMulti[i].tasteSort,
-          "price": lstTasteMulti[i].price
-        }); */
-          }
-
-          setState(() {
-            dataDownloadingController.isTasteMultiComplete = true;
+          DatabaseHelper().insertTasteMulti(lstTasteMulti).then((value) {
+            if (lstTasteMulti.length == value) {
+              setState(() {
+                dataDownloadingController.isTasteMultiComplete = true;
+              });
+            }
           });
         });
 
         apiService
             .getSystemSetting(dataDownloadingController.connectorModel)
             .then((lstSystemSetting) {
-          for (int i = 0; i < lstSystemSetting.length; i++) {
+          if (lstSystemSetting.length != 0) {
             DatabaseHelper().insertSystemSetting({
-              "tax": lstSystemSetting[i].tax,
-              "service": lstSystemSetting[i].service,
-              "adminPassword": lstSystemSetting[i].adminPassword,
-              "title": lstSystemSetting[i].title,
-              "userPassword": lstSystemSetting[i].userPassword
+              "tax": lstSystemSetting[0].tax,
+              "service": lstSystemSetting[0].service,
+              "adminPassword": lstSystemSetting[0].adminPassword,
+              "title": lstSystemSetting[0].title,
+              "userPassword": lstSystemSetting[0].userPassword
+            }).then((value) {
+              if (value == 1) {
+                setState(() {
+                  dataDownloadingController.isSystemSettingComplete = true;
+                });
+              }
             });
-            /* HiveDB.insertSystemItem({
-          "tax": lstSystemSetting[i].tax,
-          "service": lstSystemSetting[i].service,
-          "adminPassword": lstSystemSetting[i].adminPassword,
-          "title": lstSystemSetting[i].title,
-          "userPassword": lstSystemSetting[i].userPassword
-        }); */
           }
-
-          setState(() {
-            dataDownloadingController.isSystemSettingComplete = true;
-          });
         });
       });
     });
-
-    /* dataDownloadingController.lstBaseUrl = HiveDB.getBaseUrl();
-    apiService = ApiService(
-        dio: Dio(BaseOptions(
-            baseUrl: dataDownloadingController.lstBaseUrl[0]["baseUrl"])));
-    dataDownloadingController.lstConnector = HiveDB.getConnector();
-    dataDownloadingController.connectorModel = ConnectorModel(
-        ipAddress: dataDownloadingController.lstConnector[0]["ipAddress"],
-        databaseName: dataDownloadingController.lstConnector[0]["databaseName"],
-        databaseLoginUser: dataDownloadingController.lstConnector[0]
-            ["databaseLoginUser"],
-        databaseLoginPassword: dataDownloadingController.lstConnector[0]
-            ["databaseLoginPassword"]); */
 
     super.initState();
   }

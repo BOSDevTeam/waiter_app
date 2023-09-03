@@ -10,9 +10,26 @@ class TasteProvider extends ChangeNotifier {
   List<Map<String, dynamic>> get lstTaste => _lstTaste;
 
   void setSelectedTaste(String taste) {
-    _selectedTaste = "$_selectedTaste$taste,";
-    tasteController.text = _selectedTaste;
-    notifyListeners();
+    if (taste.isNotEmpty) {
+      if (_selectedTaste.isNotEmpty) {
+        _selectedTaste = "$_selectedTaste,$taste";
+      } else {
+        _selectedTaste = taste;
+      }
+      tasteController.text = _selectedTaste;
+      notifyListeners();
+    }
+  }
+
+  void loadSelectedTaste(String taste) {
+    if (taste.isNotEmpty) {
+      if (_selectedTaste.isNotEmpty) {
+        _selectedTaste = "$_selectedTaste,$taste";
+      } else {
+        _selectedTaste = taste;
+      }
+      tasteController.text = _selectedTaste;
+    }
   }
 
   void clearSelectedTaste() {
@@ -25,4 +42,5 @@ class TasteProvider extends ChangeNotifier {
     _lstTaste = lstTaste;
     notifyListeners();
   }
+
 }

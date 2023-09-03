@@ -50,6 +50,16 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String getCommonTaste(int index) {
+    String taste = _lstOrder[index].commonTaste.toString();
+    return taste;
+  }
+
+  String getTasteByItem(int index) {
+    String taste = _lstOrder[index].tasteByItem.toString();
+    return taste;
+  }
+
   void deleteOrder(int index) {
     _lstOrder.removeAt(index);
     notifyListeners();
@@ -57,6 +67,11 @@ class OrderProvider extends ChangeNotifier {
 
   void setMenu(List<MenuModel> lstMenu) {
     _lstMenu = lstMenu;
+    notifyListeners();
+  }
+
+  void numberOrderItem(int index, int number) {
+    _lstOrder[index].number = number;
     notifyListeners();
   }
 }
