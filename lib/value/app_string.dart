@@ -53,4 +53,5 @@ class AppString {
   static const String takeLongPress = "Take a long press";
   static const String quantity = "Quantity";
   static const String numberOrder = "Number Order";
+  static const String enterTime = "Enter Time";
 }
