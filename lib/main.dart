@@ -10,9 +10,12 @@ import 'package:waiter_app/provider/order_provider.dart';
 import 'package:waiter_app/provider/setting_provider.dart';
 import 'package:waiter_app/provider/table_situation_provider.dart';
 import 'package:waiter_app/provider/taste_provider.dart';
+import 'package:waiter_app/provider/time_provider.dart';
+import 'package:waiter_app/view/data_downloading.dart';
 import 'package:waiter_app/view/dialog/dialog_number.dart';
 import 'package:waiter_app/view/dialog/dialog_taste.dart';
 import 'package:waiter_app/value/number_type.dart';
+import 'package:waiter_app/view/dialog/dialog_time.dart';
 import 'package:waiter_app/view/local_server_connection.dart';
 import 'package:waiter_app/view/login.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
@@ -72,6 +75,10 @@ class MyApp extends StatelessWidget {
           create: (context) => NumberProvider(),
           child: const DialogNumber(orderIndex: -1,numberType: NumberType.quantityNumber,),
         ),
+        ChangeNotifierProvider<TimeProvider>(
+          create: (context) => TimeProvider(),
+          child: const DialogTime(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -95,11 +102,11 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
           useMaterial3: true,
         ),
-         home: AnimatedSplashScreen(
+         /* home: AnimatedSplashScreen(
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
-            nextScreen: _startWidget()),
-        //home: NavOrder(),
+            nextScreen: _startWidget()), */
+        home: Login(),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const TableSituation(

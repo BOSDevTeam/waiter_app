@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/view/dialog/dialog_number.dart';
@@ -19,6 +20,7 @@ import '../../provider/setting_provider.dart';
 import '../../value/app_color.dart';
 import '../../value/app_string.dart';
 import '../dialog/dialog_taste.dart';
+import '../dialog/dialog_time.dart';
 
 class NavOrder extends StatefulWidget {
   const NavOrder({super.key});
@@ -44,6 +46,15 @@ class _NavOrderState extends State<NavOrder> {
 
     context.read<SettingProvider>().getHideSalePriceInItem().then((value) {
       isHideSalePriceInItem = value ?? false;
+    });
+
+    context.read<SettingProvider>().getAddStartTimeInOrder().then((value) {
+      if (value == true) {
+        context.read<OrderProvider>().setIsAddStartTimeInOrder(true);
+        context
+            .read<OrderProvider>()
+            .setStartTime(DateFormat.jm().format(DateTime.now()));
+      }
     });
 
     DatabaseHelper().getMainMenu().then((value) {
@@ -246,12 +257,60 @@ class _NavOrderState extends State<NavOrder> {
               ),
             ),
             Container(
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(left: 20, top: 10),
-                child: const AppText(
-                  text: AppString.orders,
-                  color: AppColor.primary500,
-                )),
+              margin: const EdgeInsets.only(left: 20, top: 10, right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const AppText(
+                    text: AppString.orders,
+                    color: AppColor.primary500,
+                  ),
+                  Consumer<OrderProvider>(builder: (context, provider, child) {
+                    return provider.isAddStartTimeInOrder
+                        ? Row(
+                            children: [
+                              const AppText(
+                                text: AppString.startTime,
+                                color: AppColor.primary500,
+                                size: 14,
+                              ),
+                              Consumer<OrderProvider>(
+                                  builder: (context, provider, child) {
+                                return AppText(
+                                  text: provider.startTime,
+                                  color: AppColor.primary,
+                                  size: 14,
+                                );
+                              }),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                    splashColor: Colors.white,
+                                    onTap: () {
+                                      showDialog<void>(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return const DialogTime();
+                                          });
+                                    },
+                                    child: const Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 8, right: 8),
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 18,
+                                        color: AppColor.primary500,
+                                      ),
+                                    )),
+                              )
+                            ],
+                          )
+                        : Container();
+                  }),
+                ],
+              ),
+            ),
             const Divider(),
             Consumer<OrderProvider>(builder: (context, provider, child) {
               return Expanded(child: _order(provider));

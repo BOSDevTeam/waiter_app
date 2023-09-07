@@ -54,4 +54,8 @@ class AppString {
   static const String quantity = "Quantity";
   static const String numberOrder = "Number Order";
   static const String enterTime = "Enter Time";
+  static const String ok = "Ok";
+  static const String startTime = "Start Time - ";
+  static const String hour = "Hour";
+  static const String minute = "Minute";
 }

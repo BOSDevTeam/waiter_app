@@ -5,12 +5,16 @@ import '../model/menu_model.dart';
 
 class OrderProvider extends ChangeNotifier {
   final List<OrderModel> _lstOrder = [];
-  late Map<String, dynamic> _selectedTable = {"tableId": 0, "tableName": "-"};
+  Map<String, dynamic> _selectedTable = {"tableId": 0, "tableName": "-"};
   List<MenuModel> _lstMenu = [];
+  String _startTime = "";
+  bool _isAddStartTimeInOrder = false;
 
   List<OrderModel> get lstOrder => _lstOrder;
   Map<String, dynamic> get selectedTable => _selectedTable;
   List<MenuModel> get lstMenu => _lstMenu;
+  String get startTime => _startTime;
+  bool get isAddStartTimeInOrder => _isAddStartTimeInOrder;
 
   int addOrder(OrderModel orderModel) {
     _lstOrder.add(orderModel);
@@ -72,6 +76,16 @@ class OrderProvider extends ChangeNotifier {
 
   void numberOrderItem(int index, int number) {
     _lstOrder[index].number = number;
+    notifyListeners();
+  }
+
+  void setStartTime(String startTime) {
+    _startTime = startTime;
+    notifyListeners();
+  }
+
+   void setIsAddStartTimeInOrder(bool result) {
+    _isAddStartTimeInOrder = result;
     notifyListeners();
   }
 }
