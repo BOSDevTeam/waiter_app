@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../value/app_string.dart';
 
 class TimeProvider extends ChangeNotifier {
-  String _hour = "";
-  String _minute = "";
   String _period = "";
   bool _isAMSelected = false;
   bool _isPMSelected = false;
+  final hourController = TextEditingController();
+  final minuteController = TextEditingController();
 
-  String get hour => _hour;
-  String get minute => _minute;
   String get period => _period;
   bool get isAMSelected => _isAMSelected;
   bool get isPMSelected => _isPMSelected;
 
   void setHour(String hour) {
-    _hour = hour;
+    hourController.text = hour;
   }
 
   void setMinute(String minute) {
-    _minute = minute;
+    minuteController.text = minute;
   }
 
   void setSelectedPeriod(String period, bool isNotify) {
@@ -31,5 +32,16 @@ class TimeProvider extends ChangeNotifier {
       _isPMSelected = true;
     }
     if (isNotify) notifyListeners();
+  }
+
+  bool validateControl() {
+    if (hourController.text.isEmpty) {
+      Fluttertoast.showToast(msg: AppString.enterHour);
+      return false;
+    } else if (minuteController.text.isEmpty) {
+      Fluttertoast.showToast(msg: AppString.enterMinute);
+      return false;
+    }
+    return true;
   }
 }

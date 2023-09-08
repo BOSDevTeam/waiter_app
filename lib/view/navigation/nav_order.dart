@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
+import 'package:waiter_app/provider/login_provider.dart';
 import 'package:waiter_app/view/dialog/dialog_number.dart';
 import 'package:waiter_app/value/number_type.dart';
 import 'package:waiter_app/widget/app_text.dart';
@@ -89,7 +90,13 @@ class _NavOrderState extends State<NavOrder> {
                 item.name = itemList[k]["ItemName"];
                 item.incomdId = itemList[k]["IncomeID"];
                 item.salePrice = itemList[k]["SalePrice"];
+                item.systemId = itemList[k]["SystemID"];
+                item.counterId = itemList[k]["CounterID"];
+                item.sType = itemList[k]["SType"];
+                item.noDiscount = itemList[k]["NoDiscount"];
+                item.itemDiscount = itemList[k]["ItemDiscount"];
                 item.type = 3;
+
                 subMenu.list.add(item);
               }
 
@@ -318,7 +325,22 @@ class _NavOrderState extends State<NavOrder> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context
+                        .read<LoginProvider>()
+                        .getLoginWaiter()
+                        .then((waiterModel) {
+                      context
+                          .read<SettingProvider>()
+                          .getAddTimeByItemInOrder()
+                          .then((isAddTimeByItemInOrder) {
+                        if (context.read<OrderProvider>().validateOrder()) {
+                          context.read<OrderProvider>().sendOrder(
+                              waiterModel, isAddTimeByItemInOrder ?? false);
+                        }
+                      });
+                    });
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.primary500,
                       foregroundColor: Colors.white,
@@ -662,7 +684,13 @@ class _NavOrderState extends State<NavOrder> {
         itemId: data.id!,
         itemName: data.name!,
         quantity: 1,
-        incomdId: data.incomdId ?? 0));
+        incomdId: data.incomdId ?? 0,
+        salePrice: data.salePrice,
+        systemId: data.systemId,
+        counterId: data.counterId,
+        sType: data.sType,
+        noDiscount: data.noDiscount,
+        itemDiscount: data.itemDiscount));
 
     Fluttertoast.showToast(msg: AppString.orderAdded);
 

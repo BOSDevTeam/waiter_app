@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app/model/waiter_model.dart';
 
 import '../value/app_string.dart';
 
@@ -24,7 +25,7 @@ class LoginProvider extends ChangeNotifier {
 
   void setSelectedWaiter(Map<String, dynamic> selectedWaiter) {
     _selectedWaiter = selectedWaiter;
-    nameController.text=selectedWaiter["WaiterName"];
+    nameController.text = selectedWaiter["WaiterName"];
     notifyListeners();
   }
 
@@ -61,5 +62,13 @@ class LoginProvider extends ChangeNotifier {
       return false;
     }
     return true;
+  }
+
+  Future<WaiterModel> getLoginWaiter() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    int? waiterId = sharedPreferences.getInt("WaiterID");
+    String? waiterName = sharedPreferences.getString("WaiterName");
+    return WaiterModel(
+        waiterId: waiterId ?? 0, waiterName: waiterName ?? "", password: "");
   }
 }

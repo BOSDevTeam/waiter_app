@@ -129,13 +129,14 @@ class _TableSituationState extends State<TableSituation> {
                 onTapDown: (details) => _getTapPosition(details),
                 onTap: () {
                   if (!isFromNav) {
-                    if (!table.isOccupied) {
-                      context.read<OrderProvider>().setSelectedTable({
-                        "tableId": table.tableId,
-                        "tableName": table.tableName
-                      });
-                      Navigator.pop(context);
-                    }
+                    //if (!table.isOccupied) {
+                    context.read<OrderProvider>().setSelectedTable({
+                      "tableId": table.tableId,
+                      "tableName": table.tableName,
+                      "isOccupied": table.isOccupied ? true : false
+                    });
+                    Navigator.pop(context);
+                    //}
                   }
                 },
                 onLongPress: () {

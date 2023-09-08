@@ -58,4 +58,8 @@ class AppString {
   static const String startTime = "Start Time - ";
   static const String hour = "Hour";
   static const String minute = "Minute";
+  static const String enterHour = "Enter Hour";
+  static const String enterMinute = "Enter Minute";
+  static const String addOrder = "Add Order";
+  static const String selectTable = "Select Table";
 }

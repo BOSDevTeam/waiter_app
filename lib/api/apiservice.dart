@@ -7,6 +7,8 @@ import 'package:waiter_app/model/waiter_model.dart';
 
 import '../model/item_model.dart';
 import '../model/main_menu_model.dart';
+import '../model/order_master_model.dart';
+import '../model/order_model.dart';
 import '../model/sub_menu_model.dart';
 import '../model/system_item_model.dart';
 import '../model/system_setting_model.dart';
@@ -57,5 +59,12 @@ abstract class ApiService {
 
   @GET("tablesituation")
   Future<List<TableSituationModel>> getTableSituation(
-      @Body() ConnectorModel connectorModel,@Query("tableTypeId") int tableTypeId);
+      @Body() ConnectorModel connectorModel,
+      @Query("tableTypeId") int tableTypeId);
+
+  @POST("order")
+  Future<void> sendOrder(
+      @Body() ConnectorModel connectorModel,
+      @Body() OrderMasterModel orderMasterModel,
+      @Body() List<OrderModel> lstOrder);
 }

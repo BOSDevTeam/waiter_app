@@ -35,13 +35,14 @@ class _DialogTasteState extends State<DialogTaste> {
   void initState() {
     if (!isTasteMulti) {
       context.read<TasteProvider>().loadSelectedTaste(
-          context.read<OrderProvider>().getCommonTaste(orderIndex));
+          context.read<OrderProvider>().getCommonTaste(orderIndex), 0);
       DatabaseHelper().getTaste().then((value) {
         context.read<TasteProvider>().setTaste(value);
       });
     } else {
       context.read<TasteProvider>().loadSelectedTaste(
-          context.read<OrderProvider>().getTasteByItem(orderIndex));
+          context.read<OrderProvider>().getTasteByItem(orderIndex),
+          context.read<OrderProvider>().getTotalTastePrice(orderIndex));
       DatabaseHelper().getTasteMulti(incomeId).then((value) {
         context.read<TasteProvider>().setTaste(value);
       });
@@ -70,6 +71,9 @@ class _DialogTasteState extends State<DialogTaste> {
                     suffixIcon: IconButton(
                         onPressed: () {
                           context.read<TasteProvider>().clearSelectedTaste();
+                          context
+                              .read<TasteProvider>()
+                              .clearSelectedTastePrice();
                         },
                         icon: const Icon(Icons.cancel))),
                 maxLines: null,
@@ -88,7 +92,7 @@ class _DialogTasteState extends State<DialogTaste> {
               TextButton(
                   onPressed: () {
                     context.read<TasteProvider>().clearSelectedTaste();
-
+                    context.read<TasteProvider>().clearSelectedTastePrice();
                     Navigator.pop(context);
                   },
                   child: const Text(AppString.cancel)),
@@ -96,16 +100,18 @@ class _DialogTasteState extends State<DialogTaste> {
                   onPressed: () {
                     Navigator.pop(context);
                     String tastes = context.read<TasteProvider>().selectedTaste;
+                    int totalTastePrice =
+                        context.read<TasteProvider>().selectedTastePrice;
                     if (!isTasteMulti) {
                       context
                           .read<OrderProvider>()
                           .updateCommonTaste(orderIndex, tastes);
                     } else {
-                      context
-                          .read<OrderProvider>()
-                          .updateTasteByItem(orderIndex, tastes);
+                      context.read<OrderProvider>().updateTasteByItem(
+                          orderIndex, tastes, totalTastePrice);
                     }
                     context.read<TasteProvider>().clearSelectedTaste();
+                    context.read<TasteProvider>().clearSelectedTastePrice();
                   },
                   child: const Text(AppString.add))
             ],
@@ -140,6 +146,9 @@ class _DialogTasteState extends State<DialogTaste> {
                 context
                     .read<TasteProvider>()
                     .setSelectedTaste(data["TasteName"]);
+                context
+                    .read<TasteProvider>()
+                    .setSelectedTastePrice(data["Price"] ?? 0);
               },
             );
           }),

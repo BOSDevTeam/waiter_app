@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/provider/time_provider.dart';
 import 'package:waiter_app/value/app_color.dart';
 
+import '../../provider/order_provider.dart';
 import '../../value/app_string.dart';
 import '../../widget/app_text.dart';
 
@@ -15,13 +17,15 @@ class DialogTime extends StatefulWidget {
 }
 
 class _DialogTimeState extends State<DialogTime> {
+  var timeProvider = TimeProvider();
+
   @override
   void initState() {
     String time = DateFormat.jm().format(DateTime.now());
     if (time.isNotEmpty) {
       List<String> lst = time.split(":");
-      context.read<TimeProvider>().setHour(lst[0]);
-      context.read<TimeProvider>().setMinute(lst[1].substring(0, 2));
+      timeProvider.setHour(lst[0]);
+      timeProvider.setMinute(lst[1].substring(0, 2));
       String period = lst[1].substring(lst[1].length - 2);
       context.read<TimeProvider>().setSelectedPeriod(period, false);
     }
@@ -58,28 +62,33 @@ class _DialogTimeState extends State<DialogTime> {
             ),
             Row(
               children: [
-                Consumer<TimeProvider>(builder: (context, provider, child) {
-                  return Expanded(
-                      child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: const EdgeInsets.only(top: 20, bottom: 20),
-                        alignment: Alignment.center,
+                Expanded(
+                    child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {},
+                    child: Container(
+                        padding: const EdgeInsets.only(top: 8, bottom: 8),
                         decoration: BoxDecoration(
                             border: Border.all(color: AppColor.primary300),
                             borderRadius: BorderRadius.circular(5)),
                         width: double.infinity,
-                        child: AppText(
-                          text: provider.hour,
-                          size: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ));
-                }),
+                        child: TextFormField(
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(2)
+                          ],
+                          controller: timeProvider.hourController,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          decoration:
+                              const InputDecoration(border: InputBorder.none),
+                          style: const TextStyle(
+                              color: AppColor.primaryDark,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        )),
+                  ),
+                )),
                 const SizedBox(
                   width: 5,
                 ),
@@ -91,28 +100,33 @@ class _DialogTimeState extends State<DialogTime> {
                 const SizedBox(
                   width: 5,
                 ),
-                Consumer<TimeProvider>(builder: (context, provider, child) {
-                  return Expanded(
-                      child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: const EdgeInsets.only(top: 20, bottom: 20),
-                        alignment: Alignment.center,
+                Expanded(
+                    child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {},
+                    child: Container(
+                        padding: const EdgeInsets.only(top: 8, bottom: 8),
                         decoration: BoxDecoration(
                             border: Border.all(color: AppColor.primary300),
                             borderRadius: BorderRadius.circular(5)),
                         width: double.infinity,
-                        child: AppText(
-                          text: provider.minute,
-                          size: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ));
-                }),
+                        child: TextFormField(
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(2)
+                          ],
+                          controller: timeProvider.minuteController,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          decoration:
+                              const InputDecoration(border: InputBorder.none),
+                          style: const TextStyle(
+                              color: AppColor.primaryDark,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        )),
+                  ),
+                )),
                 const SizedBox(
                   width: 15,
                 ),
@@ -188,7 +202,14 @@ class _DialogTimeState extends State<DialogTime> {
                   child: const Text(AppString.cancel)),
               ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    if (timeProvider.validateControl()) {
+                      String hour = timeProvider.hourController.text;
+                      String minute = timeProvider.minuteController.text;
+                      String period = context.read<TimeProvider>().period;
+                      String time = "$hour:$minute $period";
+                      context.read<OrderProvider>().setStartTime(time);
+                      Navigator.pop(context);
+                    }
                   },
                   child: Text(AppString.ok.toUpperCase()))
             ],
