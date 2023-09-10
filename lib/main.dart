@@ -102,11 +102,11 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
           useMaterial3: true,
         ),
-         /* home: AnimatedSplashScreen(
+         home: AnimatedSplashScreen(
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
-            nextScreen: _startWidget()), */
-        home: Login(),
+            nextScreen: _startWidget()),
+        //home: Login(),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const TableSituation(

@@ -188,7 +188,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getItem() async {
     _db = await _createDatabase();
     List<Map<String, dynamic>> list = await _db.rawQuery(
-        "SELECT item.ItemID,item.SubMenuID,ItemName,SalePrice,SType,NoDiscount,ItemDiscount,sub.IncomeID,main.CounterID,sys.SystemID FROM $tbItem item INNER JOIN $tbSubMenu sub ON item.SubMenuID=sub.SubMenuID INNER JOIN $tbMainMenu main ON sub.MainMenuID=main.MainMenuID INNER JOIN $tbSystemItem sys ON item.SystemID=sys.SystemID");
+        "SELECT item.ItemID,item.SubMenuID,ItemName,SalePrice,SType,NoDiscount,ItemDiscount,sub.IncomeID,main.CounterID,sys.SystemID FROM $tbItem item INNER JOIN $tbSubMenu sub ON item.SubMenuID=sub.SubMenuID INNER JOIN $tbMainMenu main ON sub.MainMenuID=main.MainMenuID INNER JOIN $tbSystemItem sys ON item.ItemID=sys.ItemID");
     return list;
   }
 

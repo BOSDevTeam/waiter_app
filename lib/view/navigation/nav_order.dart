@@ -634,13 +634,12 @@ class _NavOrderState extends State<NavOrder> {
         return ListTile(
           leading: const SizedBox(width: 10),
           //textColor: _menuColor(list.type),
-          title: Expanded(
-              child: Text(
+          title: Text(
             menuModel.name.toString(),
             style:
                 const TextStyle(color: AppColor.primaryDark, fontFamily: "BOS"),
             maxLines: null,
-          )),
+          ),
 
           subtitle: !isHideSalePriceInItem && menuModel.type == 3
               ? AppText(
@@ -667,13 +666,13 @@ class _NavOrderState extends State<NavOrder> {
                 color: AppColor.primary400,
               ),
         //textColor: _menuColor(list.type),
-        title: Expanded(
-            child: Text(
+        title: Text(
           menuModel.name.toString(),
           style:
               const TextStyle(color: AppColor.primaryDark, fontFamily: "BOS"),
           maxLines: null,
-        )),
+        ),
+
         children: menuModel.list.map(_buildMenuList).toList(),
       );
     }
