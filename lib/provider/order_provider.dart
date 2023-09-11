@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:waiter_app/controller/data_downloading_controller.dart';
 import 'package:waiter_app/model/order_master_model.dart';
 import 'package:dio/dio.dart';
+import 'package:waiter_app/view/navigation/nav_order.dart';
 
 import '../api/apiservice.dart';
 import '../database/database_helper.dart';
@@ -14,7 +16,7 @@ import '../model/waiter_model.dart';
 import '../value/app_string.dart';
 
 class OrderProvider extends ChangeNotifier {
-  final List<OrderModel> _lstOrder = [];
+  List<OrderModel> _lstOrder = [];
   Map<String, dynamic> _selectedTable = {
     "tableId": 0,
     "tableName": "-",
@@ -89,6 +91,11 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteAllOrder() {
+    _lstOrder = [];
+    notifyListeners();
+  }
+
   void setMenu(List<MenuModel> lstMenu) {
     _lstMenu = lstMenu;
     notifyListeners();
@@ -120,20 +127,10 @@ class OrderProvider extends ChangeNotifier {
     return true;
   }
 
-  void sendOrder(WaiterModel waiterModel, bool isAddTimeByItemInOrder) {
+  void sendOrder(WaiterModel waiterModel, bool isAddTimeByItemInOrder,
+      bool notPutTogetherItemNameAndTaste) {
     var dataDownloadingController = DataDownloadingController();
     dynamic apiService;
-
-    OrderMasterModel orderMasterModel = OrderMasterModel(
-        waiterId: waiterModel.waiterId,
-        waiterName: waiterModel.waiterName,
-        tableId: _selectedTable["tableId"],
-        tableName: _selectedTable["tableName"],
-        isOccupiedTable: _selectedTable["isOccupied"],
-        isAddStartTimeInOrder: _isAddStartTimeInOrder,
-        startTime: _startTime,
-        isAddTimeByItemInOrder: isAddTimeByItemInOrder,
-        currentTime: DateFormat.jm().format(DateTime.now()));
 
     DatabaseHelper().getBaseUrl().then((value) {
       dataDownloadingController.lstBaseUrl = value;
@@ -153,10 +150,26 @@ class OrderProvider extends ChangeNotifier {
             databaseLoginPassword: dataDownloadingController.lstConnector[0]
                 ["DatabaseLoginPassword"]);
 
-        apiService
-            .sendOrder(dataDownloadingController.connectorModel,
-                orderMasterModel, lstOrder)
-            .then((value) {});
+        OrderMasterModel orderMasterModel = OrderMasterModel(
+            waiterId: waiterModel.waiterId,
+            waiterName: waiterModel.waiterName,
+            tableId: _selectedTable["tableId"],
+            tableName: _selectedTable["tableName"],
+            isOccupiedTable: _selectedTable["isOccupied"],
+            isAddStartTimeInOrder: _isAddStartTimeInOrder,
+            startTime: _startTime,
+            isAddTimeByItemInOrder: isAddTimeByItemInOrder,
+            currentTime: DateFormat.jm().format(DateTime.now()),
+            notPutTogetherItemNameAndTaste: notPutTogetherItemNameAndTaste,
+            lstOrder: _lstOrder,
+            connectorModel: dataDownloadingController.connectorModel);
+
+        EasyLoading.show();
+        apiService.sendOrder(orderMasterModel).then((value) {
+          EasyLoading.dismiss();
+          deleteAllOrder();
+          Fluttertoast.showToast(msg: AppString.successfullyOrderPlaced);
+        });
       });
     });
   }

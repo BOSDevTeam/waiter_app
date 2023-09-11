@@ -334,10 +334,17 @@ class _NavOrderState extends State<NavOrder> {
                           .read<SettingProvider>()
                           .getAddTimeByItemInOrder()
                           .then((isAddTimeByItemInOrder) {
-                        if (context.read<OrderProvider>().validateOrder()) {
-                          context.read<OrderProvider>().sendOrder(
-                              waiterModel, isAddTimeByItemInOrder ?? false);
-                        }
+                        context
+                            .read<SettingProvider>()
+                            .getNotPutItemAndTasteInOrder()
+                            .then((notPutTogetherItemNameAndTaste) {
+                          if (context.read<OrderProvider>().validateOrder()) {
+                            context.read<OrderProvider>().sendOrder(
+                                waiterModel,
+                                isAddTimeByItemInOrder ?? false,
+                                notPutTogetherItemNameAndTaste ?? false);
+                          }
+                        });
                       });
                     });
                   },

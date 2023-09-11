@@ -62,4 +62,5 @@ class AppString {
   static const String enterMinute = "Enter Minute";
   static const String addOrder = "Add Order";
   static const String selectTable = "Select Table";
+  static const String successfullyOrderPlaced = "Successfully Order Placed";
 }

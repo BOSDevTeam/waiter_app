@@ -63,8 +63,5 @@ abstract class ApiService {
       @Query("tableTypeId") int tableTypeId);
 
   @POST("order")
-  Future<void> sendOrder(
-      @Body() ConnectorModel connectorModel,
-      @Body() OrderMasterModel orderMasterModel,
-      @Body() List<OrderModel> lstOrder);
+  Future<int> sendOrder(@Body() OrderMasterModel model);
 }

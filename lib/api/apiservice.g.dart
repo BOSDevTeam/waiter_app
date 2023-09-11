@@ -358,17 +358,13 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> sendOrder(
-    ConnectorModel connectorModel,
-    OrderMasterModel orderMasterModel,
-    List<OrderModel> lstOrder,
-  ) async {
+  Future<int> sendOrder(OrderMasterModel model) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(connectorModel.toJson());
-    await _dio.fetch<void>(_setStreamType<void>(Options(
+    _data.addAll(model.toJson());
+    final _result = await _dio.fetch<int>(_setStreamType<int>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -384,6 +380,8 @@ class _ApiService implements ApiService {
           _dio.options.baseUrl,
           baseUrl,
         ))));
+    final value = _result.data!;
+    return value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

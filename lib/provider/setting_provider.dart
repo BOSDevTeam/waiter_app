@@ -71,6 +71,11 @@ class SettingProvider extends ChangeNotifier {
     return sharedPreferences.getBool(AppSetting.addTimeByItemInOrder);
   }
 
+  Future<bool?> getNotPutItemAndTasteInOrder() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(AppSetting.notPutItemAndTasteInOrder);
+  }
+
   Future<void> setAddTimeByItemInOrder(bool value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool(AppSetting.addTimeByItemInOrder, value);
