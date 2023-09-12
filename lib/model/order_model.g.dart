@@ -21,6 +21,8 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
       sType: json['SType'] as int,
       noDiscount: json['NoDiscount'] as int,
       itemDiscount: json['ItemDiscount'] as int,
+      amount: json['Amount'] as int? ?? 0,
+      allTaste: json['AllTaste'] as String? ?? "",
     );
 
 Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
@@ -39,4 +41,6 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'SType': instance.sType,
       'NoDiscount': instance.noDiscount,
       'ItemDiscount': instance.itemDiscount,
+      'Amount': instance.amount,
+      'AllTaste': instance.allTaste,
     };

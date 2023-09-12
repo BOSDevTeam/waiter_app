@@ -402,11 +402,11 @@ class _NavOrderState extends State<NavOrder> {
                     ],
                   ),
                 ),
-                data.commonTaste!.isNotEmpty || data.tasteByItem!.isNotEmpty
+                data.commonTaste.isNotEmpty || data.tasteByItem.isNotEmpty
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          data.commonTaste!.isNotEmpty
+                          data.commonTaste.isNotEmpty
                               ? Expanded(
                                   child: Text(
                                   data.commonTaste.toString(),
@@ -416,7 +416,7 @@ class _NavOrderState extends State<NavOrder> {
                                   maxLines: null,
                                 ))
                               : Container(),
-                          data.tasteByItem!.isNotEmpty
+                          data.tasteByItem.isNotEmpty
                               ? Expanded(
                                   child: Text(
                                   data.tasteByItem.toString(),

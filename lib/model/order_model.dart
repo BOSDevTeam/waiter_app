@@ -32,6 +32,10 @@ class OrderModel {
   int noDiscount;
   @JsonKey(name: "ItemDiscount")
   int itemDiscount;
+  @JsonKey(name: "Amount")
+  int amount;
+  @JsonKey(name: "AllTaste")
+  String allTaste;
 
   OrderModel(
       {required this.itemId,
@@ -47,7 +51,9 @@ class OrderModel {
       required this.counterId,
       required this.sType,
       required this.noDiscount,
-      required this.itemDiscount});
+      required this.itemDiscount,
+      this.amount = 0,
+      this.allTaste = ""});
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);

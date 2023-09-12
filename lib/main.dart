@@ -20,8 +20,10 @@ import 'package:waiter_app/view/local_server_connection.dart';
 import 'package:waiter_app/view/login.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
 import 'package:waiter_app/view/navigation/nav_setting.dart';
+import 'package:waiter_app/view/order_detail.dart';
 import 'package:waiter_app/view/table_situation.dart';
 
+import 'provider/order_detail_provider.dart';
 import 'value/app_color.dart';
 
 void main() async {
@@ -78,6 +80,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<TimeProvider>(
           create: (context) => TimeProvider(),
           child: const DialogTime(),
+        ),
+        ChangeNotifierProvider<OrderDetailProvider>(
+          create: (context) => OrderDetailProvider(),
+          child: const OrderDetail(tableId: 0,tableName: "",),
         ),
       ],
       child: MaterialApp(

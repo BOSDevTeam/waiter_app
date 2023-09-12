@@ -63,4 +63,9 @@ class AppString {
   static const String addOrder = "Add Order";
   static const String selectTable = "Select Table";
   static const String successfullyOrderPlaced = "Successfully Order Placed";
+  static const String orderDetail = "Order Detail";
+  static const String subtotal = "Subtotal";
+  static const String charges = "Charges";
+  static const String tax = "Tax";
+  static const String total = "Total";
 }

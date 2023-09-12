@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/model/table_situation_model.dart';
+import 'package:waiter_app/view/order_detail.dart';
 import 'package:waiter_app/widget/app_text.dart';
 import 'package:dio/dio.dart';
 
@@ -141,7 +142,7 @@ class _TableSituationState extends State<TableSituation> {
                 },
                 onLongPress: () {
                   if (table.isOccupied) {
-                    _showContextMenu(context);
+                    _showContextMenu(context,table.tableId,table.tableName);
                   }
                 },
                 child: Column(
@@ -256,7 +257,7 @@ class _TableSituationState extends State<TableSituation> {
     });
   }
 
-  void _showContextMenu(BuildContext context) async {
+  void _showContextMenu(BuildContext context,int tableId,String tableName) async {
     final RenderObject? overlay =
         Overlay.of(context).context.findRenderObject();
 
@@ -284,7 +285,9 @@ class _TableSituationState extends State<TableSituation> {
     // Implement the logic for each choice here
     switch (result) {
       case AppString.viewOrder:
-        debugPrint('view order');
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return OrderDetail(tableId: tableId,tableName: tableName,);
+        }));
         break;
       case AppString.getBill:
         debugPrint('get bill');

@@ -24,6 +24,8 @@ OrderMasterModel _$OrderMasterModelFromJson(Map<String, dynamic> json) =>
           .toList(),
       connectorModel: ConnectorModel.fromJson(
           json['connectorModel'] as Map<String, dynamic>),
+      tranId: json['TranID'] as int? ?? 0,
+      totalCustomer: json['TotalCustomer'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$OrderMasterModelToJson(OrderMasterModel instance) =>
@@ -40,4 +42,6 @@ Map<String, dynamic> _$OrderMasterModelToJson(OrderMasterModel instance) =>
       'NotPutTogetherItemNameAndTaste': instance.notPutTogetherItemNameAndTaste,
       'lstOrder': instance.lstOrder,
       'connectorModel': instance.connectorModel,
+      'TranID': instance.tranId,
+      'TotalCustomer': instance.totalCustomer,
     };

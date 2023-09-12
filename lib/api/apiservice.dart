@@ -64,4 +64,9 @@ abstract class ApiService {
 
   @POST("order")
   Future<int> sendOrder(@Body() OrderMasterModel model);
+
+  @GET("order")
+  Future<OrderMasterModel> getOrder(
+      @Body() ConnectorModel connectorModel,
+      @Query("tableId") int tableId);
 }

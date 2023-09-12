@@ -28,6 +28,10 @@ class OrderMasterModel {
   bool notPutTogetherItemNameAndTaste;
   List<OrderModel> lstOrder;
   ConnectorModel connectorModel;
+  @JsonKey(name: "TranID")
+  int tranId;
+  @JsonKey(name: "TotalCustomer")
+  int totalCustomer;
 
   OrderMasterModel(
       {required this.waiterId,
@@ -41,7 +45,9 @@ class OrderMasterModel {
       required this.currentTime,
       required this.notPutTogetherItemNameAndTaste,
       required this.lstOrder,
-      required this.connectorModel});
+      required this.connectorModel,
+      this.tranId = 0,
+      this.totalCustomer = 0});
 
   factory OrderMasterModel.fromJson(Map<String, dynamic> json) =>
       _$OrderMasterModelFromJson(json);
