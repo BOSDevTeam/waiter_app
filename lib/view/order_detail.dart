@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/provider/order_detail_provider.dart';
+import 'package:waiter_app/provider/setting_provider.dart';
 
 import '../api/apiservice.dart';
 import '../controller/data_downloading_controller.dart';
@@ -58,7 +59,21 @@ class _OrderDetailState extends State<OrderDetail> {
           EasyLoading.dismiss();
           context
               .read<OrderDetailProvider>()
-              .setOrderList(orderMasterModel.lstOrder);
+              .setStartTime(orderMasterModel.startTime);
+          context
+              .read<SettingProvider>()
+              .getCalculateAdvancedTax()
+              .then((isCalculateAdvancedTax) {
+            context
+                .read<SettingProvider>()
+                .getHideCommercialTax()
+                .then((isHideCommercialTax) {
+              context.read<OrderDetailProvider>().setOrderList(
+                  orderMasterModel.lstOrder,
+                  isCalculateAdvancedTax ?? false,
+                  isHideCommercialTax ?? false);
+            });
+          });
         });
       });
     });
@@ -92,10 +107,10 @@ class _OrderDetailState extends State<OrderDetail> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Row(
                       children: [
-                        ClipOval(
+                        const ClipOval(
                           child: Material(
                             color: AppColor.grey,
                             shape: CircleBorder(
@@ -111,30 +126,26 @@ class _OrderDetailState extends State<OrderDetail> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
-                    
                         Flexible(
                           child: Column(
                             children: [
-                              AppText(
+                              const AppText(
                                 text: AppString.table,
                                 size: 16,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
-                              /* Consumer<OrderDetailProvider>(
-                                  builder: (context, provider, child) {
-                                return AppText(
-                                  text: provider.tableName,
-                                  color: AppColor.primary,
-                                  size: 20,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "BOS",
-                                );
-                              }), */
+                              AppText(
+                                text: tableName,
+                                color: AppColor.primary,
+                                size: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "BOS",
+                              )
                             ],
                           ),
                         )
@@ -199,27 +210,32 @@ class _OrderDetailState extends State<OrderDetail> {
             ),
             Container(
               margin: const EdgeInsets.only(left: 20, top: 10, right: 20),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
+                  const AppText(
                     text: AppString.orders,
                     color: AppColor.primary500,
                   ),
-                  Row(
-                    children: [
-                      AppText(
-                        text: AppString.startTime,
-                        color: AppColor.primary500,
-                        size: 14,
-                      ),
-                      AppText(
-                        text: "00:00 AM",
-                        color: AppColor.primary,
-                        size: 14,
-                      )
-                    ],
-                  )
+                  Consumer<OrderDetailProvider>(
+                      builder: (context, provider, child) {
+                    return provider.startTime.isNotEmpty
+                        ? Row(
+                            children: [
+                              const AppText(
+                                text: AppString.startTime,
+                                color: AppColor.primary500,
+                                size: 14,
+                              ),
+                              AppText(
+                                text: provider.startTime,
+                                color: AppColor.primary,
+                                size: 14,
+                              )
+                            ],
+                          )
+                        : const SizedBox();
+                  }),
                 ],
               ),
             ),
@@ -229,44 +245,62 @@ class _OrderDetailState extends State<OrderDetail> {
             }),
             const Divider(),
             Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
+              margin: const EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AppText(text: AppString.subtotal),
-                      AppText(text: "0000"),
+                      const AppText(text: AppString.subtotal),
+                      Consumer<OrderDetailProvider>(
+                          builder: (context, provider, child) {
+                        return AppText(text: provider.subtotal.toString());
+                      }),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AppText(text: AppString.charges),
-                      AppText(text: "000"),
+                      const AppText(text: AppString.charges),
+                      Consumer<OrderDetailProvider>(
+                          builder: (context, provider, child) {
+                        return AppText(text: provider.chargesAmount.toString());
+                      }),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppText(text: AppString.tax),
-                      AppText(text: "000"),
-                    ],
-                  ),
+                  Consumer<OrderDetailProvider>(
+                      builder: (context, provider, child) {
+                    return !provider.isHideCommercialTax
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const AppText(text: AppString.tax),
+                              Consumer<OrderDetailProvider>(
+                                  builder: (context, provider, child) {
+                                return AppText(
+                                    text: provider.taxAmount.toString());
+                              }),
+                            ],
+                          )
+                        : const SizedBox();
+                  }),
                   const Divider(
                     color: AppColor.primary400,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AppText(
+                      const AppText(
                         text: AppString.total,
                         fontWeight: FontWeight.bold,
                       ),
-                      AppText(
-                        text: "0000",
-                        fontWeight: FontWeight.bold,
-                      ),
+                      Consumer<OrderDetailProvider>(
+                          builder: (context, provider, child) {
+                        return AppText(
+                          text: provider.total.toString(),
+                          fontWeight: FontWeight.bold,
+                        );
+                      }),
                     ],
                   ),
                 ],
@@ -295,7 +329,8 @@ class _OrderDetailState extends State<OrderDetail> {
               children: [
                 Text(
                   data.itemName,
-                  style: const TextStyle(fontFamily: "BOS",color: AppColor.primaryDark),
+                  style: const TextStyle(
+                      fontFamily: "BOS", color: AppColor.primaryDark),
                   maxLines: null,
                 ),
                 data.allTaste.isNotEmpty
@@ -320,11 +355,31 @@ class _OrderDetailState extends State<OrderDetail> {
                         const SizedBox(
                           width: 15,
                         ),
-                        const AppText(text: "x",size: 10,),
+                        const AppText(
+                          text: "x",
+                          size: 10,
+                        ),
                         const SizedBox(
                           width: 15,
                         ),
                         AppText(text: data.salePrice.toString()),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        data.itemDiscount != 0
+                            ? Container(
+                                padding:
+                                    const EdgeInsets.only(left: 5, right: 5),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColor.grey),
+                                child: AppText(
+                                  text: "${data.itemDiscount}%",
+                                  color: AppColor.primary500,
+                                  size: 14,
+                                ),
+                              )
+                            : const SizedBox()
                       ],
                     ),
                     AppText(text: data.amount.toString()),

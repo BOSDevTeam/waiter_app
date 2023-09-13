@@ -49,14 +49,13 @@ class _NavSettingState extends State<NavSetting> {
                     height: 20,
                   ),
                   ListTile(
-                    title: const Expanded(
-                        child: Text(
+                    title: const Text(
                       AppSetting.addTimeByItemInOrder,
                       style: TextStyle(
                         color: AppColor.primaryDark,
                       ),
                       maxLines: null,
-                    )),
+                    ),
                     trailing: Consumer<SettingProvider>(
                         builder: (context, provider, child) {
                       return Checkbox(
@@ -70,14 +69,13 @@ class _NavSettingState extends State<NavSetting> {
                   ),
                   const Divider(),
                   ListTile(
-                    title: const Expanded(
-                        child: Text(
+                    title: const Text(
                       AppSetting.showTasteInSelectItem,
                       style: TextStyle(
                         color: AppColor.primaryDark,
                       ),
                       maxLines: null,
-                    )),
+                    ),
                     trailing: Consumer<SettingProvider>(
                         builder: (context, provider, child) {
                       return Checkbox(
@@ -91,14 +89,13 @@ class _NavSettingState extends State<NavSetting> {
                   ),
                   const Divider(),
                   ListTile(
-                    title: const Expanded(
-                        child: Text(
+                    title: const Text(
                       AppSetting.useTasteByMenu,
                       style: TextStyle(
                         color: AppColor.primaryDark,
                       ),
                       maxLines: null,
-                    )),
+                    ),
                     trailing: Consumer<SettingProvider>(
                         builder: (context, provider, child) {
                       return Checkbox(
@@ -112,14 +109,13 @@ class _NavSettingState extends State<NavSetting> {
                   ),
                   const Divider(),
                   ListTile(
-                    title: const Expanded(
-                        child: Text(
+                    title: const Text(
                       AppSetting.notPutItemAndTasteInOrder,
                       style: TextStyle(
                         color: AppColor.primaryDark,
                       ),
                       maxLines: null,
-                    )),
+                    ),
                     trailing: Consumer<SettingProvider>(
                         builder: (context, provider, child) {
                       return Checkbox(
@@ -133,14 +129,13 @@ class _NavSettingState extends State<NavSetting> {
                   ),
                   const Divider(),
                   ListTile(
-                    title: const Expanded(
-                        child: Text(
+                    title: const Text(
                       AppSetting.addStartTimeInOrder,
                       style: TextStyle(
                         color: AppColor.primaryDark,
                       ),
                       maxLines: null,
-                    )),
+                    ),
                     trailing: Consumer<SettingProvider>(
                         builder: (context, provider, child) {
                       return Checkbox(
@@ -154,14 +149,13 @@ class _NavSettingState extends State<NavSetting> {
                   ),
                   const Divider(),
                   ListTile(
-                    title: const Expanded(
-                        child: Text(
+                    title: const Text(
                       AppSetting.hideSalePriceInItem,
                       style: TextStyle(
                         color: AppColor.primaryDark,
                       ),
                       maxLines: null,
-                    )),
+                    ),
                     trailing: Consumer<SettingProvider>(
                         builder: (context, provider, child) {
                       return Checkbox(
@@ -175,14 +169,13 @@ class _NavSettingState extends State<NavSetting> {
                   ),
                   const Divider(),
                   ListTile(
-                    title: const Expanded(
-                        child: Text(
+                    title: const Text(
                       AppSetting.hideCommercialTax,
                       style: TextStyle(
                         color: AppColor.primaryDark,
                       ),
                       maxLines: null,
-                    )),
+                    ),
                     trailing: Consumer<SettingProvider>(
                         builder: (context, provider, child) {
                       return Checkbox(
@@ -196,14 +189,13 @@ class _NavSettingState extends State<NavSetting> {
                   ),
                   const Divider(),
                   ListTile(
-                    title: const Expanded(
-                        child: Text(
+                    title: const Text(
                       AppSetting.calculateAdvancedTax,
                       style: TextStyle(
                         color: AppColor.primaryDark,
                       ),
                       maxLines: null,
-                    )),
+                    ),
                     trailing: Consumer<SettingProvider>(
                         builder: (context, provider, child) {
                       return Checkbox(
@@ -217,14 +209,13 @@ class _NavSettingState extends State<NavSetting> {
                   ),
                   const Divider(),
                   ListTile(
-                    title: const Expanded(
-                        child: Text(
+                    title: const Text(
                       AppSetting.addCustomerByTotalPerson,
                       style: TextStyle(
                         color: AppColor.primaryDark,
                       ),
                       maxLines: null,
-                    )),
+                    ),
                     trailing: Consumer<SettingProvider>(
                         builder: (context, provider, child) {
                       return Checkbox(
@@ -254,25 +245,23 @@ class _NavSettingState extends State<NavSetting> {
                     height: 20,
                   ),
                   ListTile(
-                      title: Expanded(
-                          child: Text(
+                      title: Text(
                         AppString.localServerConnection,
                         style: TextStyle(
                           color: AppColor.primaryDark,
                         ),
                         maxLines: null,
-                      )),
+                      ),
                       trailing: Icon(Icons.arrow_right)),
                   Divider(),
                   ListTile(
-                      title: Expanded(
-                          child: Text(
+                      title: Text(
                         AppString.updateData,
                         style: TextStyle(
                           color: AppColor.primaryDark,
                         ),
                         maxLines: null,
-                      )),
+                      ),
                       trailing: Icon(Icons.arrow_right)),
                 ],
               )

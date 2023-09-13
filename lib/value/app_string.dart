@@ -68,4 +68,7 @@ class AppString {
   static const String charges = "Charges";
   static const String tax = "Tax";
   static const String total = "Total";
+  static const String somethingWentWrong = "Something Went Wrong";
+  static const String billRequested = "Bill is Requested";
+  static const String addCustomerNumber = "Add Customer Number";
 }

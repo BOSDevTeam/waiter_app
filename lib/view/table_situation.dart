@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/model/table_situation_model.dart';
+import 'package:waiter_app/provider/login_provider.dart';
 import 'package:waiter_app/view/order_detail.dart';
 import 'package:waiter_app/widget/app_text.dart';
 import 'package:dio/dio.dart';
@@ -142,7 +144,7 @@ class _TableSituationState extends State<TableSituation> {
                 },
                 onLongPress: () {
                   if (table.isOccupied) {
-                    _showContextMenu(context,table.tableId,table.tableName);
+                    _showContextMenu(context, table.tableId, table.tableName);
                   }
                 },
                 child: Column(
@@ -257,7 +259,8 @@ class _TableSituationState extends State<TableSituation> {
     });
   }
 
-  void _showContextMenu(BuildContext context,int tableId,String tableName) async {
+  void _showContextMenu(
+      BuildContext context, int tableId, String tableName) async {
     final RenderObject? overlay =
         Overlay.of(context).context.findRenderObject();
 
@@ -286,11 +289,31 @@ class _TableSituationState extends State<TableSituation> {
     switch (result) {
       case AppString.viewOrder:
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return OrderDetail(tableId: tableId,tableName: tableName,);
+          return OrderDetail(
+            tableId: tableId,
+            tableName: tableName,
+          );
         }));
         break;
       case AppString.getBill:
-        debugPrint('get bill');
+        context.read<LoginProvider>().getLoginWaiter().then((waiterModel) {
+          EasyLoading.show();
+          apiService
+              .getBill(dataDownloadingController.connectorModel, tableId,
+                  tableName, waiterModel.waiterId, waiterModel.waiterName)
+              .then((value) {
+            EasyLoading.dismiss();
+            if (value) {
+              Fluttertoast.showToast(
+                  msg: "$tableName ${AppString.billRequested}");
+            } else {
+              Fluttertoast.showToast(
+                msg: AppString.somethingWentWrong,
+              );
+            }
+          });
+        });
+
         break;
     }
   }

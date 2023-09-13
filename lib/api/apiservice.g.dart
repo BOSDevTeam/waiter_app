@@ -415,6 +415,44 @@ class _ApiService implements ApiService {
     return value;
   }
 
+  @override
+  Future<bool> getBill(
+    ConnectorModel connectorModel,
+    int tableId,
+    String tableName,
+    int waiterId,
+    String waiterName,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'tableId': tableId,
+      r'tableName': tableName,
+      r'waiterId': waiterId,
+      r'waiterName': waiterName,
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(connectorModel.toJson());
+    final _result = await _dio.fetch<bool>(_setStreamType<bool>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          'bill',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
+    final value = _result.data!;
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

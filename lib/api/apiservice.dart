@@ -67,6 +67,13 @@ abstract class ApiService {
 
   @GET("order")
   Future<OrderMasterModel> getOrder(
+      @Body() ConnectorModel connectorModel, @Query("tableId") int tableId);
+
+  @GET("bill")
+  Future<bool> getBill(
       @Body() ConnectorModel connectorModel,
-      @Query("tableId") int tableId);
+      @Query("tableId") int tableId,
+      @Query("tableName") String tableName,
+      @Query("waiterId") int waiterId,
+      @Query("waiterName") String waiterName);
 }
