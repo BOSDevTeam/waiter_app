@@ -44,6 +44,7 @@ dependencies:
   flutter_easyloading: ^3.0.5
   path: ^1.8.3
   intl: ^0.18.1
+  syncfusion_flutter_datepicker: ^22.2.12
 
 dev_dependencies:
   flutter_test:

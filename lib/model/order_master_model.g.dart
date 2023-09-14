@@ -26,6 +26,8 @@ OrderMasterModel _$OrderMasterModelFromJson(Map<String, dynamic> json) =>
           json['connectorModel'] as Map<String, dynamic>),
       tranId: json['TranID'] as int? ?? 0,
       totalCustomer: json['TotalCustomer'] as int? ?? 0,
+      customerModel:
+          CustomerModel.fromJson(json['customerModel'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$OrderMasterModelToJson(OrderMasterModel instance) =>
@@ -44,4 +46,5 @@ Map<String, dynamic> _$OrderMasterModelToJson(OrderMasterModel instance) =>
       'connectorModel': instance.connectorModel,
       'TranID': instance.tranId,
       'TotalCustomer': instance.totalCustomer,
+      'customerModel': instance.customerModel,
     };

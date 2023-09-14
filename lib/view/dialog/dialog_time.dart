@@ -2,22 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:waiter_app/provider/customer_provider.dart';
 import 'package:waiter_app/provider/time_provider.dart';
 import 'package:waiter_app/value/app_color.dart';
 
 import '../../provider/order_provider.dart';
 import '../../value/app_string.dart';
+import '../../value/time_type.dart';
 import '../../widget/app_text.dart';
 
 class DialogTime extends StatefulWidget {
-  const DialogTime({super.key});
+  final TimeType timeType;
+  const DialogTime({super.key, required this.timeType});
 
   @override
-  State<DialogTime> createState() => _DialogTimeState();
+  State<DialogTime> createState() => _DialogTimeState(timeType);
 }
 
 class _DialogTimeState extends State<DialogTime> {
   var timeProvider = TimeProvider();
+  TimeType timeType;
+
+  _DialogTimeState(this.timeType);
 
   @override
   void initState() {
@@ -207,7 +213,12 @@ class _DialogTimeState extends State<DialogTime> {
                       String minute = timeProvider.minuteController.text;
                       String period = context.read<TimeProvider>().period;
                       String time = "$hour:$minute $period";
-                      context.read<OrderProvider>().setStartTime(time);
+                      if (timeType == TimeType.orderStartTime) {
+                        context.read<OrderProvider>().setStartTime(time);
+                      } else if (timeType == TimeType.customerTime) {
+                        context.read<CustomerProvider>().setTime(time,true);
+                      }
+
                       Navigator.pop(context);
                     }
                   },

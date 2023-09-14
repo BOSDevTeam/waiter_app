@@ -86,6 +86,11 @@ class SettingProvider extends ChangeNotifier {
     return sharedPreferences.getBool(AppSetting.calculateAdvancedTax);
   }
 
+  Future<bool?> getAddCustomerByTotalPerson() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(AppSetting.addCustomerByTotalPerson);
+  }
+
   Future<void> setAddTimeByItemInOrder(bool value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool(AppSetting.addTimeByItemInOrder, value);

@@ -71,4 +71,11 @@ class AppString {
   static const String somethingWentWrong = "Something Went Wrong";
   static const String billRequested = "Bill is Requested";
   static const String addCustomerNumber = "Add Customer Number";
+  static const String date = "Date";
+  static const String time = "Time";
+  static const String man = "Man";
+  static const String women = "Women";
+  static const String child = "Child";
+  static const String totalCustomer = "Total Customer";
+  static const String save = "Save";
 }

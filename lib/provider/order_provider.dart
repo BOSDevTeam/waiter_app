@@ -5,11 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:waiter_app/controller/data_downloading_controller.dart';
 import 'package:waiter_app/model/order_master_model.dart';
 import 'package:dio/dio.dart';
-import 'package:waiter_app/view/navigation/nav_order.dart';
 
 import '../api/apiservice.dart';
 import '../database/database_helper.dart';
 import '../model/connector_model.dart';
+import '../model/customer_model.dart';
 import '../model/order_model.dart';
 import '../model/menu_model.dart';
 import '../model/waiter_model.dart';
@@ -25,12 +25,21 @@ class OrderProvider extends ChangeNotifier {
   List<MenuModel> _lstMenu = [];
   String _startTime = "";
   bool _isAddStartTimeInOrder = false;
+  Map<String, dynamic> _customerNumber = {
+    "date": "",
+    "time": "",
+    "man": 0,
+    "women": 0,
+    "child": 0,
+    "totalCustomer": 0
+  };
 
   List<OrderModel> get lstOrder => _lstOrder;
   Map<String, dynamic> get selectedTable => _selectedTable;
   List<MenuModel> get lstMenu => _lstMenu;
   String get startTime => _startTime;
   bool get isAddStartTimeInOrder => _isAddStartTimeInOrder;
+  Map<String, dynamic> get customerNumber => _customerNumber;
 
   int addOrder(OrderModel orderModel) {
     _lstOrder.add(orderModel);
@@ -116,6 +125,11 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setCustomerNumber(Map<String, dynamic> customerNumber) {
+    _customerNumber = customerNumber;
+    notifyListeners();
+  }
+
   bool validateOrder() {
     if (_lstOrder.isEmpty) {
       Fluttertoast.showToast(msg: AppString.addOrder);
@@ -162,7 +176,14 @@ class OrderProvider extends ChangeNotifier {
             currentTime: DateFormat.jm().format(DateTime.now()),
             notPutTogetherItemNameAndTaste: notPutTogetherItemNameAndTaste,
             lstOrder: _lstOrder,
-            connectorModel: dataDownloadingController.connectorModel);
+            connectorModel: dataDownloadingController.connectorModel,
+            customerModel: CustomerModel(
+                date: _customerNumber["date"],
+                time: _customerNumber["time"],
+                man: _customerNumber["man"],
+                women: _customerNumber["women"],
+                child: _customerNumber["child"],
+                totalCustomer: _customerNumber["totalCustomer"]));
 
         EasyLoading.show();
         apiService.sendOrder(orderMasterModel).then((value) {

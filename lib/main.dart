@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app/provider/customer_provider.dart';
 import 'package:waiter_app/provider/login_provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/provider/number_provider.dart';
@@ -11,6 +12,8 @@ import 'package:waiter_app/provider/setting_provider.dart';
 import 'package:waiter_app/provider/table_situation_provider.dart';
 import 'package:waiter_app/provider/taste_provider.dart';
 import 'package:waiter_app/provider/time_provider.dart';
+import 'package:waiter_app/value/time_type.dart';
+import 'package:waiter_app/view/customer_entry.dart';
 import 'package:waiter_app/view/data_downloading.dart';
 import 'package:waiter_app/view/dialog/dialog_number.dart';
 import 'package:waiter_app/view/dialog/dialog_taste.dart';
@@ -79,11 +82,15 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<TimeProvider>(
           create: (context) => TimeProvider(),
-          child: const DialogTime(),
+          child: const DialogTime(timeType: TimeType.orderStartTime,),
         ),
         ChangeNotifierProvider<OrderDetailProvider>(
           create: (context) => OrderDetailProvider(),
           child: const OrderDetail(tableId: 0,tableName: "",),
+        ),
+        ChangeNotifierProvider<CustomerProvider>(
+          create: (context) => CustomerProvider(),
+          child: const CustomerEntry(),
         ),
       ],
       child: MaterialApp(
@@ -112,7 +119,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
             nextScreen: _startWidget()),
-        //home: Login(),
+        //home: CustomerEntry(),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const TableSituation(

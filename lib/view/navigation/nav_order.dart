@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/provider/login_provider.dart';
+import 'package:waiter_app/value/time_type.dart';
+import 'package:waiter_app/view/customer_entry.dart';
 import 'package:waiter_app/view/dialog/dialog_number.dart';
 import 'package:waiter_app/value/number_type.dart';
 import 'package:waiter_app/widget/app_text.dart';
@@ -225,7 +227,20 @@ class _NavOrderState extends State<NavOrder> {
                                     width: 2, color: AppColor.primary)),
                             child: InkWell(
                               splashColor: AppColor.primary300,
-                              onTap: () {},
+                              onTap: () {
+                                if (context
+                                        .read<OrderProvider>()
+                                        .selectedTable["tableId"] !=
+                                    0) {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const CustomerEntry();
+                                  }));
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: AppString.selectTable);
+                                }
+                              },
                               child: const SizedBox(
                                 width: 60,
                                 height: 60,
@@ -240,21 +255,28 @@ class _NavOrderState extends State<NavOrder> {
                         const SizedBox(
                           width: 20,
                         ),
-                        const Column(
+                        Column(
                           children: [
-                            AppText(
+                            const AppText(
                               text: AppString.customers,
                               size: 16,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            AppText(
-                              text: "-",
-                              color: AppColor.primary,
-                              size: 20,
-                              fontWeight: FontWeight.bold,
-                            )
+                            Consumer<OrderProvider>(
+                                builder: (context, provider, child) {
+                              return AppText(
+                                text: provider
+                                            .customerNumber["totalCustomer"] ==
+                                        0
+                                    ? "-"
+                                    : provider.customerNumber["totalCustomer"],
+                                color: AppColor.primary,
+                                size: 20,
+                                fontWeight: FontWeight.bold,
+                              );
+                            }),
                           ],
                         )
                       ],
@@ -298,7 +320,9 @@ class _NavOrderState extends State<NavOrder> {
                                           barrierDismissible: false,
                                           context: context,
                                           builder: (BuildContext context) {
-                                            return const DialogTime();
+                                            return const DialogTime(
+                                              timeType: TimeType.orderStartTime,
+                                            );
                                           });
                                     },
                                     child: const Padding(

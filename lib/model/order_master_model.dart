@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:waiter_app/model/connector_model.dart';
+import 'package:waiter_app/model/customer_model.dart';
 import 'package:waiter_app/model/order_model.dart';
 
 part 'order_master_model.g.dart';
@@ -32,6 +33,7 @@ class OrderMasterModel {
   int tranId;
   @JsonKey(name: "TotalCustomer")
   int totalCustomer;
+  CustomerModel customerModel;
 
   OrderMasterModel(
       {required this.waiterId,
@@ -47,7 +49,8 @@ class OrderMasterModel {
       required this.lstOrder,
       required this.connectorModel,
       this.tranId = 0,
-      this.totalCustomer = 0});
+      this.totalCustomer = 0,
+      required this.customerModel});
 
   factory OrderMasterModel.fromJson(Map<String, dynamic> json) =>
       _$OrderMasterModelFromJson(json);
