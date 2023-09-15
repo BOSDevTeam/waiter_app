@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/provider/order_detail_provider.dart';
 import 'package:waiter_app/provider/setting_provider.dart';
+import 'package:waiter_app/view/customer_entry.dart';
 
 import '../api/apiservice.dart';
 import '../controller/data_downloading_controller.dart';
@@ -60,6 +61,9 @@ class _OrderDetailState extends State<OrderDetail> {
           context
               .read<OrderDetailProvider>()
               .setStartTime(orderMasterModel.startTime);
+          context
+              .read<OrderDetailProvider>()
+              .setTotalCustomer(orderMasterModel.totalCustomer);
           context
               .read<SettingProvider>()
               .getCalculateAdvancedTax()
@@ -170,7 +174,16 @@ class _OrderDetailState extends State<OrderDetail> {
                                     width: 2, color: AppColor.primary)),
                             child: InkWell(
                               splashColor: AppColor.primary300,
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return CustomerEntry(
+                                    isFromOrderDetail: true,
+                                    tableId: tableId,
+                                    tableName: tableName,
+                                  );
+                                }));
+                              },
                               child: const SizedBox(
                                 width: 60,
                                 height: 60,
@@ -185,21 +198,26 @@ class _OrderDetailState extends State<OrderDetail> {
                         const SizedBox(
                           width: 20,
                         ),
-                        const Column(
+                        Column(
                           children: [
-                            AppText(
+                            const AppText(
                               text: AppString.customers,
                               size: 16,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            AppText(
-                              text: "-",
-                              color: AppColor.primary,
-                              size: 20,
-                              fontWeight: FontWeight.bold,
-                            )
+                            Consumer<OrderDetailProvider>(
+                                builder: (context, provider, child) {
+                              return AppText(
+                                text: provider.totalCustomer == 0
+                                    ? "-"
+                                    : provider.totalCustomer.toString(),
+                                color: AppColor.primary,
+                                size: 20,
+                                fontWeight: FontWeight.bold,
+                              );
+                            }),
                           ],
                         )
                       ],

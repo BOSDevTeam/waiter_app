@@ -9,13 +9,13 @@ class CustomerModel {
   @JsonKey(name: "Time")
   String time;
   @JsonKey(name: "Man")
-  String man;
+  int man;
   @JsonKey(name: "Women")
-  String women;
+  int women;
   @JsonKey(name: "Child")
-  String child;
+  int child;
   @JsonKey(name: "TotalCustomer")
-  String totalCustomer;
+  int totalCustomer;
 
   CustomerModel(
       {required this.date,

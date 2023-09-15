@@ -453,6 +453,83 @@ class _ApiService implements ApiService {
     return value;
   }
 
+  @override
+  Future<CustomerModel> getCustomerNumber(
+    ConnectorModel connectorModel,
+    int tableId,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'tableId': tableId};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(connectorModel.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<CustomerModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'customer',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CustomerModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<String> saveCustomerNumber(
+    ConnectorModel connectorModel,
+    int tableId,
+    int waiterId,
+    String date,
+    String time,
+    int man,
+    int women,
+    int child,
+    int totalCustomer,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'tableId': tableId,
+      r'waiterId': waiterId,
+      r'date': date,
+      r'time': time,
+      r'man': man,
+      r'women': women,
+      r'child': child,
+      r'totalCustomer': totalCustomer,
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(connectorModel.toJson());
+    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          'customer',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
+    final value = _result.data!;
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

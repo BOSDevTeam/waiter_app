@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +12,8 @@ import 'package:waiter_app/widget/app_text.dart';
 import 'package:waiter_app/view/table_situation.dart';
 
 import '../../provider/order_provider.dart';
-import '../../model/item_model.dart';
-import '../../model/main_menu_model.dart';
 import '../../model/menu_model.dart';
 import '../../model/order_model.dart';
-import '../../model/sub_menu_model.dart';
 import '../../nav_drawer.dart';
 import '../../provider/setting_provider.dart';
 import '../../value/app_color.dart';
@@ -234,7 +230,7 @@ class _NavOrderState extends State<NavOrder> {
                                     0) {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return const CustomerEntry();
+                                    return const CustomerEntry(isFromOrderDetail: false);
                                   }));
                                 } else {
                                   Fluttertoast.showToast(
@@ -271,7 +267,8 @@ class _NavOrderState extends State<NavOrder> {
                                             .customerNumber["totalCustomer"] ==
                                         0
                                     ? "-"
-                                    : provider.customerNumber["totalCustomer"],
+                                    : provider.customerNumber["totalCustomer"]
+                                        .toString(),
                                 color: AppColor.primary,
                                 size: 20,
                                 fontWeight: FontWeight.bold,

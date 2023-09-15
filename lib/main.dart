@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app/model/customer_model.dart';
 import 'package:waiter_app/provider/customer_provider.dart';
 import 'package:waiter_app/provider/login_provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
@@ -78,19 +79,27 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<NumberProvider>(
           create: (context) => NumberProvider(),
-          child: const DialogNumber(orderIndex: -1,numberType: NumberType.quantityNumber,),
+          child: const DialogNumber(
+            orderIndex: -1,
+            numberType: NumberType.quantityNumber,
+          ),
         ),
         ChangeNotifierProvider<TimeProvider>(
           create: (context) => TimeProvider(),
-          child: const DialogTime(timeType: TimeType.orderStartTime,),
+          child: const DialogTime(
+            timeType: TimeType.orderStartTime,
+          ),
         ),
         ChangeNotifierProvider<OrderDetailProvider>(
           create: (context) => OrderDetailProvider(),
-          child: const OrderDetail(tableId: 0,tableName: "",),
+          child: const OrderDetail(
+            tableId: 0,
+            tableName: "",
+          ),
         ),
         ChangeNotifierProvider<CustomerProvider>(
           create: (context) => CustomerProvider(),
-          child: const CustomerEntry(),
+          child: const CustomerEntry(isFromOrderDetail: false,),
         ),
       ],
       child: MaterialApp(
@@ -115,7 +124,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
           useMaterial3: true,
         ),
-         home: AnimatedSplashScreen(
+        home: AnimatedSplashScreen(
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
             nextScreen: _startWidget()),

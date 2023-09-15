@@ -132,14 +132,37 @@ class _TableSituationState extends State<TableSituation> {
                 onTapDown: (details) => _getTapPosition(details),
                 onTap: () {
                   if (!isFromNav) {
-                    //if (!table.isOccupied) {
                     context.read<OrderProvider>().setSelectedTable({
                       "tableId": table.tableId,
                       "tableName": table.tableName,
                       "isOccupied": table.isOccupied ? true : false
                     });
                     Navigator.pop(context);
-                    //}
+                    if (table.isOccupied) {
+                      apiService
+                          .getCustomerNumber(
+                              dataDownloadingController.connectorModel,
+                              table.tableId)
+                          .then((customerModel) {
+                        context.read<OrderProvider>().setCustomerNumber({
+                          "date": customerModel.date,
+                          "time": customerModel.time,
+                          "man": customerModel.man,
+                          "women": customerModel.women,
+                          "child": customerModel.child,
+                          "totalCustomer": customerModel.totalCustomer
+                        });
+                      });
+                    } else {
+                      context.read<OrderProvider>().setCustomerNumber({
+                        "date": "",
+                        "time": "",
+                        "man": 0,
+                        "women": 0,
+                        "child": 0,
+                        "totalCustomer": 0
+                      });
+                    }
                   }
                 },
                 onLongPress: () {

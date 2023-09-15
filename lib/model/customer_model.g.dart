@@ -10,10 +10,10 @@ CustomerModel _$CustomerModelFromJson(Map<String, dynamic> json) =>
     CustomerModel(
       date: json['Date'] as String,
       time: json['Time'] as String,
-      man: json['Man'] as String,
-      women: json['Women'] as String,
-      child: json['Child'] as String,
-      totalCustomer: json['TotalCustomer'] as String,
+      man: json['Man'] as int,
+      women: json['Women'] as int,
+      child: json['Child'] as int,
+      totalCustomer: json['TotalCustomer'] as int,
     );
 
 Map<String, dynamic> _$CustomerModelToJson(CustomerModel instance) =>

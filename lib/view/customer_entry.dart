@@ -1,39 +1,134 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:waiter_app/database/database_helper.dart';
+import 'package:waiter_app/provider/login_provider.dart';
+import 'package:waiter_app/provider/order_detail_provider.dart';
 import 'package:waiter_app/provider/order_provider.dart';
 import 'package:waiter_app/provider/setting_provider.dart';
 import 'package:waiter_app/widget/app_text.dart';
 
+import '../api/apiservice.dart';
+import '../controller/data_downloading_controller.dart';
+import '../model/connector_model.dart';
 import '../provider/customer_provider.dart';
 import '../value/app_color.dart';
 import '../value/app_string.dart';
 import '../value/time_type.dart';
 import 'dialog/dialog_time.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:dio/dio.dart';
 
 class CustomerEntry extends StatefulWidget {
-  const CustomerEntry({super.key});
+  final bool isFromOrderDetail;
+  final int? tableId;
+  final String? tableName;
+  const CustomerEntry(
+      {super.key,
+      required this.isFromOrderDetail,
+      this.tableId,
+      this.tableName});
 
   @override
-  State<CustomerEntry> createState() => _CustomerEntryState();
+  State<CustomerEntry> createState() =>
+      _CustomerEntryState(isFromOrderDetail, tableId, tableName ?? "");
 }
 
 class _CustomerEntryState extends State<CustomerEntry> {
+  dynamic apiService;
+  final dataDownloadingController = DataDownloadingController();
+  bool isFromOrderDetail;
+  int? tableId;
+  String tableName;
+  _CustomerEntryState(this.isFromOrderDetail, this.tableId, this.tableName);
+
   @override
   void initState() {
-    context
-        .read<CustomerProvider>()
-        .setDate(DateFormat('dd/MM/yyyy').format(DateTime.now()), false);
-    context
-        .read<CustomerProvider>()
-        .setTime(DateFormat.jm().format(DateTime.now()), false);
+    resetControl();
+    if (!isFromOrderDetail) {
+      if (context.read<OrderProvider>().customerNumber["totalCustomer"] != 0) {
+        context.read<CustomerProvider>().setDate(
+            context.read<OrderProvider>().customerNumber["date"], false);
+        context.read<CustomerProvider>().setTime(
+            context.read<OrderProvider>().customerNumber["time"], false);
+        context.read<CustomerProvider>().manController.text =
+            context.read<OrderProvider>().customerNumber["man"].toString();
+        context.read<CustomerProvider>().womenController.text =
+            context.read<OrderProvider>().customerNumber["women"].toString();
+        context.read<CustomerProvider>().childController.text =
+            context.read<OrderProvider>().customerNumber["child"].toString();
+        context.read<CustomerProvider>().totalCustomerController.text = context
+            .read<OrderProvider>()
+            .customerNumber["totalCustomer"]
+            .toString();
+      }
+    } else {
+      DatabaseHelper().getBaseUrl().then((value) {
+        dataDownloadingController.lstBaseUrl = value;
+
+        apiService = ApiService(
+            dio: Dio(BaseOptions(
+                baseUrl: dataDownloadingController.lstBaseUrl[0]["BaseUrl"])));
+
+        DatabaseHelper().getConnector().then((value) {
+          dataDownloadingController.lstConnector = value;
+          dataDownloadingController.connectorModel = ConnectorModel(
+              ipAddress: dataDownloadingController.lstConnector[0]["IPAddress"],
+              databaseName: dataDownloadingController.lstConnector[0]
+                  ["DatabaseName"],
+              databaseLoginUser: dataDownloadingController.lstConnector[0]
+                  ["DatabaseLoginUser"],
+              databaseLoginPassword: dataDownloadingController.lstConnector[0]
+                  ["DatabaseLoginPassword"]);
+
+          if (context.read<OrderDetailProvider>().totalCustomer != 0) {
+            EasyLoading.show();
+            apiService
+                .getCustomerNumber(
+                    dataDownloadingController.connectorModel, tableId ?? 0)
+                .then((customerModel) {
+              EasyLoading.dismiss();
+              context
+                  .read<CustomerProvider>()
+                  .setDate(customerModel.date, true);
+              context
+                  .read<CustomerProvider>()
+                  .setTime(customerModel.time, true);
+              context.read<CustomerProvider>().manController.text =
+                  customerModel.man.toString();
+              context.read<CustomerProvider>().womenController.text =
+                  customerModel.women.toString();
+              context.read<CustomerProvider>().childController.text =
+                  customerModel.child.toString();
+              context.read<CustomerProvider>().totalCustomerController.text =
+                  customerModel.totalCustomer.toString();
+            });
+          }
+        });
+      });
+    }
+
     context.read<SettingProvider>().getAddCustomerByTotalPerson().then((value) {
       context
           .read<CustomerProvider>()
           .setIsAddCustomerByTotalPerson(value ?? false);
     });
     super.initState();
+  }
+
+  void resetControl() {
+    context
+        .read<CustomerProvider>()
+        .setDate(DateFormat('MM/dd/yyyy').format(DateTime.now()), false);
+    context
+        .read<CustomerProvider>()
+        .setTime(DateFormat.jm().format(DateTime.now()), false);
+    context.read<CustomerProvider>().manController.text = "";
+    context.read<CustomerProvider>().womenController.text = "";
+    context.read<CustomerProvider>().childController.text = "";
+    context.read<CustomerProvider>().totalCustomerController.text = "";
   }
 
   @override
@@ -69,9 +164,11 @@ class _CustomerEntryState extends State<CustomerEntry> {
                       fontWeight: FontWeight.bold,
                     ),
                     AppText(
-                      text: context
-                          .read<OrderProvider>()
-                          .selectedTable["tableName"],
+                      text: !isFromOrderDetail
+                          ? context
+                              .read<OrderProvider>()
+                              .selectedTable["tableName"]
+                          : tableName,
                       fontFamily: "BOS",
                       fontWeight: FontWeight.bold,
                     ),
@@ -99,7 +196,7 @@ class _CustomerEntryState extends State<CustomerEntry> {
                                       (dateRangePickerSelectionChangedArgs) {
                                     if (dateRangePickerSelectionChangedArgs
                                         .value is DateTime) {
-                                      String date = DateFormat('dd/MM/yyyy')
+                                      String date = DateFormat('MM/dd/yyyy')
                                           .format(
                                               dateRangePickerSelectionChangedArgs
                                                   .value);
@@ -328,18 +425,45 @@ class _CustomerEntryState extends State<CustomerEntry> {
                         }
                         totalCustomer = man + women + child;
                       }
-                      /* context
-                          .read<OrderProvider>()
-                          .setTotalCustomer(totalCustomer); */
-                      context.read<OrderProvider>().setCustomerNumber({
-                        "date": context.read<CustomerProvider>().date,
-                        "time": context.read<CustomerProvider>().time,
-                        "man": man,
-                        "women": women,
-                        "child": child,
-                        "totalCustomer": totalCustomer
-                      });
-                      Navigator.pop(context);
+                      if (!isFromOrderDetail) {
+                        context.read<OrderProvider>().setCustomerNumber({
+                          "date": context.read<CustomerProvider>().date,
+                          "time": context.read<CustomerProvider>().time,
+                          "man": man,
+                          "women": women,
+                          "child": child,
+                          "totalCustomer": totalCustomer
+                        });
+                        Navigator.pop(context);
+                      } else {
+                        context
+                            .read<LoginProvider>()
+                            .getLoginWaiter()
+                            .then((waiterModel) {
+                          EasyLoading.show();
+                          apiService
+                              .saveCustomerNumber(
+                                  dataDownloadingController.connectorModel,
+                                  tableId ?? 0,
+                                  waiterModel.waiterId,
+                                  context.read<CustomerProvider>().date,
+                                  context.read<CustomerProvider>().time,
+                                  man,
+                                  women,
+                                  child,
+                                  totalCustomer)
+                              .then((message) {
+                            EasyLoading.dismiss();
+                            if (message.toString().isNotEmpty) {
+                              Fluttertoast.showToast(msg: message);
+                            }
+                            context
+                                .read<OrderDetailProvider>()
+                                .setTotalCustomer(totalCustomer);
+                            Navigator.pop(context);
+                          });
+                        });
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppColor.primary500,

@@ -7,7 +7,6 @@ import 'package:waiter_app/widget/app_text.dart';
 import '../../provider/order_provider.dart';
 import '../../value/app_color.dart';
 import '../../value/app_string.dart';
-import '../navigation/nav_order.dart';
 
 class DialogTaste extends StatefulWidget {
   final int orderIndex;

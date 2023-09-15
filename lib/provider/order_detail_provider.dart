@@ -12,6 +12,7 @@ class OrderDetailProvider extends ChangeNotifier {
   int _chargesAmount = 0;
   int _total = 0;
   bool _isHideCommercialTax = false;
+  int _totalCustomer = 0;
 
   List<OrderModel> get lstOrder => _lstOrder;
   String get startTime => _startTime;
@@ -20,6 +21,7 @@ class OrderDetailProvider extends ChangeNotifier {
   int get chargesAmount => _chargesAmount;
   int get total => _total;
   bool get isHideCommercialTax => _isHideCommercialTax;
+  int get totalCustomer => _totalCustomer;
 
   void setOrderList(List<OrderModel> lstOrder, bool isCalculateAdvancedTax,
       bool isHideCommercialTax) {
@@ -69,6 +71,11 @@ class OrderDetailProvider extends ChangeNotifier {
 
   void setStartTime(String startTime) {
     _startTime = startTime;
+    notifyListeners();
+  }
+
+  void setTotalCustomer(int totalCustomer) {
+    _totalCustomer = totalCustomer;
     notifyListeners();
   }
 }

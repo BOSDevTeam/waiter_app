@@ -5,6 +5,7 @@ import 'package:waiter_app/model/table_situation_model.dart';
 import 'package:waiter_app/model/table_type_model.dart';
 import 'package:waiter_app/model/waiter_model.dart';
 
+import '../model/customer_model.dart';
 import '../model/item_model.dart';
 import '../model/main_menu_model.dart';
 import '../model/order_master_model.dart';
@@ -76,4 +77,20 @@ abstract class ApiService {
       @Query("tableName") String tableName,
       @Query("waiterId") int waiterId,
       @Query("waiterName") String waiterName);
+
+  @GET("customer")
+  Future<CustomerModel> getCustomerNumber(
+      @Body() ConnectorModel connectorModel, @Query("tableId") int tableId);
+
+  @POST("customer")
+  Future<String> saveCustomerNumber(
+      @Body() ConnectorModel connectorModel,
+      @Query("tableId") int tableId,
+      @Query("waiterId") int waiterId,
+      @Query("date") String date,
+      @Query("time") String time,
+      @Query("man") int man,
+      @Query("women") int women,
+      @Query("child") int child,
+      @Query("totalCustomer") int totalCustomer);
 }
