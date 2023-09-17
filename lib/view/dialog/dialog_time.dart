@@ -81,7 +81,8 @@ class _DialogTimeState extends State<DialogTime> {
                         width: double.infinity,
                         child: TextFormField(
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(2)
+                            LengthLimitingTextInputFormatter(2),
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                           controller: timeProvider.hourController,
                           keyboardType: TextInputType.number,
@@ -119,7 +120,8 @@ class _DialogTimeState extends State<DialogTime> {
                         width: double.infinity,
                         child: TextFormField(
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(2)
+                            LengthLimitingTextInputFormatter(2),
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                           controller: timeProvider.minuteController,
                           keyboardType: TextInputType.number,

@@ -214,7 +214,8 @@ class _DataDownloadingState extends State<DataDownloading> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: AppColor.primary500,
                             foregroundColor: Colors.white,
-                            padding: const EdgeInsets.all(20),
+                            padding: const EdgeInsets.only(
+                          top: 20, bottom: 20, right: 30, left: 30),
                             shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(Radius.zero))),
                         child: const Text(AppString.sContinue)),

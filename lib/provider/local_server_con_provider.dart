@@ -4,17 +4,26 @@ import 'package:waiter_app/database/database_helper.dart';
 
 import '../value/app_string.dart';
 
-class LocalServerConController {
+class LocalServerConProvider extends ChangeNotifier {
   final ipAddressController = TextEditingController();
   final databaseNameController = TextEditingController();
   final databaseLoginUserController = TextEditingController();
   final databaseLoginPasswordController = TextEditingController();
+  bool _isEdit = false;
+
+  bool get isEdit => _isEdit;
+
+  void setIsEdit(bool isEdit) {
+    _isEdit = isEdit;
+    notifyListeners();
+  }
 
   Future<bool> save() async {
     if (isValidateControl()) {
       String ipAddress = ipAddressController.text;
 
-      DatabaseHelper().insertBaseUrl({"baseUrl": "http://$ipAddress/WaiterWebService/api/"});
+      DatabaseHelper().insertBaseUrl(
+          {"baseUrl": "http://$ipAddress/WaiterWebService/api/"});
 
       DatabaseHelper().insertConnector({
         "ipAddress": ipAddressController.text,
@@ -22,7 +31,7 @@ class LocalServerConController {
         "databaseLoginUser": databaseLoginUserController.text,
         "databaseLoginPassword": databaseLoginPasswordController.text
       });
-     
+
       return true;
     }
     return false;

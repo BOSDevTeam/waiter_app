@@ -14,6 +14,7 @@ import '../value/app_color.dart';
 import '../value/app_string.dart';
 import '../widget/app_text.dart';
 import 'package:dio/dio.dart';
+import '../value/app_constant.dart';
 
 class OrderDetail extends StatefulWidget {
   final int tableId;
@@ -272,7 +273,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       const AppText(text: AppString.subtotal),
                       Consumer<OrderDetailProvider>(
                           builder: (context, provider, child) {
-                        return AppText(text: provider.subtotal.toString());
+                        return AppText(text: AppConstant.formatter.format(provider.subtotal));
                       }),
                     ],
                   ),
@@ -282,7 +283,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       const AppText(text: AppString.charges),
                       Consumer<OrderDetailProvider>(
                           builder: (context, provider, child) {
-                        return AppText(text: provider.chargesAmount.toString());
+                        return AppText(text: AppConstant.formatter.format(provider.chargesAmount));
                       }),
                     ],
                   ),
@@ -296,7 +297,7 @@ class _OrderDetailState extends State<OrderDetail> {
                               Consumer<OrderDetailProvider>(
                                   builder: (context, provider, child) {
                                 return AppText(
-                                    text: provider.taxAmount.toString());
+                                    text: AppConstant.formatter.format(provider.taxAmount));
                               }),
                             ],
                           )
@@ -315,7 +316,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       Consumer<OrderDetailProvider>(
                           builder: (context, provider, child) {
                         return AppText(
-                          text: provider.total.toString(),
+                          text: AppConstant.formatter.format(provider.total),
                           fontWeight: FontWeight.bold,
                         );
                       }),
@@ -380,7 +381,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         const SizedBox(
                           width: 15,
                         ),
-                        AppText(text: data.salePrice.toString()),
+                        AppText(text: AppConstant.formatter.format(data.salePrice)),
                         const SizedBox(
                           width: 15,
                         ),
@@ -400,7 +401,7 @@ class _OrderDetailState extends State<OrderDetail> {
                             : const SizedBox()
                       ],
                     ),
-                    AppText(text: data.amount.toString()),
+                    AppText(text: AppConstant.formatter.format(data.amount)),
                   ],
                 )
               ],

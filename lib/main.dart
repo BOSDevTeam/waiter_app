@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waiter_app/model/customer_model.dart';
 import 'package:waiter_app/provider/customer_provider.dart';
+import 'package:waiter_app/provider/data_updating_provider.dart';
+import 'package:waiter_app/provider/local_server_con_provider.dart';
 import 'package:waiter_app/provider/login_provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/provider/number_provider.dart';
@@ -16,6 +18,7 @@ import 'package:waiter_app/provider/time_provider.dart';
 import 'package:waiter_app/value/time_type.dart';
 import 'package:waiter_app/view/customer_entry.dart';
 import 'package:waiter_app/view/data_downloading.dart';
+import 'package:waiter_app/view/data_updating.dart';
 import 'package:waiter_app/view/dialog/dialog_number.dart';
 import 'package:waiter_app/view/dialog/dialog_taste.dart';
 import 'package:waiter_app/value/number_type.dart';
@@ -101,6 +104,14 @@ class MyApp extends StatelessWidget {
           create: (context) => CustomerProvider(),
           child: const CustomerEntry(isFromOrderDetail: false,),
         ),
+        ChangeNotifierProvider<LocalServerConProvider>(
+          create: (context) => LocalServerConProvider(),
+          child: const LocalServerConnection(),
+        ),
+        ChangeNotifierProvider<DataUpdatingProvider>(
+          create: (context) => DataUpdatingProvider(),
+          child: const DataUpdating(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -143,7 +154,6 @@ class MyApp extends StatelessWidget {
 
   Widget _startWidget() {
     if (isRegisterSuccess == null || isRegisterSuccess == false) {
-      DatabaseHelper().deleteAllData();
       return const LocalServerConnection();
     } else {
       return const Login();

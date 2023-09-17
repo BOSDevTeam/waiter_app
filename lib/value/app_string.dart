@@ -78,4 +78,8 @@ class AppString {
   static const String child = "Child";
   static const String totalCustomer = "Total Customer";
   static const String save = "Save";
+  static const String noTasteByMenuForItem = "No Taste by Menu for this Item";
+  static const String update = "Update";
+  static const String dataUpdateCompleted = "Data Update Completed";
+  static const String updatingData = "Updating Data";
 }

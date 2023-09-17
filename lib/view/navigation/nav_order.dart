@@ -17,6 +17,7 @@ import '../../model/order_model.dart';
 import '../../nav_drawer.dart';
 import '../../provider/setting_provider.dart';
 import '../../value/app_color.dart';
+import '../../value/app_constant.dart';
 import '../../value/app_string.dart';
 import '../dialog/dialog_taste.dart';
 import '../dialog/dialog_time.dart';
@@ -230,7 +231,8 @@ class _NavOrderState extends State<NavOrder> {
                                     0) {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return const CustomerEntry(isFromOrderDetail: false);
+                                    return const CustomerEntry(
+                                        isFromOrderDetail: false);
                                   }));
                                 } else {
                                   Fluttertoast.showToast(
@@ -604,16 +606,22 @@ class _NavOrderState extends State<NavOrder> {
             });
         break;
       case AppString.tasteByMenu:
-        showDialog<void>(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              return DialogTaste(
-                orderIndex: index,
-                isTasteMulti: true,
-                incomeId: incomeId,
-              );
-            });
+        DatabaseHelper().isHasTasteMulti(incomeId).then((value) {
+          if (value) {
+            showDialog<void>(
+                barrierDismissible: false,
+                context: context,
+                builder: (BuildContext context) {
+                  return DialogTaste(
+                    orderIndex: index,
+                    isTasteMulti: true,
+                    incomeId: incomeId,
+                  );
+                });
+          } else {
+            Fluttertoast.showToast(msg: AppString.noTasteByMenuForItem);
+          }
+        });
         break;
       case AppString.numberOrderItem:
         showDialog<void>(
@@ -671,7 +679,7 @@ class _NavOrderState extends State<NavOrder> {
 
           subtitle: !isHideSalePriceInItem && menuModel.type == 3
               ? AppText(
-                  text: menuModel.salePrice.toString(),
+                  text: AppConstant.formatter.format(menuModel.salePrice),
                   size: 14,
                   color: AppColor.primary)
               : const SizedBox(),
@@ -741,15 +749,20 @@ class _NavOrderState extends State<NavOrder> {
                     );
                   });
             } else {
-              showDialog<void>(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DialogTaste(
-                        orderIndex: index,
-                        isTasteMulti: true,
-                        incomeId: incomeId);
-                  });
+              DatabaseHelper().isHasTasteMulti(incomeId).then((value) {
+                if (value) {
+                  showDialog<void>(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return DialogTaste(
+                          orderIndex: index,
+                          isTasteMulti: true,
+                          incomeId: incomeId,
+                        );
+                      });
+                } 
+              });
             }
           });
         }

@@ -56,24 +56,9 @@ class DatabaseHelper {
     return _db;
   }
 
-  Future<void> deleteAllData() async {
-    _db = await _createDatabase();
-    await _db.delete(tbBaseUrl);
-    await _db.delete(tbConnector);
-    await _db.delete(tbWaiter);
-    await _db.delete(tbTableType);
-    await _db.delete(tbTable);
-    await _db.delete(tbMainMenu);
-    await _db.delete(tbSubMenu);
-    await _db.delete(tbItem);
-    await _db.delete(tbSystemItem);
-    await _db.delete(tbSystemSetting);
-    await _db.delete(tbTaste);
-    await _db.delete(tbTasteMulti);
-  }
-
   Future<int> insertBaseUrl(Map<String, dynamic> data) async {
     _db = await _createDatabase();
+    await _db.delete(tbBaseUrl);
     return await _db.insert(tbBaseUrl, data);
   }
 
@@ -86,6 +71,7 @@ class DatabaseHelper {
 
   Future<int> insertConnector(Map<String, dynamic> data) async {
     _db = await _createDatabase();
+    await _db.delete(tbConnector);
     return await _db.insert(tbConnector, data);
   }
 
@@ -99,6 +85,7 @@ class DatabaseHelper {
   Future<int> insertWaiter(List<WaiterModel> lstData) async {
     int result = 0;
     _db = await _createDatabase();
+    await _db.delete(tbWaiter);
     for (var data in lstData) {
       result = await _db.insert(tbWaiter, data.toJson());
     }
@@ -115,6 +102,7 @@ class DatabaseHelper {
   Future<int> insertTableType(List<TableTypeModel> lstData) async {
     int result = 0;
     _db = await _createDatabase();
+    await _db.delete(tbTableType);
     for (var data in lstData) {
       result = await _db.insert(tbTableType, data.toJson());
     }
@@ -131,6 +119,7 @@ class DatabaseHelper {
   Future<int> insertTable(List<TableModel> lstData) async {
     int result = 0;
     _db = await _createDatabase();
+    await _db.delete(tbTable);
     for (var data in lstData) {
       result = await _db.insert(tbTable, data.toJson());
     }
@@ -147,6 +136,7 @@ class DatabaseHelper {
   Future<int> insertMainMenu(List<MainMenuModel> lstData) async {
     int result = 0;
     _db = await _createDatabase();
+    await _db.delete(tbMainMenu);
     for (var data in lstData) {
       result = await _db.insert(tbMainMenu, data.toJson());
     }
@@ -163,6 +153,7 @@ class DatabaseHelper {
   Future<int> insertSubMenu(List<SubMenuModel> lstData) async {
     int result = 0;
     _db = await _createDatabase();
+    await _db.delete(tbSubMenu);
     for (var data in lstData) {
       result = await _db.insert(tbSubMenu, data.toJson());
     }
@@ -179,6 +170,7 @@ class DatabaseHelper {
   Future<int> insertItem(List<ItemModel> lstData) async {
     int result = 0;
     _db = await _createDatabase();
+    await _db.delete(tbItem);
     for (var data in lstData) {
       result = await _db.insert(tbItem, data.toJson());
     }
@@ -195,6 +187,7 @@ class DatabaseHelper {
   Future<int> insertSystemItem(List<SystemItemModel> lstData) async {
     int result = 0;
     _db = await _createDatabase();
+    await _db.delete(tbSystemItem);
     for (var data in lstData) {
       result = await _db.insert(tbSystemItem, data.toJson());
     }
@@ -210,6 +203,7 @@ class DatabaseHelper {
 
   Future<int> insertSystemSetting(Map<String, dynamic> data) async {
     _db = await _createDatabase();
+    await _db.delete(tbSystemSetting);
     return await _db.insert(tbSystemSetting, data);
   }
 
@@ -223,6 +217,7 @@ class DatabaseHelper {
   Future<int> insertTaste(List<TasteModel> lstData) async {
     int result = 0;
     _db = await _createDatabase();
+    await _db.delete(tbTaste);
     for (var data in lstData) {
       result = await _db.insert(tbTaste, data.toJson());
     }
@@ -239,6 +234,7 @@ class DatabaseHelper {
   Future<int> insertTasteMulti(List<TasteMultiModel> lstData) async {
     int result = 0;
     _db = await _createDatabase();
+    await _db.delete(tbTasteMulti);
     for (var data in lstData) {
       result = await _db.insert(tbTasteMulti, data.toJson());
     }
@@ -250,5 +246,16 @@ class DatabaseHelper {
     List<Map<String, dynamic>> list = await _db.rawQuery(
         "SELECT TID,GroupID,TasteID,TasteName,TasteShort,TasteSort,Price FROM $tbTasteMulti WHERE GroupID=$incomeId");
     return list;
+  }
+
+  Future<bool> isHasTasteMulti(int incomeId) async {
+    _db = await _createDatabase();
+    List<Map<String, dynamic>> list = await _db
+        .rawQuery("SELECT TID FROM $tbTasteMulti WHERE GroupID=$incomeId");
+    if (list.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

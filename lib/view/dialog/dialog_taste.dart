@@ -6,6 +6,7 @@ import 'package:waiter_app/widget/app_text.dart';
 
 import '../../provider/order_provider.dart';
 import '../../value/app_color.dart';
+import '../../value/app_constant.dart';
 import '../../value/app_string.dart';
 
 class DialogTaste extends StatefulWidget {
@@ -136,7 +137,7 @@ class _DialogTasteState extends State<DialogTaste> {
                   ? Align(
                       alignment: Alignment.centerRight,
                       child: AppText(
-                        text: data["Price"].toString(),
+                        text: AppConstant.formatter.format(data["Price"]),
                         size: 14,
                       ),
                     )
