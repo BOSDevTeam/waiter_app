@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waiter_app/value/app_string.dart';
@@ -89,7 +91,9 @@ class _NavDrawerState extends State<NavDrawer> {
                     height: 30,
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      exit(0);
+                    },
                     child: const AppText(
                       text: AppString.exit,
                     ),

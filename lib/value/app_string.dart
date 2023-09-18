@@ -50,7 +50,7 @@ class AppString {
   static const String data = "Data";
   static const String orderAdded = "Order Added";
   static const String loading = "Loading";
-  static const String takeLongPress = "Take a long press";
+  static const String pressAndHoldIcon = "Press and Hold on Icon";
   static const String quantity = "Quantity";
   static const String numberOrder = "Number Order";
   static const String enterTime = "Enter Time";
@@ -82,4 +82,6 @@ class AppString {
   static const String update = "Update";
   static const String dataUpdateCompleted = "Data Update Completed";
   static const String updatingData = "Updating Data";
+  static const String invalidKey = "Invalid Key! Try Correct Key";
+  static const String successfullyKeyRegistered = "Successfully Key Registered";
 }

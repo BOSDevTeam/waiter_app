@@ -6,7 +6,6 @@ import 'package:waiter_app/provider/setting_provider.dart';
 import 'package:waiter_app/view/customer_entry.dart';
 
 import '../api/apiservice.dart';
-import '../controller/data_downloading_controller.dart';
 import '../database/database_helper.dart';
 import '../model/connector_model.dart';
 import '../model/order_model.dart';
@@ -28,7 +27,7 @@ class OrderDetail extends StatefulWidget {
 
 class _OrderDetailState extends State<OrderDetail> {
   dynamic apiService;
-  final dataDownloadingController = DataDownloadingController();
+  dynamic connectorModel;
   final int tableId;
   final String tableName;
 
@@ -36,27 +35,24 @@ class _OrderDetailState extends State<OrderDetail> {
 
   @override
   void initState() {
-    DatabaseHelper().getBaseUrl().then((value) {
-      dataDownloadingController.lstBaseUrl = value;
-
+    DatabaseHelper().getBaseUrl().then((value) {    
       apiService = ApiService(
           dio: Dio(BaseOptions(
-              baseUrl: dataDownloadingController.lstBaseUrl[0]["BaseUrl"])));
+              baseUrl: value[0]["BaseUrl"])));
 
-      DatabaseHelper().getConnector().then((value) {
-        dataDownloadingController.lstConnector = value;
-        dataDownloadingController.connectorModel = ConnectorModel(
-            ipAddress: dataDownloadingController.lstConnector[0]["IPAddress"],
-            databaseName: dataDownloadingController.lstConnector[0]
+      DatabaseHelper().getConnector().then((value) {    
+        connectorModel = ConnectorModel(
+            ipAddress: value[0]["IPAddress"],
+            databaseName: value[0]
                 ["DatabaseName"],
-            databaseLoginUser: dataDownloadingController.lstConnector[0]
+            databaseLoginUser: value[0]
                 ["DatabaseLoginUser"],
-            databaseLoginPassword: dataDownloadingController.lstConnector[0]
+            databaseLoginPassword: value[0]
                 ["DatabaseLoginPassword"]);
 
         EasyLoading.show();
         apiService
-            .getOrder(dataDownloadingController.connectorModel, tableId)
+            .getOrder(connectorModel, tableId)
             .then((orderMasterModel) {
           EasyLoading.dismiss();
           context

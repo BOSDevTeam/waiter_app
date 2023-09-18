@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:waiter_app/controller/data_downloading_controller.dart';
 import 'package:waiter_app/model/order_master_model.dart';
 import 'package:dio/dio.dart';
 
@@ -143,26 +142,16 @@ class OrderProvider extends ChangeNotifier {
 
   void sendOrder(WaiterModel waiterModel, bool isAddTimeByItemInOrder,
       bool notPutTogetherItemNameAndTaste) {
-    var dataDownloadingController = DataDownloadingController();
-    dynamic apiService;
-
     DatabaseHelper().getBaseUrl().then((value) {
-      dataDownloadingController.lstBaseUrl = value;
-
-      apiService = ApiService(
-          dio: Dio(BaseOptions(
-              baseUrl: dataDownloadingController.lstBaseUrl[0]["BaseUrl"])));
+      ApiService apiService =
+          ApiService(dio: Dio(BaseOptions(baseUrl: value[0]["BaseUrl"])));
 
       DatabaseHelper().getConnector().then((value) {
-        dataDownloadingController.lstConnector = value;
-        dataDownloadingController.connectorModel = ConnectorModel(
-            ipAddress: dataDownloadingController.lstConnector[0]["IPAddress"],
-            databaseName: dataDownloadingController.lstConnector[0]
-                ["DatabaseName"],
-            databaseLoginUser: dataDownloadingController.lstConnector[0]
-                ["DatabaseLoginUser"],
-            databaseLoginPassword: dataDownloadingController.lstConnector[0]
-                ["DatabaseLoginPassword"]);
+        var connectorModel = ConnectorModel(
+            ipAddress: value[0]["IPAddress"],
+            databaseName: value[0]["DatabaseName"],
+            databaseLoginUser: value[0]["DatabaseLoginUser"],
+            databaseLoginPassword: value[0]["DatabaseLoginPassword"]);
 
         OrderMasterModel orderMasterModel = OrderMasterModel(
             waiterId: waiterModel.waiterId,
@@ -176,7 +165,7 @@ class OrderProvider extends ChangeNotifier {
             currentTime: DateFormat.jm().format(DateTime.now()),
             notPutTogetherItemNameAndTaste: notPutTogetherItemNameAndTaste,
             lstOrder: _lstOrder,
-            connectorModel: dataDownloadingController.connectorModel,
+            connectorModel: connectorModel,
             customerModel: CustomerModel(
                 date: _customerNumber["date"],
                 time: _customerNumber["time"],

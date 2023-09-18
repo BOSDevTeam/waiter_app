@@ -45,6 +45,7 @@ dependencies:
   path: ^1.8.3
   intl: ^0.18.1
   syncfusion_flutter_datepicker: ^22.2.12
+  mac_address: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -11,7 +11,6 @@ import 'package:waiter_app/provider/setting_provider.dart';
 import 'package:waiter_app/widget/app_text.dart';
 
 import '../api/apiservice.dart';
-import '../controller/data_downloading_controller.dart';
 import '../model/connector_model.dart';
 import '../provider/customer_provider.dart';
 import '../value/app_color.dart';
@@ -38,7 +37,7 @@ class CustomerEntry extends StatefulWidget {
 
 class _CustomerEntryState extends State<CustomerEntry> {
   dynamic apiService;
-  final dataDownloadingController = DataDownloadingController();
+  dynamic connectorModel;
   bool isFromOrderDetail;
   int? tableId;
   String tableName;
@@ -66,28 +65,21 @@ class _CustomerEntryState extends State<CustomerEntry> {
       }
     } else {
       DatabaseHelper().getBaseUrl().then((value) {
-        dataDownloadingController.lstBaseUrl = value;
 
-        apiService = ApiService(
-            dio: Dio(BaseOptions(
-                baseUrl: dataDownloadingController.lstBaseUrl[0]["BaseUrl"])));
+        apiService =
+            ApiService(dio: Dio(BaseOptions(baseUrl: value[0]["BaseUrl"])));
 
-        DatabaseHelper().getConnector().then((value) {
-          dataDownloadingController.lstConnector = value;
-          dataDownloadingController.connectorModel = ConnectorModel(
-              ipAddress: dataDownloadingController.lstConnector[0]["IPAddress"],
-              databaseName: dataDownloadingController.lstConnector[0]
-                  ["DatabaseName"],
-              databaseLoginUser: dataDownloadingController.lstConnector[0]
-                  ["DatabaseLoginUser"],
-              databaseLoginPassword: dataDownloadingController.lstConnector[0]
-                  ["DatabaseLoginPassword"]);
+        DatabaseHelper().getConnector().then((value) {        
+          connectorModel = ConnectorModel(
+              ipAddress: value[0]["IPAddress"],
+              databaseName: value[0]["DatabaseName"],
+              databaseLoginUser: value[0]["DatabaseLoginUser"],
+              databaseLoginPassword: value[0]["DatabaseLoginPassword"]);
 
           if (context.read<OrderDetailProvider>().totalCustomer != 0) {
             EasyLoading.show();
             apiService
-                .getCustomerNumber(
-                    dataDownloadingController.connectorModel, tableId ?? 0)
+                .getCustomerNumber(connectorModel, tableId ?? 0)
                 .then((customerModel) {
               EasyLoading.dismiss();
               context
@@ -443,7 +435,7 @@ class _CustomerEntryState extends State<CustomerEntry> {
                           EasyLoading.show();
                           apiService
                               .saveCustomerNumber(
-                                  dataDownloadingController.connectorModel,
+                                  connectorModel,
                                   tableId ?? 0,
                                   waiterModel.waiterId,
                                   context.read<CustomerProvider>().date,

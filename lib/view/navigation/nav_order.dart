@@ -520,7 +520,7 @@ class _NavOrderState extends State<NavOrder> {
                     ),
                     InkWell(
                         onTap: () {
-                          Fluttertoast.showToast(msg: AppString.takeLongPress);
+                          Fluttertoast.showToast(msg: AppString.pressAndHoldIcon);
                         },
                         onTapDown: (details) => _getTapPosition(details),
                         onLongPress: () {

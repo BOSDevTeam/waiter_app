@@ -95,24 +95,16 @@ class _DataUpdatingState extends State<DataUpdating> {
   }
 
   void updateData() {
-    ApiService apiService;
-    List<Map<String, dynamic>> lstBaseUrl = [];
-    List<Map<String, dynamic>> lstConnector = [];
-    dynamic connectorModel;
-
     DatabaseHelper().getBaseUrl().then((value) {
-      lstBaseUrl = value;
+      ApiService apiService =
+          ApiService(dio: Dio(BaseOptions(baseUrl: value[0]["BaseUrl"])));
 
-      apiService =
-          ApiService(dio: Dio(BaseOptions(baseUrl: lstBaseUrl[0]["BaseUrl"])));
-
-      DatabaseHelper().getConnector().then((value) {
-        lstConnector = value;
-        connectorModel = ConnectorModel(
-            ipAddress: lstConnector[0]["IPAddress"],
-            databaseName: lstConnector[0]["DatabaseName"],
-            databaseLoginUser: lstConnector[0]["DatabaseLoginUser"],
-            databaseLoginPassword: lstConnector[0]["DatabaseLoginPassword"]);
+      DatabaseHelper().getConnector().then((value) {    
+        var connectorModel = ConnectorModel(
+            ipAddress: value[0]["IPAddress"],
+            databaseName: value[0]["DatabaseName"],
+            databaseLoginUser: value[0]["DatabaseLoginUser"],
+            databaseLoginPassword: value[0]["DatabaseLoginPassword"]);
 
         apiService.getWaiter(connectorModel).then((lstWaiter) {
           DatabaseHelper().insertWaiter(lstWaiter).then((value) {

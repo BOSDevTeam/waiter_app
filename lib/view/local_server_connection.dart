@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/view/register_key.dart';
 
@@ -19,7 +20,12 @@ class _LocalServerConnectionState extends State<LocalServerConnection> {
   void initState() {
     DatabaseHelper().getConnector().then((value) {
       if (value.isNotEmpty) {
-        context.read<LocalServerConProvider>().setIsEdit(true);
+        isRegisterSuccess().then((value) {
+          if (value) {
+            context.read<LocalServerConProvider>().setIsEdit(true);
+          }
+        });
+
         context.read<LocalServerConProvider>().ipAddressController.text =
             value[0]["IPAddress"];
         context.read<LocalServerConProvider>().databaseNameController.text =
@@ -36,6 +42,12 @@ class _LocalServerConnectionState extends State<LocalServerConnection> {
     });
 
     super.initState();
+  }
+
+  Future<bool> isRegisterSuccess() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    bool? isRegisterSuccess = sharedPreferences.getBool("IsRegisterSuccess");
+    return isRegisterSuccess ?? false;
   }
 
   @override

@@ -9,7 +9,6 @@ import 'package:waiter_app/widget/app_text.dart';
 import 'package:dio/dio.dart';
 
 import '../api/apiservice.dart';
-import '../controller/data_downloading_controller.dart';
 import '../database/database_helper.dart';
 import '../nav_drawer.dart';
 import '../provider/order_provider.dart';
@@ -28,7 +27,7 @@ class TableSituation extends StatefulWidget {
 
 class _TableSituationState extends State<TableSituation> {
   dynamic apiService;
-  final dataDownloadingController = DataDownloadingController();
+  dynamic connectorModel;
   Offset _tapPosition = Offset.zero;
   bool isFromNav;
 
@@ -37,22 +36,15 @@ class _TableSituationState extends State<TableSituation> {
   @override
   void initState() {
     DatabaseHelper().getBaseUrl().then((value) {
-      dataDownloadingController.lstBaseUrl = value;
+      apiService =
+          ApiService(dio: Dio(BaseOptions(baseUrl: value[0]["BaseUrl"])));
 
-      apiService = ApiService(
-          dio: Dio(BaseOptions(
-              baseUrl: dataDownloadingController.lstBaseUrl[0]["BaseUrl"])));
-
-      DatabaseHelper().getConnector().then((value) {
-        dataDownloadingController.lstConnector = value;
-        dataDownloadingController.connectorModel = ConnectorModel(
-            ipAddress: dataDownloadingController.lstConnector[0]["IPAddress"],
-            databaseName: dataDownloadingController.lstConnector[0]
-                ["DatabaseName"],
-            databaseLoginUser: dataDownloadingController.lstConnector[0]
-                ["DatabaseLoginUser"],
-            databaseLoginPassword: dataDownloadingController.lstConnector[0]
-                ["DatabaseLoginPassword"]);
+      DatabaseHelper().getConnector().then((value) {      
+        connectorModel = ConnectorModel(
+            ipAddress: value[0]["IPAddress"],
+            databaseName: value[0]["DatabaseName"],
+            databaseLoginUser: value[0]["DatabaseLoginUser"],
+            databaseLoginPassword: value[0]["DatabaseLoginPassword"]);
 
         DatabaseHelper().getTableType().then((value) {
           if (value.isNotEmpty) {
@@ -63,8 +55,7 @@ class _TableSituationState extends State<TableSituation> {
 
             EasyLoading.show();
             apiService
-                .getTableSituation(dataDownloadingController.connectorModel,
-                    value[0]["TableTypeID"])
+                .getTableSituation(connectorModel, value[0]["TableTypeID"])
                 .then((lstTableSituation) {
               EasyLoading.dismiss();
               context
@@ -140,9 +131,7 @@ class _TableSituationState extends State<TableSituation> {
                     Navigator.pop(context);
                     if (table.isOccupied) {
                       apiService
-                          .getCustomerNumber(
-                              dataDownloadingController.connectorModel,
-                              table.tableId)
+                          .getCustomerNumber(connectorModel, table.tableId)
                           .then((customerModel) {
                         context.read<OrderProvider>().setCustomerNumber({
                           "date": customerModel.date,
@@ -244,8 +233,7 @@ class _TableSituationState extends State<TableSituation> {
                       EasyLoading.show();
                       apiService
                           .getTableSituation(
-                              dataDownloadingController.connectorModel,
-                              tableType["TableTypeID"])
+                              connectorModel, tableType["TableTypeID"])
                           .then((lstTableSituation) {
                         EasyLoading.dismiss();
                         context
@@ -322,8 +310,8 @@ class _TableSituationState extends State<TableSituation> {
         context.read<LoginProvider>().getLoginWaiter().then((waiterModel) {
           EasyLoading.show();
           apiService
-              .getBill(dataDownloadingController.connectorModel, tableId,
-                  tableName, waiterModel.waiterId, waiterModel.waiterName)
+              .getBill(connectorModel, tableId, tableName, waiterModel.waiterId,
+                  waiterModel.waiterName)
               .then((value) {
             EasyLoading.dismiss();
             if (value) {

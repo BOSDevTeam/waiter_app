@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:waiter_app/model/customer_model.dart';
 import 'package:waiter_app/provider/customer_provider.dart';
 import 'package:waiter_app/provider/data_updating_provider.dart';
 import 'package:waiter_app/provider/local_server_con_provider.dart';
 import 'package:waiter_app/provider/login_provider.dart';
-import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/provider/number_provider.dart';
 import 'package:waiter_app/provider/order_provider.dart';
+import 'package:waiter_app/provider/register_provider.dart';
 import 'package:waiter_app/provider/setting_provider.dart';
 import 'package:waiter_app/provider/table_situation_provider.dart';
 import 'package:waiter_app/provider/taste_provider.dart';
@@ -32,6 +31,7 @@ import 'package:waiter_app/view/table_situation.dart';
 
 import 'provider/order_detail_provider.dart';
 import 'value/app_color.dart';
+import 'view/register_key.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -102,7 +102,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<CustomerProvider>(
           create: (context) => CustomerProvider(),
-          child: const CustomerEntry(isFromOrderDetail: false,),
+          child: const CustomerEntry(
+            isFromOrderDetail: false,
+          ),
         ),
         ChangeNotifierProvider<LocalServerConProvider>(
           create: (context) => LocalServerConProvider(),
@@ -110,7 +112,16 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<DataUpdatingProvider>(
           create: (context) => DataUpdatingProvider(),
-          child: const DataUpdating(),
+          child: const Column(
+            children: [
+              DataDownloading(),
+              DataUpdating(),
+            ],
+          ),
+        ),
+        ChangeNotifierProvider<RegisterProvider>(
+          create: (context) => RegisterProvider(),
+          child: const RegisterKey(),
         ),
       ],
       child: MaterialApp(
@@ -139,7 +150,6 @@ class MyApp extends StatelessWidget {
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
             nextScreen: _startWidget()),
-        //home: CustomerEntry(),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const TableSituation(
