@@ -95,14 +95,14 @@ class _RegisterKeyState extends State<RegisterKey> {
               alignment: Alignment.topRight,
               child: ElevatedButton(
                   onPressed: () {
-                    if (context.read<RegisterProvider>().isValidateKey()) {
+                    //if (context.read<RegisterProvider>().isValidateKey()) {
                       ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text(AppString.successfullyKeyRegistered)));
                       Navigator.pushAndRemoveUntil(context,
                           MaterialPageRoute(builder: (context) {
                         return const DataDownloading();
                       }), (route) => false);
-                    }
+                    //}
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.primary500,
