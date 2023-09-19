@@ -40,6 +40,16 @@ class _LocalServerConnectionState extends State<LocalServerConnection> {
             .text = value[0]["DatabaseLoginPassword"];
       }
     });
+    context.read<LocalServerConProvider>().ipAddressController.text =
+        "192.168.100.11";
+    context.read<LocalServerConProvider>().databaseNameController.text =
+        "RestDB";
+    context.read<LocalServerConProvider>().databaseLoginUserController.text =
+        "sa";
+    context
+        .read<LocalServerConProvider>()
+        .databaseLoginPasswordController
+        .text = "nya";
 
     super.initState();
   }

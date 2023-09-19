@@ -157,25 +157,23 @@ class _LoginState extends State<Login> {
               shape:
                   const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               title: const AppText(text: AppString.waiter),
-              content: Expanded(
-                child: SizedBox(
-                  width: double.maxFinite,
-                  child: ListView.builder(
-                      itemCount: lstWaiter.length,
-                      itemBuilder: ((context, index) {
-                        Map<String, dynamic> waiter = lstWaiter[index];
-                        return ListTile(
-                          onTap: () {
-                            Navigator.pop(context);
-                            context
-                                .read<LoginProvider>()
-                                .setSelectedWaiter(waiter);
-                          },
-                          leading: const Icon(Icons.person),
-                          title: AppText(text: waiter["WaiterName"],fontFamily:"BOS"),
-                        );
-                      })),
-                ),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: ListView.builder(
+                    itemCount: lstWaiter.length,
+                    itemBuilder: ((context, index) {
+                      Map<String, dynamic> waiter = lstWaiter[index];
+                      return ListTile(
+                        onTap: () {
+                          Navigator.pop(context);
+                          context
+                              .read<LoginProvider>()
+                              .setSelectedWaiter(waiter);
+                        },
+                        leading: const Icon(Icons.person),
+                        title: AppText(text: waiter["WaiterName"],fontFamily:"BOS"),
+                      );
+                    })),
               ));
         });
   }
