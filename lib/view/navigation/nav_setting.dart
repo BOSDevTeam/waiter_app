@@ -9,6 +9,8 @@ import '../../provider/setting_provider.dart';
 import '../../value/app_color.dart';
 import '../../value/app_setting.dart';
 import '../../value/app_string.dart';
+import '../../value/password_type.dart';
+import '../dialog/dialog_password.dart';
 
 class NavSetting extends StatefulWidget {
   const NavSetting({super.key});
@@ -256,10 +258,14 @@ class _NavSettingState extends State<NavSetting> {
                       ),
                       trailing: IconButton(
                           onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return const LocalServerConnection();
-                            }));
+                            showDialog<void>(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const DialogPassword(
+                                    passwordType: PasswordType.localServerPassword,
+                                  );
+                                });
                           },
                           icon: const Icon(Icons.arrow_right))),
                   const Divider(),

@@ -39,7 +39,7 @@ class _TableSituationState extends State<TableSituation> {
       apiService =
           ApiService(dio: Dio(BaseOptions(baseUrl: value[0]["BaseUrl"])));
 
-      DatabaseHelper().getConnector().then((value) {      
+      DatabaseHelper().getConnector().then((value) {
         connectorModel = ConnectorModel(
             ipAddress: value[0]["IPAddress"],
             databaseName: value[0]["DatabaseName"],
@@ -315,8 +315,11 @@ class _TableSituationState extends State<TableSituation> {
               .then((value) {
             EasyLoading.dismiss();
             if (value) {
-              Fluttertoast.showToast(
-                  msg: "$tableName ${AppString.billRequested}");
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: AppText(
+                      text: "$tableName ${AppString.billRequested}",
+                      color: Colors.white,
+                      fontFamily: "BOS")));
             } else {
               Fluttertoast.showToast(
                 msg: AppString.somethingWentWrong,

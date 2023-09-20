@@ -99,7 +99,7 @@ class _DataUpdatingState extends State<DataUpdating> {
       ApiService apiService =
           ApiService(dio: Dio(BaseOptions(baseUrl: value[0]["BaseUrl"])));
 
-      DatabaseHelper().getConnector().then((value) {    
+      DatabaseHelper().getConnector().then((value) {
         var connectorModel = ConnectorModel(
             ipAddress: value[0]["IPAddress"],
             databaseName: value[0]["DatabaseName"],
@@ -109,9 +109,7 @@ class _DataUpdatingState extends State<DataUpdating> {
         apiService.getWaiter(connectorModel).then((lstWaiter) {
           DatabaseHelper().insertWaiter(lstWaiter).then((value) {
             if (lstWaiter.length == value) {
-              setState(() {
-                context.read<DataUpdatingProvider>().setIsWaiterComplete(true);
-              });
+              context.read<DataUpdatingProvider>().setIsWaiterComplete(true);
             }
           });
         });
@@ -119,11 +117,7 @@ class _DataUpdatingState extends State<DataUpdating> {
         apiService.getMainMenu(connectorModel).then((lstMainMenu) {
           DatabaseHelper().insertMainMenu(lstMainMenu).then((value) {
             if (lstMainMenu.length == value) {
-              setState(() {
-                context
-                    .read<DataUpdatingProvider>()
-                    .setIsMainMenuComplete(true);
-              });
+              context.read<DataUpdatingProvider>().setIsMainMenuComplete(true);
             }
           });
         });
@@ -131,9 +125,7 @@ class _DataUpdatingState extends State<DataUpdating> {
         apiService.getSubMenu(connectorModel).then((lstSubMenu) {
           DatabaseHelper().insertSubMenu(lstSubMenu).then((value) {
             if (lstSubMenu.length == value) {
-              setState(() {
-                context.read<DataUpdatingProvider>().setIsSubMenuComplete(true);
-              });
+              context.read<DataUpdatingProvider>().setIsSubMenuComplete(true);
             }
           });
         });
@@ -141,9 +133,7 @@ class _DataUpdatingState extends State<DataUpdating> {
         apiService.getItem(connectorModel).then((lstItem) {
           DatabaseHelper().insertItem(lstItem).then((value) {
             if (lstItem.length == value) {
-              setState(() {
-                context.read<DataUpdatingProvider>().setIsItemComplete(true);
-              });
+              context.read<DataUpdatingProvider>().setIsItemComplete(true);
             }
           });
         });
@@ -151,11 +141,9 @@ class _DataUpdatingState extends State<DataUpdating> {
         apiService.getSystemItem(connectorModel).then((lstSystemItem) {
           DatabaseHelper().insertSystemItem(lstSystemItem).then((value) {
             if (lstSystemItem.length == value) {
-              setState(() {
-                context
-                    .read<DataUpdatingProvider>()
-                    .setIsSystemItemComplete(true);
-              });
+              context
+                  .read<DataUpdatingProvider>()
+                  .setIsSystemItemComplete(true);
             }
           });
         });
@@ -163,11 +151,7 @@ class _DataUpdatingState extends State<DataUpdating> {
         apiService.getTableType(connectorModel).then((lstTableType) {
           DatabaseHelper().insertTableType(lstTableType).then((value) {
             if (lstTableType.length == value) {
-              setState(() {
-                context
-                    .read<DataUpdatingProvider>()
-                    .setIsTableTypeComplete(true);
-              });
+              context.read<DataUpdatingProvider>().setIsTableTypeComplete(true);
             }
           });
         });
@@ -175,9 +159,7 @@ class _DataUpdatingState extends State<DataUpdating> {
         apiService.getTable(connectorModel).then((lstTable) {
           DatabaseHelper().insertTable(lstTable).then((value) {
             if (lstTable.length == value) {
-              setState(() {
-                context.read<DataUpdatingProvider>().setIsTableComplete(true);
-              });
+              context.read<DataUpdatingProvider>().setIsTableComplete(true);
             }
           });
         });
@@ -185,9 +167,7 @@ class _DataUpdatingState extends State<DataUpdating> {
         apiService.getTaste(connectorModel).then((lstTaste) {
           DatabaseHelper().insertTaste(lstTaste).then((value) {
             if (lstTaste.length == value) {
-              setState(() {
-                context.read<DataUpdatingProvider>().setIsTasteComplete(true);
-              });
+              context.read<DataUpdatingProvider>().setIsTasteComplete(true);
             }
           });
         });
@@ -195,11 +175,9 @@ class _DataUpdatingState extends State<DataUpdating> {
         apiService.getTasteMulti(connectorModel).then((lstTasteMulti) {
           DatabaseHelper().insertTasteMulti(lstTasteMulti).then((value) {
             if (lstTasteMulti.length == value) {
-              setState(() {
-                context
-                    .read<DataUpdatingProvider>()
-                    .setIsTasteMultiComplete(true);
-              });
+              context
+                  .read<DataUpdatingProvider>()
+                  .setIsTasteMultiComplete(true);
             }
           });
         });
@@ -214,11 +192,9 @@ class _DataUpdatingState extends State<DataUpdating> {
               "userPassword": lstSystemSetting[0].userPassword
             }).then((value) {
               if (value == 1) {
-                setState(() {
-                  context
-                      .read<DataUpdatingProvider>()
-                      .setIsSystemSettingComplete(true);
-                });
+                context
+                    .read<DataUpdatingProvider>()
+                    .setIsSystemSettingComplete(true);
               }
             });
           }

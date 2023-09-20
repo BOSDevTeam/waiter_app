@@ -18,8 +18,6 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   void initState() {
-    context.read<LoginProvider>().passwordController.text = "1";
-
     DatabaseHelper().getWaiter().then((value) {
       if (value.isNotEmpty) {
         context.read<LoginProvider>().setWaiterList(value);
@@ -110,6 +108,7 @@ class _LoginState extends State<Login> {
                         context.read<LoginProvider>().passwordController,
                     style: const TextStyle(color: AppColor.primaryDark),
                     keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
                     textInputAction: TextInputAction.done,
                     decoration: const InputDecoration(
                         labelText: AppString.password,
@@ -171,7 +170,8 @@ class _LoginState extends State<Login> {
                               .setSelectedWaiter(waiter);
                         },
                         leading: const Icon(Icons.person),
-                        title: AppText(text: waiter["WaiterName"],fontFamily:"BOS"),
+                        title: AppText(
+                            text: waiter["WaiterName"], fontFamily: "BOS"),
                       );
                     })),
               ));

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waiter_app/value/app_string.dart';
+import 'package:waiter_app/value/password_type.dart';
+import 'package:waiter_app/view/dialog/dialog_password.dart';
 import 'package:waiter_app/widget/app_text.dart';
 
 import 'value/app_color.dart';
@@ -15,15 +17,14 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
-
-  String _waiterName="";
+  String _waiterName = "";
 
   @override
   void initState() {
     getWaiterName().then((value) {
-      if(value != null){
+      if (value != null) {
         setState(() {
-          _waiterName=value;
+          _waiterName = value;
         });
       }
     });
@@ -37,7 +38,11 @@ class _NavDrawerState extends State<NavDrawer> {
         children: [
           UserAccountsDrawerHeader(
             accountName: const Text(""),
-            accountEmail: AppText(text:_waiterName,fontFamily: "BOS",color: Colors.white,),
+            accountEmail: AppText(
+              text: _waiterName,
+              fontFamily: "BOS",
+              color: Colors.white,
+            ),
             currentAccountPicture: Image.asset(
               "assets/images/launcher.png",
               height: 100,
@@ -76,7 +81,14 @@ class _NavDrawerState extends State<NavDrawer> {
             leading: const Icon(Icons.settings, color: AppColor.primaryDark),
             title: const AppText(text: AppString.setting),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed('/nav_setting');
+              showDialog<void>(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const DialogPassword(
+                      passwordType: PasswordType.settingPassword,
+                    );
+                  });
             },
           ),
           const Divider(),

@@ -9,16 +9,19 @@ import 'package:waiter_app/provider/local_server_con_provider.dart';
 import 'package:waiter_app/provider/login_provider.dart';
 import 'package:waiter_app/provider/number_provider.dart';
 import 'package:waiter_app/provider/order_provider.dart';
+import 'package:waiter_app/provider/password_provider.dart';
 import 'package:waiter_app/provider/register_provider.dart';
 import 'package:waiter_app/provider/setting_provider.dart';
 import 'package:waiter_app/provider/table_situation_provider.dart';
 import 'package:waiter_app/provider/taste_provider.dart';
 import 'package:waiter_app/provider/time_provider.dart';
+import 'package:waiter_app/value/password_type.dart';
 import 'package:waiter_app/value/time_type.dart';
 import 'package:waiter_app/view/customer_entry.dart';
 import 'package:waiter_app/view/data_downloading.dart';
 import 'package:waiter_app/view/data_updating.dart';
 import 'package:waiter_app/view/dialog/dialog_number.dart';
+import 'package:waiter_app/view/dialog/dialog_password.dart';
 import 'package:waiter_app/view/dialog/dialog_taste.dart';
 import 'package:waiter_app/value/number_type.dart';
 import 'package:waiter_app/view/dialog/dialog_time.dart';
@@ -123,6 +126,12 @@ class MyApp extends StatelessWidget {
           create: (context) => RegisterProvider(),
           child: const RegisterKey(),
         ),
+        ChangeNotifierProvider<PasswordProvier>(
+          create: (context) => PasswordProvier(),
+          child: const DialogPassword(
+            passwordType: PasswordType.settingPassword,
+          ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -146,11 +155,10 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
           useMaterial3: true,
         ),
-        /* home: AnimatedSplashScreen(
+        home: AnimatedSplashScreen(
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
-            nextScreen: _startWidget()), */
-            home: RegisterKey(),
+            nextScreen: _startWidget()),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const TableSituation(

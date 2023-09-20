@@ -84,4 +84,5 @@ class AppString {
   static const String updatingData = "Updating Data";
   static const String invalidKey = "Invalid Key! Try Correct Key";
   static const String successfullyKeyRegistered = "Successfully Key Registered";
+  static const String invalidPassword = "Invalid Password";
 }
