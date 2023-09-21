@@ -50,12 +50,12 @@ class _LoginState extends State<Login> {
                       opacity: const AlwaysStoppedAnimation(30)),
                   const Text(
                     AppString.welcomeToThe,
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(color: Color.fromARGB(255, 85, 34, 7), fontSize: 25),
                   ),
                   const Text(
                     AppString.appName,
                     style: TextStyle(
-                        color: AppColor.grey,
+                        color: Color.fromARGB(255, 85, 34, 7),
                         fontWeight: FontWeight.bold,
                         fontSize: 30),
                   )

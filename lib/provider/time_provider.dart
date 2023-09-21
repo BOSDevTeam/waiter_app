@@ -38,8 +38,14 @@ class TimeProvider extends ChangeNotifier {
     if (hourController.text.isEmpty) {
       Fluttertoast.showToast(msg: AppString.enterHour);
       return false;
+    } else if (int.parse(hourController.text) > 12) {
+      Fluttertoast.showToast(msg: AppString.invalidHour);
+      return false;
     } else if (minuteController.text.isEmpty) {
       Fluttertoast.showToast(msg: AppString.enterMinute);
+      return false;
+    } else if (int.parse(minuteController.text) > 60) {
+      Fluttertoast.showToast(msg: AppString.invalidMinute);
       return false;
     }
     return true;

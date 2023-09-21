@@ -119,12 +119,14 @@ class _NavOrderState extends State<NavOrder> {
             style: TextStyle(color: AppColor.primary)),
         iconTheme: const IconThemeData(color: AppColor.primary),
         actions: [
-          TextButton(
-            onPressed: () {
-              _key.currentState!.openEndDrawer();
-            },
-            child: const AppText(text: AppString.menu, size: 20),
-          ),
+          Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: ElevatedButton.icon(
+                  onPressed: () {
+                    _key.currentState!.openEndDrawer();
+                  },
+                  icon: const Icon(Icons.menu_book),
+                  label: const AppText(text: AppString.menu, size: 20)))
         ],
       ),
       endDrawer: Consumer<OrderProvider>(builder: (context, provider, child) {
@@ -520,7 +522,8 @@ class _NavOrderState extends State<NavOrder> {
                     ),
                     InkWell(
                         onTap: () {
-                          Fluttertoast.showToast(msg: AppString.pressAndHoldIcon);
+                          Fluttertoast.showToast(
+                              msg: AppString.pressAndHoldIcon);
                         },
                         onTapDown: (details) => _getTapPosition(details),
                         onLongPress: () {
@@ -761,7 +764,7 @@ class _NavOrderState extends State<NavOrder> {
                           incomeId: incomeId,
                         );
                       });
-                } 
+                }
               });
             }
           });

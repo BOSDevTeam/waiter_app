@@ -85,4 +85,8 @@ class AppString {
   static const String invalidKey = "Invalid Key! Try Correct Key";
   static const String successfullyKeyRegistered = "Successfully Key Registered";
   static const String invalidPassword = "Invalid Password";
+  static const String noActionEmptyTable = "No Action for Empty Table";
+  static const String invalidHour = "Invalid Hour";
+  static const String invalidMinute = "Invalid Minute";
+  static const String pressAndHoldTable = "Press and Hold on Table";
 }

@@ -52,11 +52,6 @@ class _NavDrawerState extends State<NavDrawer> {
               color: AppColor.primary,
             ),
           ),
-          const Divider(
-            height: 1,
-            thickness: 2,
-            color: AppColor.primary300,
-          ),
           ListTile(
             leading: const Icon(
               Icons.list,

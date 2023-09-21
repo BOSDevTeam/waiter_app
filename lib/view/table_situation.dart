@@ -152,11 +152,15 @@ class _TableSituationState extends State<TableSituation> {
                         "totalCustomer": 0
                       });
                     }
+                  } else {
+                    Fluttertoast.showToast(msg: AppString.pressAndHoldTable);
                   }
                 },
                 onLongPress: () {
                   if (table.isOccupied) {
                     _showContextMenu(context, table.tableId, table.tableName);
+                  } else {
+                    Fluttertoast.showToast(msg: AppString.noActionEmptyTable);
                   }
                 },
                 child: Column(
