@@ -7,6 +7,7 @@ import 'package:waiter_app/provider/customer_provider.dart';
 import 'package:waiter_app/provider/data_updating_provider.dart';
 import 'package:waiter_app/provider/local_server_con_provider.dart';
 import 'package:waiter_app/provider/login_provider.dart';
+import 'package:waiter_app/provider/manage_main_menu_provider.dart';
 import 'package:waiter_app/provider/number_provider.dart';
 import 'package:waiter_app/provider/order_provider.dart';
 import 'package:waiter_app/provider/password_provider.dart';
@@ -27,6 +28,7 @@ import 'package:waiter_app/value/number_type.dart';
 import 'package:waiter_app/view/dialog/dialog_time.dart';
 import 'package:waiter_app/view/local_server_connection.dart';
 import 'package:waiter_app/view/login.dart';
+import 'package:waiter_app/view/manage_main_menu.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
 import 'package:waiter_app/view/navigation/nav_setting.dart';
 import 'package:waiter_app/view/order_detail.dart';
@@ -132,6 +134,10 @@ class MyApp extends StatelessWidget {
             passwordType: PasswordType.settingPassword,
           ),
         ),
+        ChangeNotifierProvider<ManageMainMenuProvider>(
+          create: (context) => ManageMainMenuProvider(),
+          child: const ManageMainMenu()
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -155,10 +161,11 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
           useMaterial3: true,
         ),
-        home: AnimatedSplashScreen(
+       /*  home: AnimatedSplashScreen(
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
-            nextScreen: _startWidget()),
+            nextScreen: _startWidget()), */
+            home:ManageMainMenu(),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const TableSituation(

@@ -89,4 +89,6 @@ class AppString {
   static const String invalidHour = "Invalid Hour";
   static const String invalidMinute = "Invalid Minute";
   static const String pressAndHoldTable = "Press and Hold on Table";
+  static const String manageMainMenu = "Manage Main Menu";
+  static const String openClose = "Open/Close";
 }

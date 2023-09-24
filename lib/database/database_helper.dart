@@ -40,7 +40,7 @@ class DatabaseHelper {
     await _db.execute(
         "CREATE TABLE IF NOT EXISTS $tbTable(TableID INTEGER,TableName TEXT,TableTypeID INTEGER)");
     await _db.execute(
-        "CREATE TABLE IF NOT EXISTS $tbMainMenu(MainMenuID INTEGER,MainMenuName TEXT,CounterID INTEGER)");
+        "CREATE TABLE IF NOT EXISTS $tbMainMenu(MainMenuID INTEGER,MainMenuName TEXT,CounterID INTEGER,IsOpen INTEGER)");
     await _db.execute(
         "CREATE TABLE IF NOT EXISTS $tbSubMenu(SubMenuID INTEGER,MainMenuID INTEGER,SubMenuName TEXT,IncomeID INTEGER)");
     await _db.execute(
@@ -146,7 +146,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getMainMenu() async {
     _db = await _createDatabase();
     List<Map<String, dynamic>> list = await _db
-        .rawQuery("SELECT MainMenuID,MainMenuName,CounterID FROM $tbMainMenu");
+        .rawQuery("SELECT MainMenuID,MainMenuName,CounterID,IsOpen FROM $tbMainMenu");
     return list;
   }
 

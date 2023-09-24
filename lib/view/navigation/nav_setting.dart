@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/view/data_updating.dart';
 import 'package:waiter_app/view/local_server_connection.dart';
+import 'package:waiter_app/view/manage_main_menu.dart';
 import 'package:waiter_app/widget/app_text.dart';
 
 import '../../nav_drawer.dart';
@@ -263,7 +264,8 @@ class _NavSettingState extends State<NavSetting> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return const DialogPassword(
-                                    passwordType: PasswordType.localServerPassword,
+                                    passwordType:
+                                        PasswordType.localServerPassword,
                                   );
                                 });
                           },
@@ -282,6 +284,23 @@ class _NavSettingState extends State<NavSetting> {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return const DataUpdating();
+                            }));
+                          },
+                          icon: const Icon(Icons.arrow_right))),
+                  const Divider(),
+                  ListTile(
+                      title: const Text(
+                        AppString.manageMainMenu,
+                        style: TextStyle(
+                          color: AppColor.primaryDark,
+                        ),
+                        maxLines: null,
+                      ),
+                      trailing: IconButton(
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return const ManageMainMenu();
                             }));
                           },
                           icon: const Icon(Icons.arrow_right))),
