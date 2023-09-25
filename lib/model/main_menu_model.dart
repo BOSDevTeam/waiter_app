@@ -10,13 +10,13 @@ class MainMenuModel {
   String mainMenuName;
   @JsonKey(name: "CounterID")
   int counterId;
-  int isOpen;
+  int? isOpen;
 
   MainMenuModel(
       {required this.mainMenuId,
       required this.mainMenuName,
       required this.counterId,
-      this.isOpen = 1});
+      this.isOpen});
 
   factory MainMenuModel.fromJson(Map<String, dynamic> json) =>
       _$MainMenuModelFromJson(json);

@@ -145,9 +145,26 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getMainMenu() async {
     _db = await _createDatabase();
-    List<Map<String, dynamic>> list = await _db
-        .rawQuery("SELECT MainMenuID,MainMenuName,CounterID,IsOpen FROM $tbMainMenu");
+    List<Map<String, dynamic>> list = await _db.rawQuery(
+        "SELECT MainMenuID,MainMenuName,CounterID,IsOpen FROM $tbMainMenu");
     return list;
+  }
+
+  Future<List<Map<String, dynamic>>> getOpenMainMenu() async {
+    _db = await _createDatabase();
+    List<Map<String, dynamic>> list = await _db.rawQuery(
+        "SELECT MainMenuID,MainMenuName,CounterID,IsOpen FROM $tbMainMenu WHERE IsOpen is null OR IsOpen == 1");
+    return list;
+  }
+
+  Future<int> updateMainMenu(Map<String, dynamic> mainMenu) async {
+    int result = 0;
+    _db = await _createDatabase();
+    int mainMenuId = mainMenu["MainMenuID"];
+    result =
+        await _db.update(tbMainMenu, mainMenu, where: "MainMenuID=$mainMenuId");
+
+    return result;
   }
 
   Future<int> insertSubMenu(List<SubMenuModel> lstData) async {

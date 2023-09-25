@@ -195,27 +195,29 @@ class _OrderDetailState extends State<OrderDetail> {
                         const SizedBox(
                           width: 20,
                         ),
-                        Column(
-                          children: [
-                            const AppText(
-                              text: AppString.customers,
-                              size: 16,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Consumer<OrderDetailProvider>(
-                                builder: (context, provider, child) {
-                              return AppText(
-                                text: provider.totalCustomer == 0
-                                    ? "-"
-                                    : provider.totalCustomer.toString(),
-                                color: AppColor.primary,
-                                size: 20,
-                                fontWeight: FontWeight.bold,
-                              );
-                            }),
-                          ],
+                        Flexible(
+                          child: Column(
+                            children: [
+                              const AppText(
+                                text: AppString.customers,
+                                size: 16,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Consumer<OrderDetailProvider>(
+                                  builder: (context, provider, child) {
+                                return AppText(
+                                  text: provider.totalCustomer == 0
+                                      ? "-"
+                                      : provider.totalCustomer.toString(),
+                                  color: AppColor.primary,
+                                  size: 20,
+                                  fontWeight: FontWeight.bold,
+                                );
+                              }),
+                            ],
+                          ),
                         )
                       ],
                     ),

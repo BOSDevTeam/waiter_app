@@ -135,9 +135,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
         ChangeNotifierProvider<ManageMainMenuProvider>(
-          create: (context) => ManageMainMenuProvider(),
-          child: const ManageMainMenu()
-        ),
+            create: (context) => ManageMainMenuProvider(),
+            child: const ManageMainMenu()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -161,11 +160,10 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
           useMaterial3: true,
         ),
-       /*  home: AnimatedSplashScreen(
+        home: AnimatedSplashScreen(
             backgroundColor: AppColor.primary,
             splash: 'assets/images/foreground.png',
-            nextScreen: _startWidget()), */
-            home:ManageMainMenu(),
+            nextScreen: _startWidget()),
         routes: {
           '/nav_order': (BuildContext ctx) => const NavOrder(),
           '/nav_table': (BuildContext ctx) => const TableSituation(

@@ -57,7 +57,7 @@ class _NavOrderState extends State<NavOrder> {
       }
     });
 
-    DatabaseHelper().getMainMenu().then((value) {
+    DatabaseHelper().getOpenMainMenu().then((value) {
       lstMainMenu = value;
       DatabaseHelper().getSubMenu().then((value) {
         lstSubMenu = value;
@@ -255,30 +255,32 @@ class _NavOrderState extends State<NavOrder> {
                         const SizedBox(
                           width: 20,
                         ),
-                        Column(
-                          children: [
-                            const AppText(
-                              text: AppString.customers,
-                              size: 16,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Consumer<OrderProvider>(
-                                builder: (context, provider, child) {
-                              return AppText(
-                                text: provider
-                                            .customerNumber["totalCustomer"] ==
-                                        0
-                                    ? "-"
-                                    : provider.customerNumber["totalCustomer"]
-                                        .toString(),
-                                color: AppColor.primary,
-                                size: 20,
-                                fontWeight: FontWeight.bold,
-                              );
-                            }),
-                          ],
+                        Flexible(
+                          child: Column(
+                            children: [
+                              const AppText(
+                                text: AppString.customers,
+                                size: 16,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Consumer<OrderProvider>(
+                                  builder: (context, provider, child) {
+                                return AppText(
+                                  text: provider
+                                              .customerNumber["totalCustomer"] ==
+                                          0
+                                      ? "-"
+                                      : provider.customerNumber["totalCustomer"]
+                                          .toString(),
+                                  color: AppColor.primary,
+                                  size: 20,
+                                  fontWeight: FontWeight.bold,
+                                );
+                              }),
+                            ],
+                          ),
                         )
                       ],
                     ),

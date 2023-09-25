@@ -91,4 +91,6 @@ class AppString {
   static const String pressAndHoldTable = "Press and Hold on Table";
   static const String manageMainMenu = "Manage Main Menu";
   static const String openClose = "Open/Close";
+  static const String openedMenu = "Opened Menu";
+  static const String closedMenu = "Closed Menu";
 }

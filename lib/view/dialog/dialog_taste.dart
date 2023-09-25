@@ -137,7 +137,9 @@ class _DialogTasteState extends State<DialogTaste> {
                   ? Align(
                       alignment: Alignment.centerRight,
                       child: AppText(
-                        text: AppConstant.formatter.format(data["Price"]),
+                        text: data["Price"] != null
+                            ? AppConstant.formatter.format(data["Price"])
+                            : 0.toString(),
                         size: 14,
                       ),
                     )

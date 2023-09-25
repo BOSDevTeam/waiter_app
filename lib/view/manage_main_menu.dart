@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/provider/manage_main_menu_provider.dart';
 import 'package:waiter_app/widget/app_text.dart';
 import '../database/database_helper.dart';
 
+import '../model/main_menu_model.dart';
 import '../value/app_color.dart';
 import '../value/app_string.dart';
 
@@ -18,7 +20,17 @@ class _ManageMainMenuState extends State<ManageMainMenu> {
   @override
   void initState() {
     DatabaseHelper().getMainMenu().then((value) {
-      context.read<ManageMainMenuProvider>().setMainMenu(value);
+      if (value.isNotEmpty) {
+        List<MainMenuModel> lstMainMenu = [];
+        for (int i = 0; i < value.length; i++) {
+          lstMainMenu.add(MainMenuModel(
+              mainMenuId: value[i]["MainMenuID"],
+              mainMenuName: value[i]["MainMenuName"],
+              counterId: value[i]["CounterID"],
+              isOpen: value[i]["IsOpen"]));
+        }
+        context.read<ManageMainMenuProvider>().setMainMenu(lstMainMenu);
+      }
     });
     super.initState();
   }
@@ -69,23 +81,30 @@ class _ManageMainMenuState extends State<ManageMainMenu> {
         shrinkWrap: true,
         itemCount: provider.lstMainMenu.length,
         itemBuilder: (context, index) {
-          Map<String, dynamic> data = provider.lstMainMenu[index];
+          MainMenuModel data = provider.lstMainMenu[index];
           return ListTile(
-            title: AppText(text: data["MainMenuName"]),
+            title: AppText(text: data.mainMenuName),
             trailing: Switch(
-                value: data["IsOpen"] == null || data["IsOpen"] == 1
-                    ? true
-                    : false,
+                value: data.isOpen == null || data.isOpen == 1 ? true : false,
                 onChanged: (result) {
-                  Map<String, dynamic> mainMenu = {
-                    'MainMenuID': data["MainMenuID"],
-                    'MainMenuName': data["MainMenuName"],
-                    'CounterID': data["CounterID"],
-                    'IsOpen': result,
-                  };
-                  context
-                      .read<ManageMainMenuProvider>()
-                      .updateOpenClose(index, mainMenu);
+                  DatabaseHelper().updateMainMenu({
+                    "MainMenuID": data.mainMenuId,
+                    "MainMenuName": data.mainMenuName,
+                    "CounterID": data.counterId,
+                    "IsOpen": result ? 1 : 0
+                  }).then((value) {
+                  
+                    if (value != 0) {
+                      result
+                          ? Fluttertoast.showToast(msg: AppString.openedMenu)
+                          : Fluttertoast.showToast(msg: AppString.closedMenu);
+                      context
+                          .read<ManageMainMenuProvider>()
+                          .updateOpenClose(index, result ? 1 : 0);
+                    } else {
+                      Fluttertoast.showToast(msg: AppString.somethingWentWrong);
+                    }
+                  });
                 }),
           );
         });
