@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/provider/order_detail_provider.dart';
 import 'package:waiter_app/provider/setting_provider.dart';
@@ -9,6 +10,7 @@ import '../api/apiservice.dart';
 import '../database/database_helper.dart';
 import '../model/connector_model.dart';
 import '../model/order_model.dart';
+import '../provider/login_provider.dart';
 import '../value/app_color.dart';
 import '../value/app_string.dart';
 import '../widget/app_text.dart';
@@ -35,25 +37,19 @@ class _OrderDetailState extends State<OrderDetail> {
 
   @override
   void initState() {
-    DatabaseHelper().getBaseUrl().then((value) {    
-      apiService = ApiService(
-          dio: Dio(BaseOptions(
-              baseUrl: value[0]["BaseUrl"])));
+    DatabaseHelper().getBaseUrl().then((value) {
+      apiService =
+          ApiService(dio: Dio(BaseOptions(baseUrl: value[0]["BaseUrl"])));
 
-      DatabaseHelper().getConnector().then((value) {    
+      DatabaseHelper().getConnector().then((value) {
         connectorModel = ConnectorModel(
             ipAddress: value[0]["IPAddress"],
-            databaseName: value[0]
-                ["DatabaseName"],
-            databaseLoginUser: value[0]
-                ["DatabaseLoginUser"],
-            databaseLoginPassword: value[0]
-                ["DatabaseLoginPassword"]);
+            databaseName: value[0]["DatabaseName"],
+            databaseLoginUser: value[0]["DatabaseLoginUser"],
+            databaseLoginPassword: value[0]["DatabaseLoginPassword"]);
 
         EasyLoading.show();
-        apiService
-            .getOrder(connectorModel, tableId)
-            .then((orderMasterModel) {
+        apiService.getOrder(connectorModel, tableId).then((orderMasterModel) {
           EasyLoading.dismiss();
           context
               .read<OrderDetailProvider>()
@@ -87,6 +83,38 @@ class _OrderDetailState extends State<OrderDetail> {
       appBar: AppBar(
         title: const Text(AppString.orderDetail,
             style: TextStyle(color: AppColor.primary)),
+        actions: [
+          IconButton(
+              onPressed: () {
+                context
+                    .read<LoginProvider>()
+                    .getLoginWaiter()
+                    .then((waiterModel) {
+                  EasyLoading.show();
+                  apiService
+                      .getBill(connectorModel, tableId, tableName,
+                          waiterModel.waiterId, waiterModel.waiterName)
+                      .then((value) {
+                    EasyLoading.dismiss();
+                    if (value) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: AppText(
+                              text: "$tableName ${AppString.billRequested}",
+                              color: Colors.white,
+                              fontFamily: "BOS")));
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: AppString.somethingWentWrong,
+                      );
+                    }
+                  });
+                });
+              },
+              icon: const Icon(
+                Icons.paid,
+                color: AppColor.primary,
+              ))
+        ],
       ),
       body: Container(
         color: AppColor.grey,
@@ -271,7 +299,9 @@ class _OrderDetailState extends State<OrderDetail> {
                       const AppText(text: AppString.subtotal),
                       Consumer<OrderDetailProvider>(
                           builder: (context, provider, child) {
-                        return AppText(text: AppConstant.formatter.format(provider.subtotal));
+                        return AppText(
+                            text: AppConstant.formatter
+                                .format(provider.subtotal));
                       }),
                     ],
                   ),
@@ -281,7 +311,9 @@ class _OrderDetailState extends State<OrderDetail> {
                       const AppText(text: AppString.charges),
                       Consumer<OrderDetailProvider>(
                           builder: (context, provider, child) {
-                        return AppText(text: AppConstant.formatter.format(provider.chargesAmount));
+                        return AppText(
+                            text: AppConstant.formatter
+                                .format(provider.chargesAmount));
                       }),
                     ],
                   ),
@@ -295,7 +327,8 @@ class _OrderDetailState extends State<OrderDetail> {
                               Consumer<OrderDetailProvider>(
                                   builder: (context, provider, child) {
                                 return AppText(
-                                    text: AppConstant.formatter.format(provider.taxAmount));
+                                    text: AppConstant.formatter
+                                        .format(provider.taxAmount));
                               }),
                             ],
                           )
@@ -379,7 +412,8 @@ class _OrderDetailState extends State<OrderDetail> {
                         const SizedBox(
                           width: 15,
                         ),
-                        AppText(text: AppConstant.formatter.format(data.salePrice)),
+                        AppText(
+                            text: AppConstant.formatter.format(data.salePrice)),
                         const SizedBox(
                           width: 15,
                         ),

@@ -55,6 +55,7 @@ class _RegisterKeyState extends State<RegisterKey> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
           title: const Text(
         AppString.registerKey,
