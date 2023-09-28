@@ -194,13 +194,14 @@ class _NavOrderState extends State<NavOrder> {
                               ),
                               Consumer<OrderProvider>(
                                   builder: (context, provider, child) {
-                                return AppText(
-                                  text: provider.selectedTable["tableName"],
-                                  color: AppColor.primary,
-                                  size: 20,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "BOS",
-                                );
+                                return Text(provider.selectedTable["tableName"],
+                                    style: const TextStyle(
+                                      color: AppColor.primary,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "BOS",
+                                    ),
+                                    maxLines: null);
                               }),
                             ],
                           ),
@@ -423,7 +424,8 @@ class _NavOrderState extends State<NavOrder> {
                       Expanded(
                           child: Text(
                         data.itemName,
-                        style: const TextStyle(fontFamily: "BOS"),
+                        style: const TextStyle(
+                            fontFamily: "BOS", color: AppColor.primaryDark),
                         maxLines: null,
                       ))
                     ],

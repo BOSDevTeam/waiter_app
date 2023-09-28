@@ -179,11 +179,14 @@ class _TableSituationState extends State<TableSituation> {
                                 )
                               : Container(),
                           Flexible(
-                            child: AppText(
-                              text: table.tableName,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "BOS",
-                            ),
+                            child: Text(table.tableName,
+                                style: const TextStyle(
+                                  color: AppColor.primaryDark,
+                                  fontSize: 16,
+                                  fontFamily: "BOS",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: null),
                           )
                         ],
                       ),
@@ -247,21 +250,30 @@ class _TableSituationState extends State<TableSituation> {
                       });
                     },
                     child: Container(
-                        width: 130,
-                        height: 60,
-                        alignment: Alignment.center,
-                        child: context
-                                    .read<TableSituationProvider>()
-                                    .selectedTableType["TableTypeID"] !=
-                                tableType["TableTypeID"]
-                            ? AppText(
-                                text: tableType["TableTypeName"],
-                                fontFamily: "BOS",
-                              )
-                            : AppText(
-                                text: tableType["TableTypeName"],
-                                color: Colors.white,
-                                fontFamily: "BOS")),
+                      width: 130,
+                      height: 60,
+                      alignment: Alignment.center,
+                      child: context
+                                  .read<TableSituationProvider>()
+                                  .selectedTableType["TableTypeID"] !=
+                              tableType["TableTypeID"]
+                          ? Text(
+                              tableType["TableTypeName"],
+                              style: const TextStyle(
+                                  color: AppColor.primaryDark,
+                                  fontFamily: "BOS",
+                                  fontSize: 16),
+                              maxLines: null,
+                            ),
+                          : Text(
+                              tableType["TableTypeName"],
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "BOS",
+                                  fontSize: 16),
+                              maxLines: null,
+                            ),
+                    ),
                   ),
                 ),
               );

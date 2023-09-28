@@ -168,13 +168,14 @@ class _OrderDetailState extends State<OrderDetail> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              AppText(
-                                text: tableName,
-                                color: AppColor.primary,
-                                size: 20,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "BOS",
-                              )
+                              Text(tableName,
+                                  style: const TextStyle(
+                                    color: AppColor.primary,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "BOS",
+                                  ),
+                                  maxLines: null)
                             ],
                           ),
                         )

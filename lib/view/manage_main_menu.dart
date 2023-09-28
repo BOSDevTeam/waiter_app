@@ -83,7 +83,12 @@ class _ManageMainMenuState extends State<ManageMainMenu> {
         itemBuilder: (context, index) {
           MainMenuModel data = provider.lstMainMenu[index];
           return ListTile(
-            title: AppText(text: data.mainMenuName),
+            title: Text(
+              data.mainMenuName,
+              style: const TextStyle(
+                  color: AppColor.primaryDark, fontFamily: "BOS", fontSize: 16),
+              maxLines: null,
+            ),
             trailing: Switch(
                 value: data.isOpen == null || data.isOpen == 1 ? true : false,
                 onChanged: (result) {
@@ -93,7 +98,6 @@ class _ManageMainMenuState extends State<ManageMainMenu> {
                     "CounterID": data.counterId,
                     "IsOpen": result ? 1 : 0
                   }).then((value) {
-                  
                     if (value != 0) {
                       result
                           ? Fluttertoast.showToast(msg: AppString.openedMenu)
