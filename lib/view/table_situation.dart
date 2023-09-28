@@ -264,7 +264,7 @@ class _TableSituationState extends State<TableSituation> {
                                   fontFamily: "BOS",
                                   fontSize: 16),
                               maxLines: null,
-                            ),
+                            )
                           : Text(
                               tableType["TableTypeName"],
                               style: const TextStyle(
