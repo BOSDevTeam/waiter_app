@@ -120,7 +120,7 @@ class _TableSituationState extends State<TableSituation> {
               color: table.isOccupied ? AppColor.grey : Colors.white,
               child: InkWell(
                 splashColor: AppColor.primary300,
-                onTapDown: (details) => _getTapPosition(details),
+                onTapUp: (details) => _getTapPosition(details),
                 onTap: () {
                   if (!isFromNav) {
                     context.read<OrderProvider>().setSelectedTable({
@@ -128,11 +128,13 @@ class _TableSituationState extends State<TableSituation> {
                       "tableName": table.tableName,
                       "isOccupied": table.isOccupied ? true : false
                     });
-                    Navigator.pop(context);
+
                     if (table.isOccupied) {
+                      EasyLoading.show();
                       apiService
                           .getCustomerNumber(connectorModel, table.tableId)
                           .then((customerModel) {
+                        EasyLoading.dismiss();
                         context.read<OrderProvider>().setCustomerNumber({
                           "date": customerModel.date,
                           "time": customerModel.time,
@@ -141,6 +143,7 @@ class _TableSituationState extends State<TableSituation> {
                           "child": customerModel.child,
                           "totalCustomer": customerModel.totalCustomer
                         });
+                        Navigator.pop(context);
                       });
                     } else {
                       context.read<OrderProvider>().setCustomerNumber({
@@ -151,16 +154,14 @@ class _TableSituationState extends State<TableSituation> {
                         "child": 0,
                         "totalCustomer": 0
                       });
+                      Navigator.pop(context);
                     }
                   } else {
-                    Fluttertoast.showToast(msg: AppString.pressAndHoldTable);
-                  }
-                },
-                onLongPress: () {
-                  if (table.isOccupied) {
-                    _showContextMenu(context, table.tableId, table.tableName);
-                  } else {
-                    Fluttertoast.showToast(msg: AppString.noActionEmptyTable);
+                    if (table.isOccupied) {
+                      _showContextMenu(context, table.tableId, table.tableName);
+                    } else {
+                      Fluttertoast.showToast(msg: AppString.noActionEmptyTable);
+                    }
                   }
                 },
                 child: Column(
@@ -267,7 +268,7 @@ class _TableSituationState extends State<TableSituation> {
             }));
   }
 
-  void _getTapPosition(TapDownDetails details) {
+  void _getTapPosition(TapUpDetails details) {
     final RenderBox referenceBox = context.findRenderObject() as RenderBox;
     setState(() {
       _tapPosition = referenceBox.globalToLocal(details.globalPosition);

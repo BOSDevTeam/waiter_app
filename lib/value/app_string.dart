@@ -50,7 +50,6 @@ class AppString {
   static const String data = "Data";
   static const String orderAdded = "Order Added";
   static const String loading = "Loading";
-  static const String pressAndHoldIcon = "Press and Hold on Icon";
   static const String quantity = "Quantity";
   static const String numberOrder = "Number Order";
   static const String enterTime = "Enter Time";
@@ -88,7 +87,6 @@ class AppString {
   static const String noActionEmptyTable = "No Action for Empty Table";
   static const String invalidHour = "Invalid Hour";
   static const String invalidMinute = "Invalid Minute";
-  static const String pressAndHoldTable = "Press and Hold on Table";
   static const String manageMainMenu = "Manage Main Menu";
   static const String openClose = "Open/Close";
   static const String openedMenu = "Opened Menu";

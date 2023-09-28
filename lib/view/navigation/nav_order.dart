@@ -268,8 +268,8 @@ class _NavOrderState extends State<NavOrder> {
                               Consumer<OrderProvider>(
                                   builder: (context, provider, child) {
                                 return AppText(
-                                  text: provider
-                                              .customerNumber["totalCustomer"] ==
+                                  text: provider.customerNumber[
+                                              "totalCustomer"] ==
                                           0
                                       ? "-"
                                       : provider.customerNumber["totalCustomer"]
@@ -523,12 +523,8 @@ class _NavOrderState extends State<NavOrder> {
                       ],
                     ),
                     InkWell(
+                        onTapUp: (details) => _getTapPosition(details),
                         onTap: () {
-                          Fluttertoast.showToast(
-                              msg: AppString.pressAndHoldIcon);
-                        },
-                        onTapDown: (details) => _getTapPosition(details),
-                        onLongPress: () {
                           context
                               .read<SettingProvider>()
                               .getUseTasteByMenu()
@@ -543,7 +539,7 @@ class _NavOrderState extends State<NavOrder> {
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(color: AppColor.grey)),
                           child: const Icon(
-                            Icons.touch_app,
+                            Icons.more_horiz,
                             color: AppColor.primary400,
                           ),
                         )),
@@ -555,7 +551,7 @@ class _NavOrderState extends State<NavOrder> {
         });
   }
 
-  void _getTapPosition(TapDownDetails details) {
+  void _getTapPosition(TapUpDetails details) {
     final RenderBox referenceBox = context.findRenderObject() as RenderBox;
     setState(() {
       _tapPosition = referenceBox.globalToLocal(details.globalPosition);
