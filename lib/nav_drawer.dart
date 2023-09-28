@@ -38,10 +38,13 @@ class _NavDrawerState extends State<NavDrawer> {
         children: [
           UserAccountsDrawerHeader(
             accountName: const Text(""),
-            accountEmail: AppText(
-              text: _waiterName,
-              fontFamily: "BOS",
-              color: Colors.white,
+            accountEmail: Text(
+              _waiterName,
+              style: const TextStyle(
+                fontFamily: 'BOS',
+                color: Colors.white,
+                fontSize: 16,
+              ),maxLines: null,
             ),
             currentAccountPicture: Image.asset(
               "assets/images/launcher.png",

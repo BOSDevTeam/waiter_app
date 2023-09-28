@@ -129,9 +129,12 @@ class _DialogTasteState extends State<DialogTaste> {
           itemBuilder: (context, index) {
             Map<String, dynamic> data = lstTaste[index];
             return ListTile(
-              leading: AppText(
-                text: data["TasteName"],
-                fontFamily: "BOS",
+              leading: Text(
+                data["TasteName"],
+                style: const TextStyle(
+                    fontFamily: 'BOS',
+                    fontSize: 16,
+                    color: AppColor.primaryDark),
               ),
               title: isTasteMulti
                   ? Align(

@@ -50,7 +50,8 @@ class _LoginState extends State<Login> {
                       opacity: const AlwaysStoppedAnimation(30)),
                   const Text(
                     AppString.welcomeToThe,
-                    style: TextStyle(color: Color.fromARGB(255, 85, 34, 7), fontSize: 25),
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 85, 34, 7), fontSize: 25),
                   ),
                   const Text(
                     AppString.appName,
@@ -170,8 +171,12 @@ class _LoginState extends State<Login> {
                               .setSelectedWaiter(waiter);
                         },
                         leading: const Icon(Icons.person),
-                        title: AppText(
-                            text: waiter["WaiterName"], fontFamily: "BOS"),
+                        title: Text(waiter["WaiterName"],
+                            style: const TextStyle(
+                                fontFamily: 'BOS',
+                                color: AppColor.primaryDark,
+                                fontSize: 16),
+                            maxLines: null),
                       );
                     })),
               ));
