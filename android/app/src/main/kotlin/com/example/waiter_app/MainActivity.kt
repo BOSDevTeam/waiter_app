@@ -21,7 +21,6 @@ class MainActivity: FlutterActivity() {
             if(call.method == "getMAC"){
                 var mac =  getMacAddress();
                 result.success(mac);
-                Toast.makeText(this, mac, Toast.LENGTH_LONG).show()
             }
         }
     }
