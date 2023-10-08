@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import 'package:waiter_app/model/connector_model.dart';
 import 'package:waiter_app/model/table_situation_model.dart';
 import 'package:waiter_app/model/table_type_model.dart';
 import 'package:waiter_app/model/waiter_model.dart';
+import 'package:waiter_app/value/app_color.dart';
 
 import '../model/customer_model.dart';
 import '../model/item_model.dart';

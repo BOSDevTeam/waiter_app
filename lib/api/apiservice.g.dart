@@ -20,32 +20,37 @@ class _ApiService implements ApiService {
 
   @override
   Future<List<WaiterModel>> getWaiter(ConnectorModel connectorModel) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(connectorModel.toJson());
-    final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<WaiterModel>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              'waiter',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var value = _result.data!
-        .map((dynamic i) => WaiterModel.fromJson(i as Map<String, dynamic>))
-        .toList();
-    return value;
+    try {
+      const _extra = <String, dynamic>{};
+      final queryParameters = <String, dynamic>{};
+      final _headers = <String, dynamic>{};
+      final _data = <String, dynamic>{};
+      _data.addAll(connectorModel.toJson());
+      final _result = await _dio
+          .fetch<List<dynamic>>(_setStreamType<List<WaiterModel>>(Options(
+        method: 'GET',
+        headers: _headers,
+        extra: _extra,
+      )
+              .compose(
+                _dio.options,
+                'waiter',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                  baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                baseUrl,
+              ))));
+      var value = _result.data!
+          .map((dynamic i) => WaiterModel.fromJson(i as Map<String, dynamic>))
+          .toList();
+      return value;
+    } catch (ex) {
+      Fluttertoast.showToast(msg: ex.toString(),toastLength: Toast.LENGTH_LONG);
+    }
+    return [];
   }
 
   @override

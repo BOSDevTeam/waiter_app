@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
