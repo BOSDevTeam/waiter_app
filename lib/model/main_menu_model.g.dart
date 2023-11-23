@@ -11,6 +11,7 @@ MainMenuModel _$MainMenuModelFromJson(Map<String, dynamic> json) =>
       mainMenuId: json['MainMenuID'] as int,
       mainMenuName: json['MainMenuName'] as String,
       counterId: json['CounterID'] as int,
+      isOpen: json['isOpen'] as int?,
     );
 
 Map<String, dynamic> _$MainMenuModelToJson(MainMenuModel instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$MainMenuModelToJson(MainMenuModel instance) =>
       'MainMenuID': instance.mainMenuId,
       'MainMenuName': instance.mainMenuName,
       'CounterID': instance.counterId,
+      'isOpen': instance.isOpen,
     };

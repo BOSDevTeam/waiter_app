@@ -26,7 +26,7 @@ class _DialogPasswordState extends State<DialogPassword> {
 
   @override
   void initState() {
-    context.read<PasswordProvier>().passwordController.text="";
+    context.read<PasswordProvider>().passwordController.text="";
     super.initState();
   }
 
@@ -37,7 +37,7 @@ class _DialogPasswordState extends State<DialogPassword> {
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         title: const AppText(text: AppString.enterPassword),
         content: TextFormField(
-          controller: context.read<PasswordProvier>().passwordController,
+          controller: context.read<PasswordProvider>().passwordController,
           style: const TextStyle(color: AppColor.primaryDark),
           keyboardType: TextInputType.visiblePassword,
           obscureText: true,
@@ -58,12 +58,12 @@ class _DialogPasswordState extends State<DialogPassword> {
                   child: const Text(AppString.cancel)),
               ElevatedButton(
                   onPressed: () {
-                    if (context.read<PasswordProvier>().isValidateControl()) {
+                    if (context.read<PasswordProvider>().isValidateControl()) {
                       if (passwordType == PasswordType.settingPassword) {
                         DatabaseHelper().getSystemSetting().then((value) {
                           String adminPassword = value[0]["AdminPassword"];
                           if (context
-                                  .read<PasswordProvier>()
+                                  .read<PasswordProvider>()
                                   .passwordController
                                   .text ==
                               adminPassword) {
@@ -80,7 +80,7 @@ class _DialogPasswordState extends State<DialogPassword> {
                         DatabaseHelper().getSystemSetting().then((value) {
                           String userPassword = value[0]["UserPassword"];
                           if (context
-                                  .read<PasswordProvier>()
+                                  .read<PasswordProvider>()
                                   .passwordController
                                   .text ==
                               userPassword) {

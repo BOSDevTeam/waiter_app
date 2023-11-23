@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/view/navigation/nav_order.dart';
@@ -8,6 +7,7 @@ import '../provider/login_provider.dart';
 import '../value/app_color.dart';
 import '../value/app_string.dart';
 import '../widget/app_text.dart';
+import 'data_updating.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -17,6 +17,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  Offset _tapPosition = Offset.zero;
+
   @override
   void initState() {
     DatabaseHelper().getWaiter().then((value) {
@@ -45,6 +47,25 @@ class _LoginState extends State<Login> {
               ),
               Column(
                 children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                        onTapUp: (details) => _getTapPosition(details),
+                        onTap: () {
+                          _showContextMenu(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Icon(
+                            Icons.settings,
+                            color: AppColor.primaryDark,
+                          ),
+                        )),
+                  ),
                   Image.asset("assets/images/launcher.png",
                       height: 100,
                       width: 100,
@@ -148,6 +169,44 @@ class _LoginState extends State<Login> {
         ],
       )),
     );
+  }
+
+  void _getTapPosition(TapUpDetails details) {
+    final RenderBox referenceBox = context.findRenderObject() as RenderBox;
+    setState(() {
+      _tapPosition = referenceBox.globalToLocal(details.globalPosition);
+    });
+  }
+
+  void _showContextMenu(BuildContext context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+
+    final result = await showMenu(
+        context: context,
+
+        // Show the context menu at the tap location
+        position: RelativeRect.fromRect(
+            Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 30, 30),
+            Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+                overlay.paintBounds.size.height)),
+
+        // set a list of choices for the context menu
+        items: [
+          const PopupMenuItem(
+            value: AppString.updateData,
+            child: Text(AppString.updateData),
+          ),
+        ]);
+
+    // Implement the logic for each choice here
+    switch (result) {
+      case AppString.updateData:
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return const DataUpdating();
+        }));
+        break;
+    }
   }
 
   Future<void> _waiterDialog(List<Map<String, dynamic>> lstWaiter) async {

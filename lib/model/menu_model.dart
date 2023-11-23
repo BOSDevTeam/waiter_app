@@ -10,6 +10,7 @@ class MenuModel {
   int sType;
   int noDiscount;
   int itemDiscount;
+  int outOfOrder;
 
   MenuModel(
       {this.id,
@@ -21,5 +22,6 @@ class MenuModel {
       this.counterId = 0,
       this.sType = 0,
       this.noDiscount = 0,
-      this.itemDiscount = 0,});
+      this.itemDiscount = 0,
+      this.outOfOrder = 0});
 }

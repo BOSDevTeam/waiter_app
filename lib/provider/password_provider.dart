@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../value/app_string.dart';
 
-class PasswordProvier extends ChangeNotifier {
+class PasswordProvider extends ChangeNotifier {
   final passwordController = TextEditingController();
 
   bool isValidateControl() {

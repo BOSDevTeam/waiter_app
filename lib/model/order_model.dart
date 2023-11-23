@@ -12,6 +12,8 @@ class OrderModel {
   String commonTaste;
   @JsonKey(name: "TasteByItem")
   String tasteByItem;
+  @JsonKey(name: "InputTaste")
+  String inputTaste;
   @JsonKey(name: "Quantity")
   int quantity;
   @JsonKey(name: "IncomeID")
@@ -42,6 +44,7 @@ class OrderModel {
       required this.itemName,
       this.commonTaste = "",
       this.tasteByItem = "",
+      this.inputTaste = "",
       required this.quantity,
       required this.incomdId,
       this.number = 0,

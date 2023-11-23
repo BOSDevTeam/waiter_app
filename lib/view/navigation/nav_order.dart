@@ -6,6 +6,7 @@ import 'package:waiter_app/database/database_helper.dart';
 import 'package:waiter_app/provider/login_provider.dart';
 import 'package:waiter_app/value/time_type.dart';
 import 'package:waiter_app/view/customer_entry.dart';
+import 'package:waiter_app/view/dialog/dialog_input.dart';
 import 'package:waiter_app/view/dialog/dialog_number.dart';
 import 'package:waiter_app/value/number_type.dart';
 import 'package:waiter_app/widget/app_text.dart';
@@ -19,6 +20,7 @@ import '../../provider/setting_provider.dart';
 import '../../value/app_color.dart';
 import '../../value/app_constant.dart';
 import '../../value/app_string.dart';
+import '../../value/input_type.dart';
 import '../dialog/dialog_taste.dart';
 import '../dialog/dialog_time.dart';
 
@@ -94,6 +96,7 @@ class _NavOrderState extends State<NavOrder> {
                 item.sType = itemList[k]["SType"];
                 item.noDiscount = itemList[k]["NoDiscount"];
                 item.itemDiscount = itemList[k]["ItemDiscount"];
+                item.outOfOrder = itemList[k]["OutOfOrder"];
                 item.type = 3;
 
                 subMenu.list.add(item);
@@ -458,6 +461,18 @@ class _NavOrderState extends State<NavOrder> {
                         ],
                       )
                     : Container(),
+                data.inputTaste.isNotEmpty
+                    ? Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                      data.inputTaste.toString(),
+                      style: const TextStyle(
+                        color: AppColor.primary500,
+                      ),
+                      maxLines: null,
+                        ),
+                    )
+                    : Container(),
                 const SizedBox(
                   height: 10,
                 ),
@@ -585,6 +600,10 @@ class _NavOrderState extends State<NavOrder> {
               value: AppString.tasteByMenu,
               child: const Text(AppString.tasteByMenu)),
           const PopupMenuItem(
+            value: AppString.addTaste,
+            child: Text(AppString.addTaste),
+          ),
+          const PopupMenuItem(
             value: AppString.numberOrderItem,
             child: Text(AppString.numberOrderItem),
           ),
@@ -625,6 +644,15 @@ class _NavOrderState extends State<NavOrder> {
             Fluttertoast.showToast(msg: AppString.noTasteByMenuForItem);
           }
         });
+        break;
+      case AppString.addTaste:
+        showDialog<void>(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return DialogInput(
+                  inputType: InputType.tasteInput, orderIndex: index);
+            });
         break;
       case AppString.numberOrderItem:
         showDialog<void>(
@@ -671,6 +699,9 @@ class _NavOrderState extends State<NavOrder> {
     if (menuModel.list.isEmpty) {
       return Builder(builder: (context) {
         return ListTile(
+          enabled: menuModel.outOfOrder == 0 ? true : false,
+          tileColor:
+              menuModel.outOfOrder == 0 ? Colors.transparent : Colors.grey[400],
           leading: const SizedBox(width: 10),
           //textColor: _menuColor(list.type),
           title: Text(

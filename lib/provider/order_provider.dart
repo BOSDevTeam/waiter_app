@@ -79,6 +79,11 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateInputTaste(int index, String tastes) {
+    _lstOrder[index].inputTaste = tastes;
+    notifyListeners();
+  }
+
   String getCommonTaste(int index) {
     String taste = _lstOrder[index].commonTaste.toString();
     return taste;
@@ -86,6 +91,11 @@ class OrderProvider extends ChangeNotifier {
 
   String getTasteByItem(int index) {
     String taste = _lstOrder[index].tasteByItem.toString();
+    return taste;
+  }
+
+  String getInputTaste(int index) {
+    String taste = _lstOrder[index].inputTaste.toString();
     return taste;
   }
 

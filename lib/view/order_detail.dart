@@ -394,6 +394,15 @@ class _OrderDetailState extends State<OrderDetail> {
                         maxLines: null,
                       )
                     : Container(),
+                data.inputTaste.isNotEmpty
+                    ? Text(
+                        data.inputTaste,
+                        style: const TextStyle(
+                          color: AppColor.primary500,
+                        ),
+                        maxLines: null,
+                      )
+                    : Container(),
                 const SizedBox(
                   height: 5,
                 ),

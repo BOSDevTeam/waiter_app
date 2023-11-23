@@ -128,8 +128,8 @@ class MyApp extends StatelessWidget {
           create: (context) => RegisterProvider(),
           child: const RegisterKey(),
         ),
-        ChangeNotifierProvider<PasswordProvier>(
-          create: (context) => PasswordProvier(),
+        ChangeNotifierProvider<PasswordProvider>(
+          create: (context) => PasswordProvider(),
           child: const DialogPassword(
             passwordType: PasswordType.settingPassword,
           ),

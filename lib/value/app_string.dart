@@ -38,6 +38,7 @@ class AppString {
   static const String sendOrder = "Send Order";
   static const String commonTaste = "Common Taste";
   static const String tasteByMenu = "Taste by Menu";
+  static const String addTaste = "Add Taste";
   static const String numberOrderItem = "Number Order Item";
   static const String delete = "Delete";
   static const String tableSituation = "Table Situation";
@@ -91,4 +92,6 @@ class AppString {
   static const String openClose = "Open/Close";
   static const String openedMenu = "Opened Menu";
   static const String closedMenu = "Closed Menu";
+  static const String enterTaste = "Enter Taste";
+  static const String taste = "Taste";
 }
